@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}注册{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="username">NetID</label>
+    <input name="username" id="username" required>
+    <label for="password">密码</label>
+    <input type="password" name="password" id="password" required>
+    <label for="sname">姓名</label>
+    <input name="sname" id="sname" required>
+    <label for="sid">学号</label>
+    <input name="sid" id="sid" required>
+
+
+    <input type="submit" value="注册">
+  </form>
+{% endblock %}

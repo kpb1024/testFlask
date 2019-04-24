@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}录入课程成绩{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="cname">课程名称</label>
+    <input name="cname" id="cname" value="{{ request.form['cname'] }}" required>
+    <label for="score">成绩</label>
+    <input name="score" id="score" value="{{ request.form['score'] }}" required>
+    <input type="submit" value="提交成绩">
+  </form>
+{% endblock %}
