@@ -1,11 +1,6 @@
 {% extends 'base.html' %}
-
-{% block header %}
-  <h1>{% block title %}学生成绩{% endblock %}</h1>
-  {% if g.user %}
-    <a class="action" href="{{ url_for('info.create') }}">录入成绩</a>
-    <a class="action" href="{{ url_for('info.createCourse') }}">添加课程</a>
-  {% endif %}
+{% block title %}
+  我的成绩
 {% endblock %}
 
 {% block content %}
