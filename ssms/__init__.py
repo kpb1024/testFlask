@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-
+from flask_sqlalchemy import SQLAlchemy
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -11,7 +11,9 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         # store the database in the instance folder
         DATABASE=os.path.join(app.instance_path, 'ssms.sqlite'),
+	SQLALCHEMY_DATABASE_URI='sqlite:////ssms.db',
     )
+    orm = SQLAlchemy(app)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing

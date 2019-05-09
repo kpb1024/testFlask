@@ -11,16 +11,6 @@ bp = Blueprint('info', __name__)
 @bp.route('/')
 @login_required
 def index(check_author=True):
-    """Get a post and its author by id.
-
-    Checks that the sid exists and optionally that the current user is
-    the student.
-
-    :param sid: sid of score to get
-    :param check_author: require the current user to be the student
-    :return: the score info with student information
-    :raise 403: if the current user isn't the student
-    """
     sid = session['sid']
     score = get_db().execute(
         'SELECT cname, courseterm, coursepoint, score'
