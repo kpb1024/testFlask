@@ -8,7 +8,7 @@ def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
     jsglue = JSGlue()
-    jsglue.init_app(app)  # 让js文件中可以使用url_for方法
+    jsglue.init_app(app) 
     app.config.from_mapping(
         # a default secret that should be overridden by instance config
         SECRET_KEY='dev',

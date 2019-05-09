@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS score;
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS teacher;
 DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS studentCourse;
 
 
 CREATE TABLE user (
@@ -36,8 +37,8 @@ CREATE TABLE course (
   courseyear INTEGER NOT NULL,
   coursepoint INTEGER NOT NULL,
   coursetype TEXT NOT NULL,
-  tid INTEGER NOT NULL,
-  tname TEXT NOT NULL,
+  tid INTEGER,
+  tname TEXT,
   FOREIGN KEY (tid) REFERENCES teacher (tid),
   FOREIGN KEY (tname) REFERENCES teacher (tname)
 );

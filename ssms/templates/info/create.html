@@ -10,6 +10,8 @@
     <input name="cname" id="cname" value="{{ request.form['cname'] }}" required>
     <label for="score">成绩</label>
     <input name="score" id="score" value="{{ request.form['score'] }}" required>
+    <label for="gpa">绩点</label>
+    <input name="gpa" id="gpa" value="{{ request.form['gpa'] }}" required>
     <input type="submit" value="提交成绩">
   </form>
 {% endblock %}
