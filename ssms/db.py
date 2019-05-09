@@ -11,10 +11,7 @@ def get_db():
     again.
     """
     if 'db' not in g:
-<<<<<<< HEAD
-=======
 
->>>>>>> 266f41eeae4d225dbf423f5cf25d955d8177b373
         g.db = sqlite3.connect(
             current_app.config['DATABASE'],
             detect_types=sqlite3.PARSE_DECLTYPES
