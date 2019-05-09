@@ -1,0 +1,62 @@
+<!doctype html>
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- 引入组件库 -->
+  <title>{% block title %}{% endblock %} - 学生成绩管理系统</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<div id="app-2">
+<el-menu
+  :default-active="activeIndex2"
+  class="el-menu-demo"
+  mode="horizontal"
+  @select="handleSelect"
+  background-color="#409EFF"
+  text-color="#fff"
+  active-text-color="#fff">
+  <el-menu-item index="1"><a href="{{ url_for('index') }}">学生成绩管理系统</a></el-menu-item>
+  <el-submenu index="2">
+    <template slot="title">我的成绩</template>
+    <el-menu-item index="2-1"><a href="{{ url_for('info.create') }}">录入成绩</a></el-menu-item>
+    <el-menu-item index="2-2"><a href="{{ url_for('info.createCourse') }}">添加课程</a></el-menu-item>
+	<el-menu-item index="2-3"><a href="{{ url_for('info.myScore') }}">成绩分析</a><el-menu-item>
+  </el-submenu>
+  <el-menu-item index="3" disabled>消息中心</el-menu-item>
+  <el-menu-item index="4">
+    <el-popover placement="top-start" title="标题" v-bind:title="message" width="200" trigger="hover">
+      <el-button slot="reference">当前时间</el-button>
+    </el-popover>
+  </el-menu-item>
+  {% if g.user %}
+    <el-menu-item><span>{{ g.user['username'] }}</span></el-menu-item>
+    <el-menu-item><a href="{{ url_for('auth.logout') }}">登出</a></el-menu-item>
+  {% else %}
+    <el-menu-item><a href="{{ url_for('auth.register') }}">注册</a></el-menu-item>
+    <el-menu-item><a href="{{ url_for('auth.login') }}">登录</a></el-menu-item>
+  {% endif %}
+</el-menu>
+</div>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</section>
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    var app2 = new Vue({
+      el: '#app-2',
+      data: {
+        message: '页面加载于 ' + new Date().toLocaleString()
+      }
+    })
+  </script>

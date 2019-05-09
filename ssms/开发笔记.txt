@@ -1,0 +1,32 @@
+echarts实现：
+学生：
+变化趋势分析
+select courseTerm, avg(score), max(score), min(score) from Performances, Courses where Performances.courseNo=Courses.courseNo
+and studentNo={given} group by courseTerm
+优劣势分析 data
+select studentNo, courseName, score from Performances, Courses where Performances.courseNo=Courses.courseNo and studentNo={given}
+and courseTerm={given}
+按照学年，学科类别进行成绩展示 data
+select courseName, score, GPA, render, entryStatus from Performances, Courses where studentNo={given}
+and Performances.courseNo in (select courseNo from Courses where courseCate={given} and courseTerm={given}) and Performances.courseNo=Courses.courseNo
+老师：
+各科平均分，最高分，优秀率
+select courseNo, avg(score), max(score), count(if(score >= 80, true, null))/count(score) from Performances, Courses where teacherNo={given} 
+and Courses.courseNo=Performances.courseNo group by courseNo
+各科成绩分布
+
+前端提交表单-后端查询数据库-后端生成json-前端获得json-前端生成表格流程：
+前端提交表单并获得json：<el-form> @click调用function 判断是否为空
+let url = Flask.url_for("selectedScore");
+                axios.post(url, {
+                    term: self.form.term //提交参数
+	    cate: self.form.cate
+                })then(function(response) {
+		self.tableData = response.data.results;}); //获得数据
+后端查询数据库并生成json:
+使用 term = request.json.get('term')获得数据
+return jsonify({'results': results})
+(results=[] results.append({'name':'', 'id':''}))
+
+前端生成表格：
+:data='tableData'

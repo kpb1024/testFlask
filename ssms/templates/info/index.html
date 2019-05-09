@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+  我的成绩
+{% endblock %}
+
+{% block content %}
+  {% for post in scores %}
+    <article class="post">
+      <header>
+        <div>
+          <h1>{{ post['cname'] }}</h1>
+        </div>
+        {% if g.user['sid'] == post['sid'] %}
+          <a class="action" href="{{ url_for('info.update', sid=post['sid']) }}">修改成绩</a>
+        {% endif %}
+      </header>
+      <p class="body">{{ post['score'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
