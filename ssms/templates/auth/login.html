@@ -5,11 +5,22 @@
 {% endblock %}
 
 {% block content %}
-  <form method="post">
+  <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+  <form id="myform" method="post">
     <label for="username">NetID</label>
     <input name="username" id="username" required>
     <label for="password">密码</label>
     <input type="password" name="password" id="password" required>
-    <input type="submit" value="登录">
   </form>
+  <button style="width:310px;height:40px;" id="TencentCaptcha" data-appid="2027467746" data-cbfn="callback">登录</button>
+  <script>
+  window.callback = function(res){
+      console.log(res)
+      // res（用户主动关闭验证码）= {ret: 2, ticket: null}
+      // res（验证成功） = {ret: 0, ticket: "String", randstr: "String"}
+      if(res.ret === 0){
+          document.getElementById("myform").submit();
+      }
+  }
+  </script>
 {% endblock %}
