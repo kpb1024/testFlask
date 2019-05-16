@@ -2,3 +2,4 @@
 /instance
 *.pyc
 nohup.out
+*.swp
