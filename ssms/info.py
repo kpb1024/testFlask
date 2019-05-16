@@ -14,7 +14,7 @@ bp = Blueprint('info', __name__)
 def index(check_author=True):
 	sid = session['sid']
 	courselist = get_db().execute(
-		'SELECT cname, courseterm, coursepoint, score'
+		'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa'
 		' FROM studentCourse sc JOIN course c ON sc.cid = c.cid'
 		' WHERE sc.sid = ?',
 		(sid,)
@@ -22,9 +22,6 @@ def index(check_author=True):
 
 	if courselist is None:
 		abort(404, "Student id {0} doesn't have Course score.".format(sid))
-
-	#if check_author and score['sid'] != g.user['sid']:
-	#	 abort(403)
 
 	return render_template('info/index.html', courses=courselist)
 
@@ -73,6 +70,7 @@ def createCourse():
 		coursepoint = request.form['coursepoint']
 		coursetype = request.form['coursetype']	
 		courseyear = request.form['courseyear']	
+		tname = request.form['tname']	
 		error = None
 
 		if not cname:
@@ -87,9 +85,9 @@ def createCourse():
 		else:
 			db = get_db()
 			db.execute(
-				'INSERT INTO course (cname, courseyear, coursetype, courseterm, coursepoint)'
-				' VALUES (?, ?, ?, ?, ?)',
-				(cname, courseyear, coursetype, courseterm, coursepoint)
+				'INSERT INTO course (cname, courseyear, coursetype, courseterm, coursepoint, tname)'
+				' VALUES (?, ?, ?, ?, ?, ?)',
+				(cname, courseyear, coursetype, courseterm, coursepoint, tname)
 			)
 			db.commit()
 			return redirect(url_for('info.index'))
