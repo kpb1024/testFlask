@@ -48,8 +48,11 @@ CREATE TABLE studentCourse (
   sid INTEGER NOT NULL,
   cid INTEGER NOT NULL,
   scid INTEGER PRIMARY KEY AUTOINCREMENT,
-  score INTEGER NOT NULL,
-  gpa INTEGER NOT NULL,
+  score INTEGER,
+  gpa INTEGER,
+  dailyPerf INTEGER,
+  dailyPerfRatio INTEGER,
+  finalExamScore INTEGER,
   FOREIGN KEY (sid) REFERENCES student (sid),
   FOREIGN KEY (cid) REFERENCES course (cid)
 );

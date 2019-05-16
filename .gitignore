@@ -1,5 +1,4 @@
 /venv
-/instance
 *.pyc
 nohup.out
 *.swp
