@@ -4,13 +4,13 @@
 {% endblock %}
 
 {% block content %}
-  {% for course in courses %}
-    <article class="post">
-    {% for key in course.keys() %}
+    {% for key in courses[0].keys() %}
       <span>{{ key }}</span>
     {% endfor %}
-      <hr>
-    {% for value in course%}
+	<hr>
+  {% for course in courses %}
+    <article class="post">
+    {% for value in course.values() %}
       <span>{{ value }}</span>
     {% endfor %}
     </article>

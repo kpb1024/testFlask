@@ -1,14 +1,13 @@
 import functools
 
 from flask import (
-	Blueprint, flash, g, redirect, render_template, request, session, url_for
+	Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from ssms.db import get_db
+from ssms.db import get_db, get_results
 
 bp = Blueprint('auth', __name__)
-
 
 def login_required(view):
 	"""View decorator that redirects anonymous users to the login page."""
@@ -26,67 +25,51 @@ def login_required(view):
 def load_logged_in_user():
 	"""If a user id is stored in the session, load the user object from
 	the database into ``g.user``."""
-	user_id = session.get('user_id')
+	id = session.get('id')
 
-	if user_id is None:
+	if id is None:
 		g.user = None
 	else:
-		g.user = get_db().execute(
-			'SELECT * FROM user JOIN student WHERE id = ?', (user_id,)
-		).fetchone()
+		cur = get_db().cursor()
+		cur.execute(
+			'SELECT * FROM user WHERE id = %s', (id)
+		)
+		g.user = get_results(cur)[0]
 
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
 	"""Register a new user.
-
 	Validates that the username is not already taken. Hashes the
 	password for security.
+	
+	Use cursor to execute SQL query.
 	"""
 	if request.method == 'POST':
 		username = request.form['username']
 		password = request.form['password']
-		sid		 = request.form['sid']
+		id = request.form['id']
 		sname	 = request.form['sname']
 		db = get_db()
+		cur = db.cursor()
 		error = None
 
-		if not username:
-			error = 'Username is required.'
-		elif not password:
-			error = 'Password is required.'
-		elif not sid:
-			error = 'Student ID is required.'
-		elif not sname:
-			error = 'Your name is required.'
-		elif db.execute(
-			'SELECT id FROM user WHERE username = ?', (username,)
-		).fetchone() is not None:
+		if cur.execute('SELECT id FROM user WHERE username = %s', (username)) is not 0:
 			error = 'NetID {0} is already registered.'.format(username)
-		elif db.execute(
-			'SELECT sid FROM student WHERE sid = ?', (sid,)
-		).fetchone() is not None:
-			error = 'Student ID {0} is already registered.'.format(sid)
-
 		if error is None:
-			# the name and student ID is available, store it in the database and go to
-			# the login page
-		# auth = 0 for student
-			db.execute(
-				'INSERT INTO user (username, password, auth) VALUES (?, ?, ?)',
-				(username, generate_password_hash(password), 0)
+			cur.execute(
+				'INSERT INTO user (id, username, password, auth, is_male) VALUES (%s, %s, %s, %s, %s)',
+				(id, username,  generate_password_hash(password), 0, 1)
 			)
-			db.execute(
-				'INSERT INTO student (sid, sname, uid) VALUES (?, ?,  (SELECT last_insert_rowid()))',
-				(sid, sname)
+			cur.execute(
+				'INSERT INTO student (id, name) VALUES (%s, %s)',
+				(id, sname)
 		)
 			db.commit()
 			return redirect(url_for('auth.login'))
-
 		flash(error)
 
 	return render_template('auth/register.html')
-
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
@@ -95,30 +78,29 @@ def login():
 		username = request.form['username']
 		password = request.form['password']
 		db = get_db()
+		cur = db.cursor()
 		error = None
-		user = db.execute(
-			'SELECT * FROM user WHERE username = ?', (username,)
-		).fetchone()
-		student = db.execute(
-			'SELECT * FROM student WHERE uid = ?', (user['id'],)
-		).fetchone()
-
-		if user is None:
+		cur.execute(
+			'SELECT * FROM user WHERE username = %s', (username,)
+		)
+		#user = cur.fetchone()
+		user = get_results(cur)
+		if len(user) is 0:
 			error = 'Incorrect username.'
-		elif not check_password_hash(user['password'], password):
+		elif not check_password_hash(user[0]['password'], password):
 			error = 'Incorrect password.'
 
 		if error is None:
 			# store the user id in a new session and return to the index
 			session.clear()
-			session['user_id'] = user['id']
-			session['sid'] = student['sid']
+			session['id'] = user[0]['id']
+			session['username'] = user[0]['username']
+			session['auth'] = user[0]['auth']
 			return redirect(url_for('info.index'))
 
 		flash(error)
 
 	return render_template('auth/login.html')
-
 
 @bp.route('/logout')
 def logout():

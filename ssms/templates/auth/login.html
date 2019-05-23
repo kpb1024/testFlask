@@ -11,8 +11,9 @@
     <input name="username" id="username" required>
     <label for="password">密码</label>
     <input type="password" name="password" id="password" required>
+    <input type="submit" volue="Submit">
   </form>
-  <button style="width:310px;height:40px;" id="TencentCaptcha" data-appid="2027467746" data-cbfn="callback">登录</button>
+  <button style="width:310px;height:40px;" id="TencentCaptcha" data-appid="2027467746" data-cbfn="callback">验证码登录</button>
   <script>
   window.callback = function(res){
       console.log(res)
