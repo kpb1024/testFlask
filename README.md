@@ -34,14 +34,10 @@ flask run -h 0.0.0.0 -p 5000
 -h 参数为0.0.0.0时能够从外部网络访问该应用，-p 参数指定端口
 
 > 安装virtualenv
-
-　　运行命令：pip intall virtualenv 直接安装
-
-　　运行创建虚拟环境命令:virtualenv venv ，在当前目录下会成功生产一个venv文件夹。
-
-　　开启虚拟环境：先cd venv，进入venv目录，输入Scripts\activate运行，开启成功。
-
-    关闭虚拟环境：输入deactivate回车成功关闭。
+运行命令：pip intall virtualenv 直接安装
+运行创建虚拟环境命令:virtualenv venv ，在当前目录下会成功生产一个venv文件夹。
+开启虚拟环境：先cd venv，进入venv目录，输入Scripts\activate运行，开启成功。
+关闭虚拟环境：输入deactivate回车成功关闭。
 
 无论在什么环境下都要注意系统变量 FLASK_APP 和 FLASK_ENV 的设置，Windows 平台下通过`set FLASK_APP=ssms`设置系统变量。
 
@@ -49,24 +45,24 @@ flask run -h 0.0.0.0 -p 5000
 ```
 testFlask
 |-- instance	//已弃用，旧版本所使用的数据库的本地文件
-|   `-- ssms.sqlite	//通过指令sqlite3 ssms.sqlite来查看
-|-- notes.md	//广泓的开发笔记
-|-- README.md	//使用和说明文档
-|-- requirements.txt	//项目所需的 Python 包
-|-- run.sh	//一键运行项目的脚本
-|-- ssms	//主文件夹
-|   |-- auth.py	//登录、登出、注册、强制要求登录等功能
+|   `-- ssms.sqlite
+|-- notes.md
+|-- README.md
+|-- requirements.txt
+|-- run.sh
+|-- ssms
+|   |-- auth.py	//登录、注册、强制要求登录等功能
 |   |-- db.py	//数据库相关功能
-|   |-- guanghong_info.py	//获取可供成绩分析的数据
-|   |-- info.py	//主页、获取所有成绩、创建课程、录入成绩等功能
-|   |-- __init__.py	//ssms模块的声明
+|   |-- guanghong_info.py
+|   |-- info.py	//主页、录入成绩等功能
+|   |-- __init__.py	//ssms模块声明
 |   |-- mysql.py	//被我魔改过的flask_ext.mysql模块
 |   |-- reference.sql	//已弃用，依据需求报告写的建表语句
 |   |-- schema.sql	//灵活、可随时修改的建表语句
-|   |-- static	//静态文件，如css、js文件
+|   |-- static	//静态文件如css、js
 |   `-- templates	//前端网页模板
-|       |-- auth	//身份验证相关网页
+|       |-- auth
 |       |-- base.html	//所有网页都继承的基础网页
-|       `-- info	//展示信息相关的网页
+|       `-- info
 `-- ToDo.md	
 ```
