@@ -1,27 +1,23 @@
 from flask import (
 	Blueprint, flash, g, session, redirect, render_template, request, url_for, current_app
 )
-
 from flask.json import jsonify
-
 from werkzeug.exceptions import abort
-
 from ssms.auth import login_required
 from ssms.db import get_db, get_results
 
 bp = Blueprint('info', __name__)
 
-
 @bp.route('/')
 @login_required
-def index():
+def index(check_author=True):
 	id = session['id']
 	db = get_db()
 	cur = db.cursor()
 	cur.execute(
                 'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa'
                 ' FROM studentCourse JOIN course'
-                ' WHERE sid = %s',
+                ' WHERE id = %s',
                 (id)
         )
 	courselist = get_results(cur)
@@ -30,77 +26,78 @@ def index():
 
 	return render_template('info/index.html', courses=courselist)
 
-@bp.route('/createCourse', methods=('GET', 'POST'))
-@login_required
-def createCourse():
-        #Create a new course.
-        if request.method == 'POST':
-                cname = request.form['cname']
-                courseterm = request.form['courseterm']
-                coursepoint = request.form['coursepoint']
-                coursetype = request.form['coursetype']
-                courseyear = request.form['courseyear']
-                tname = request.form['tname']
-		#Validation
-                error = None
-                if not cname:
-                        error = 'Course name is required.'
-                elif not courseterm:
-                        error = 'Course term is required'
-                elif not courseterm:
-                        error = 'Course point is required'
-
-                if error is not None:
-                        flash(error)
-                else:
-                        db = get_db()
-			cur = db.cursor()
-                        cur.execute(
-                                'INSERT INTO course (cname, courseyear, coursetype, courseterm, coursepoint, tname)'
-                                ' VALUES ( %s, %s, %s, %s, %s, %s)',
-                                (cname, courseyear, coursetype, courseterm, coursepoint, tname)
-                        )
-                        db.commit()
-			#cur.close()
-			#db.close()
-                        return redirect(url_for('info.index'))
-
-        return render_template('info/createCourse.html')
-
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
+	"""Create a new post for the current user."""
 	if request.method == 'POST':
 		cname = request.form['cname']
 		score = request.form['score']
 		gpa = request.form['gpa']
-
 		error = None
+
 		if not cname:
 			error = 'Course name is required.'
 		elif not score:
 			error = 'Score is required'
+
 		if error is not None:
 			flash(error)
 		else:
 			db = get_db()
 			cur = db.cursor()
-			if cur.execute(
+			cur.execute(
 				'SELECT * FROM course WHERE cname = %s ', (cname)
-			) is 0:
-				error= 'Course do not exist'
-                                flash(error)
-			#Get the first one meet the requirement.
+			)
 			course = get_results(cur)
+			if len(course) is 0:
+				error= 'Course do not exist'
+				flash(error)
 			db.execute(
 				'INSERT INTO studentCourse (sid, cid, score, gpa)'
-				' VALUES (%s, %s, %s, %s)',
-				(g.user['id'], course[0]['cid'], score, gpa)
+				' VALUES ( %s, %s, %s, %s)',
+				(g.user['id'], course['cid'], score, gpa)
 			)
 			db.commit()
 			return redirect(url_for('info.index'))
 
 	return render_template('info/create.html')
+
+@bp.route('/createCourse', methods=('GET', 'POST'))
+@login_required
+def createCourse():
+	"""Create a new post for the current user."""
+	if request.method == 'POST':
+		cname = request.form['cname']
+		courseterm = request.form['courseterm']
+		coursepoint = request.form['coursepoint']
+		coursetype = request.form['coursetype']	
+		courseyear = request.form['courseyear']	
+		tname = request.form['tname']	
+		error = None
+
+		if not cname:
+			error = 'Course name is required.'
+		elif not courseterm:
+			error = 'Course term is required'
+		elif not courseterm:
+			error = 'Course point is required'
+
+		if error is not None:
+			flash(error)
+		else:
+			db = get_db()
+			cur = db.cursor()
+			cur.execute(
+				'INSERT INTO course (cname, courseyear, coursetype, courseterm, coursepoint, tname)'
+				' VALUES (%s, %s, %s, %s, %s, %s)',
+				(cname, courseyear, coursetype, courseterm, coursepoint, tname)
+			)
+			db.commit()
+			return redirect(url_for('info.index'))
+
+	return render_template('info/createCourse.html')
+	
 
 #@bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
@@ -140,6 +137,12 @@ def delete(id):
 	"""
 	get_post(id)
 	db = get_db()
+
+	Ensures that the post exists and that the logged in user is the
+	author of the post.
+	"""
+	get_post(id)
+	db = get_db()
 	db.execute('DELETE FROM post WHERE id = ?', (id,))
 	db.commit()
 	return redirect(url_for('blog.index'))
@@ -168,9 +171,3 @@ def myAnalysis():
 	
 	analysis = get_db().execute(
 		'select courseTerm, avg(score), max(score), min(score) from Performances, Courses where Performances.courseNo=Courses.courseNo'
-		'and studentNo=? group by courseTerm', (sid,)).fetchall()
-		
-	if analysis is None:
-		abort(404, "Student id{0} doesn't have any score.".format(sid))
-		
-	return jsonify(term = [x[0] for x in analysis], avg = [x[1] for x in analysis], max = [x[2] for x in analysis], min = [x[3] for x in analysis])

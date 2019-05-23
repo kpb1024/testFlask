@@ -20,6 +20,18 @@ def login_required(view):
 
 	return wrapped_view
 
+def teacher_required(view):
+        """View decorator that redirects anonymous users to the login page."""
+        @functools.wraps(view)
+        def wrapped_view(**kwargs):
+                if g.user is None:
+                        return redirect(url_for('auth.login'))
+		elif g.user['auth'] is not 1:
+			flash('Only teachers are permitted to do this.')
+                return view(**kwargs)
+
+        return wrapped_view
+
 
 @bp.before_app_request
 def load_logged_in_user():
