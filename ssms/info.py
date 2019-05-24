@@ -17,7 +17,7 @@ def index(check_author=True):
 	cur.execute(
                 'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa'
                 ' FROM studentCourse JOIN course'
-                ' WHERE id = %s',
+                ' WHERE sid = %s',
                 (id)
         )
 	courselist = get_results(cur)
@@ -137,10 +137,6 @@ def delete(id):
 	"""
 	get_post(id)
 	db = get_db()
-
-	Ensures that the post exists and that the logged in user is the
-	author of the post.
-	"""
 	get_post(id)
 	db = get_db()
 	db.execute('DELETE FROM post WHERE id = ?', (id,))
@@ -170,4 +166,4 @@ def myAnalysis():
 	sid = session['sid']
 	
 	analysis = get_db().execute(
-		'select courseTerm, avg(score), max(score), min(score) from Performances, Courses where Performances.courseNo=Courses.courseNo'
+		'select courseTerm, avg(score), max(score), min(score) from Performances, Courses where Performances.courseNo=Courses.courseNo')

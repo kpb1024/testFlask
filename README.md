@@ -73,27 +73,46 @@ testFlask
 # info.py
 from ssms.db import get_db, get_results
 
-db = get_db()
-cur = db.cursor()
-cur.execute(
-	'SELECT * FROM user WHERE auth = %s and is_male = %s ', (0, 1)
-)
-boys = get_results(cur)
-for student in boys:
-	print
-
+@bp.route('/getStudents')
+@login_required
+@teacher_required
+def getStudents():
+	if request.method == 'POST':
+                cid = request.form['cid']
+		db = get_db()
+		cur = db.cursor()
+		cur.execute(
+			'SELECT id, name FROM studentCourse JOIN student ON id = sid WHERE cid = %s', (cid)
+		)
+		students = get_results(cur)
+		return render_template('info/insertScores.html', students=students)
+	render_template('info/getStudents.html')
 ```
 ```html
-<!-- index.html  -->
-  {% for course in courses %}
-    {% for value in course.values() %}
-      <span>{{ value }}</span>
-    {% endfor %}
-  {% endfor %}
+<!-- templates/info/insertScores.html  -->
+{% for key in students[0].keys()  %}
+  <span>{{ key }}</span>
+{% endfor %}
 
+{% for student in students %}
+  {% for value in student.values() %}
+    <span>{{ value }}</span>
+  {% endfor %}
+{% endfor %}
+```
+上面的使用示例是当教师用户访问（或被导向到）info/getStudents.html 时可以使教师在<form>中输入课程序号并提交后会得到所有选了该门课的学生的学号和姓名，该方法最后将带着包含所有信息的列表对象重定向到录入分数的页面；第二段代码块是前端使用该对象的方法。
+`cur = get_db().cursor()` 获取数据库的游标，负责执行SQL语句和获取结果
+`cur.execute(sql, args)`  参数列表导入SQL语句执行，返回值为受影响的行数(affected rows)
+`students = get_results(cur)`   get_results()方法接收游标作为参数，该例中返回的结果是一个列表，列表每一项是包含每个学生信息的字典:
+```
+(
+{'id':16369028 , 'name':'康培邦'},
+{'id':163690XX , 'name':'某某某'} 
+)
 ```
 
-#auth.py
+
+# auth.py
 ## login_required
 在方法上面加`@login_required`，调用该方法必须有用户登录
 ## teacher_required
