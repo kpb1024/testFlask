@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS score;
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS teacher;
 DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS feedback;
 DROP TABLE IF EXISTS studentCourse;
 
 
@@ -47,6 +48,17 @@ CREATE TABLE studentCourse (
   dailyScore TINYINT UNSIGNED,
   dailyScoreRatio TINYINT UNSIGNED,
   finalExamScore TINYINT UNSIGNED,
+  is_checked BIT(1) DEFAULT 0,
   KEY `student` (`sid`),
   KEY `course` (`cid`)
+);
+
+CREATE TABLE feedback (
+  fid INTEGER PRIMARY KEY AUTO_INCREMENT,
+  raisedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  cname VARCHAR(20) NOT NULL,
+  reason TEXT,
+  reply TEXT,
+  is_checked_by_teacher BIT(1) DEFAULT 0,
+  is_checked_by_dean BIT(1) DEFAULT 0
 );
