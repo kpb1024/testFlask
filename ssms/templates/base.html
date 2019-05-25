@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 2 | Dashboard</title>
+  <title>学生成绩管理系统</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -61,7 +61,7 @@
                   <li><!-- start message -->
                     <a href="#">
                       <div class="pull-left">
-                        <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        <img src="static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                       </div>
                       <h4>
                         Support Team
@@ -74,7 +74,7 @@
                   <li>
                     <a href="#">
                       <div class="pull-left">
-                        <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
+                        <img src="static/dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
                       </div>
                       <h4>
                         AdminLTE Design Team
@@ -86,7 +86,7 @@
                   <li>
                     <a href="#">
                       <div class="pull-left">
-                        <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+                        <img src="static/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
                       </div>
                       <h4>
                         Developers
@@ -98,7 +98,7 @@
                   <li>
                     <a href="#">
                       <div class="pull-left">
-                        <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
+                        <img src="static/dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
                       </div>
                       <h4>
                         Sales Department
@@ -110,7 +110,7 @@
                   <li>
                     <a href="#">
                       <div class="pull-left">
-                        <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+                        <img src="static/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
                       </div>
                       <h4>
                         Reviewers
@@ -247,13 +247,13 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <img src="static/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
               <span class="hidden-xs">{{ g.user['username'] }}</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <img src="static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
                   Alexander Pierce - Web Developer
@@ -292,7 +292,7 @@
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+          <img src="static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
           <p>{{ g.user['username'] }}</p>
@@ -350,9 +350,7 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>
-        成绩查询
-      </h1>
+	{% block header %}{% endblock%}
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Dashboard</li>
@@ -362,524 +360,7 @@
     <!-- Main content -->
     <section class="content">
       <!-- Info boxes -->
-
-      <!-- /.row -->
-
-        <!-- 公告栏-->
-      <div class="row">
-        <div class="col-md-12">
-          <div class="box">
-
-            <!-- /.box-header -->
-            <div class="box-body">
-              <div class="row">
-                  <div class="col-md-8">
-                    <div class="box box-primary">
-                      <div class="box-header with-border">
-                          <h3 class="box-title">公告栏</h3>
-
-                      </div>
-                      <!-- /.box-header -->
-                      <div class="box-body">
-                          <ul class="products-list product-list-in-box">
-                              <li class="item">
-                                  <div class="product-img">
-                                      <img src="dist/img/default-50x50.gif" alt="Product Image">
-                                  </div>
-                                  <div class="product-info">
-                                      <a href="javascript:void(0)" class="product-title">教务部
-                                          <span class="label label-warning pull-right">2019-1-29</span></a>
-                                      <span class="product-description">
-                            关于2018学年第二学期（春季学期）成绩上传事项
-                        </span>
-                                  </div>
-                              </li>
-                              <!-- /.item -->
-                              <li class="item">
-                                  <div class="product-img">
-                                      <img src="dist/img/default-50x50.gif" alt="Product Image">
-                                  </div>
-                                  <div class="product-info">
-                                      <a href="javascript:void(0)" class="product-title">教务部
-                                          <span class="label label-info pull-right">2019-1-09</span></a>
-                                      <span class="product-description">
-                            教务部关于2018学年春季学期课程登记与安排的通告
-                        </span>
-                                  </div>
-                              </li>
-                              <!-- /.item -->
-                              <li class="item">
-                                  <div class="product-img">
-                                      <img src="dist/img/default-50x50.gif" alt="Product Image">
-                                  </div>
-                                  <div class="product-info">
-                                      <a href="javascript:void(0)" class="product-title">资讯管理学院教务处 <span
-                                              class="label label-danger pull-right">2019-1-19</span></a>
-                                      <span class="product-description">
-                          资讯管理学院课程成绩上传与审核通知
-                        </span>
-                                  </div>
-                              </li>
-                              <!-- /.item -->
-                          </ul>
-                      </div>
-                      <!-- /.box-body -->
-                      <div class="box-footer text-center">
-                          <a href="javascript:void(0)" class="uppercase">查看所有公告</a>
-                      </div>
-                      <!-- /.box-footer -->
-                  </div>
-                  </div>
-                <!-- /.col -->
-                  <div class="col-md-4">
-                    <div class="box box-warning direct-chat direct-chat-warning">
-                      <div class="box-header with-border">
-                          <h3 class="box-title">消息列表</h3>
-
-                      </div>
-                      <!-- /.box-header -->
-                      <div class="box-body">
-                          <!-- Conversations are loaded here -->
-                          <div class="direct-chat-messages">
-                              <!-- Message. Default to the left -->
-                              <div class="direct-chat-msg">
-                                  <div class="direct-chat-info clearfix">
-                                      <span class="direct-chat-name pull-left">资管徐健老师</span>
-                                      <span class="direct-chat-timestamp pull-right">28 Jan 2:00 pm</span>
-                                  </div>
-                                  <!-- /.direct-chat-info -->
-                                  <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
-                                  <!-- /.direct-chat-img -->
-                                  <div class="direct-chat-text">
-                                      2018年数据结构课程成绩已经上传，等待教务审核！
-                                  </div>
-                                  <!-- /.direct-chat-text -->
-                              </div>
-                              <!-- /.direct-chat-msg -->
-
-                              <!-- Message. Default to the left -->
-                              <div class="direct-chat-msg">
-                                  <div class="direct-chat-info clearfix">
-                                      <span class="direct-chat-name pull-left">资管教务柯栋老师</span>
-                                      <span class="direct-chat-timestamp pull-right">23 Jan 5:37 pm</span>
-                                  </div>
-                                  <!-- /.direct-chat-info -->
-                                  <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
-                                  <!-- /.direct-chat-img -->
-                                  <div class="direct-chat-text">
-                                      2018年离散数学课程成绩已经审核完毕，开放查询！
-                                  </div>
-                                  <!-- /.direct-chat-text -->
-                              </div>
-                              <!-- /.direct-chat-msg -->
-
-
-                              <div class="direct-chat-msg">
-                                  <div class="direct-chat-info clearfix">
-                                      <span class="direct-chat-name pull-left">资管教务柯栋老师</span>
-                                      <span class="direct-chat-timestamp pull-right">23 Jan 5:37 pm</span>
-                                  </div>
-                                  <!-- /.direct-chat-info -->
-                                  <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
-                                  <!-- /.direct-chat-img -->
-                                  <div class="direct-chat-text">
-                                      2018年离散数学课程成绩已经审核完毕，开放查询！
-                                  </div>
-                                  <!-- /.direct-chat-text -->
-                              </div>
-
-                          </div>
-                          <!--/.direct-chat-messages-->
-
-                          <!-- Contacts are loaded here -->
-                          <div class="direct-chat-contacts">
-                              <ul class="contacts-list">
-                                  <li>
-                                      <a href="#">
-                                          <img class="contacts-list-img" src="dist/img/user1-128x128.jpg" alt="User Image">
-
-                                          <div class="contacts-list-info">
-                                <span class="contacts-list-name">
-                                  Count Dracula
-                                  <small class="contacts-list-date pull-right">2/28/2015</small>
-                                </span>
-                                              <span class="contacts-list-msg">How have you been? I was...</span>
-                                          </div>
-                                          <!-- /.contacts-list-info -->
-                                      </a>
-                                  </li>
-                                  <!-- End Contact Item -->
-                                  <li>
-                                      <a href="#">
-                                          <img class="contacts-list-img" src="dist/img/user7-128x128.jpg" alt="User Image">
-
-                                          <div class="contacts-list-info">
-                                <span class="contacts-list-name">
-                                  Sarah Doe
-                                  <small class="contacts-list-date pull-right">2/23/2015</small>
-                                </span>
-                                              <span class="contacts-list-msg">I will be waiting for...</span>
-                                          </div>
-                                          <!-- /.contacts-list-info -->
-                                      </a>
-                                  </li>
-                                  <!-- End Contact Item -->
-                                  <li>
-                                      <a href="#">
-                                          <img class="contacts-list-img" src="dist/img/user3-128x128.jpg" alt="User Image">
-
-                                          <div class="contacts-list-info">
-                                <span class="contacts-list-name">
-                                  Nadia Jolie
-                                  <small class="contacts-list-date pull-right">2/20/2015</small>
-                                </span>
-                                              <span class="contacts-list-msg">I'll call you back at...</span>
-                                          </div>
-                                          <!-- /.contacts-list-info -->
-                                      </a>
-                                  </li>
-                                  <!-- End Contact Item -->
-                                  <li>
-                                      <a href="#">
-                                          <img class="contacts-list-img" src="dist/img/user5-128x128.jpg" alt="User Image">
-
-                                          <div class="contacts-list-info">
-                                <span class="contacts-list-name">
-                                  Nora S. Vans
-                                  <small class="contacts-list-date pull-right">2/10/2015</small>
-                                </span>
-                                              <span class="contacts-list-msg">Where is your new...</span>
-                                          </div>
-                                          <!-- /.contacts-list-info -->
-                                      </a>
-                                  </li>
-                                  <!-- End Contact Item -->
-                                  <li>
-                                      <a href="#">
-                                          <img class="contacts-list-img" src="dist/img/user6-128x128.jpg" alt="User Image">
-
-                                          <div class="contacts-list-info">
-                                <span class="contacts-list-name">
-                                  John K.
-                                  <small class="contacts-list-date pull-right">1/27/2015</small>
-                                </span>
-                                              <span class="contacts-list-msg">Can I take a look at...</span>
-                                          </div>
-                                          <!-- /.contacts-list-info -->
-                                      </a>
-                                  </li>
-                                  <!-- End Contact Item -->
-                                  <li>
-                                      <a href="#">
-                                          <img class="contacts-list-img" src="dist/img/user8-128x128.jpg" alt="User Image">
-
-                                          <div class="contacts-list-info">
-                                <span class="contacts-list-name">
-                                  Kenneth M.
-                                  <small class="contacts-list-date pull-right">1/4/2015</small>
-                                </span>
-                                              <span class="contacts-list-msg">Never mind I found...</span>
-                                          </div>
-                                          <!-- /.contacts-list-info -->
-                                      </a>
-                                  </li>
-                                  <!-- End Contact Item -->
-                              </ul>
-                              <!-- /.contatcts-list -->
-                          </div>
-                          <!-- /.direct-chat-pane -->
-                      </div>
-                      <!-- /.box-body -->
-                      <div class="box-footer">
-                          <form action="#" method="post">
-                              <div class="input-group">
-                                  <input type="text" name="message" placeholder="Type Message ..." class="form-control">
-                                  <span class="input-group-btn">
-                            <button type="button" class="btn btn-warning btn-flat">Send</button>
-                          </span>
-                              </div>
-                          </form>
-                      </div>
-                      <!-- /.box-footer-->
-                  </div>
-                  </div>
-                <!-- /.col -->
-              </div>
-              <!-- /.row -->
-            </div>
-            <!-- ./box-body -->
-
-            <!-- /.box-footer -->
-          </div>
-          <!-- /.box -->
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
-
-        <!-- 成绩显示栏 -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="box">
-
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <div class="tips">
-                            <h5>使用提示：</h5>
-                            <ol>
-                                <li>学年不选，学期不选，即可查询所有科目的成绩。</li>
-                                <li>在成绩查询结果表格，点击课程名称，可将该课程置灰，表格顶部总学分及总绩点实时变动，实现自定义计算绩点功能(比如置灰所有公选科目)。</li>
-                                <li>在成绩查询结果表格，点击 该科目的成绩，即可查询该科目的具体分项成绩，比如平时分+期末分，以及具体权值。</li>
-                            </ol>
-                        </div>
-                        <!-- 成绩筛选 -->
-                        <div class="grade_select" style="padding:20px">
-                            <!-- 培养类型 -->
-                            <form method="post">
-                                <span>条件筛选：</span>
-                                    <span class="div_cols" style="position: absolute;left: 10%;">
-                                        <label>课程类别：</label>
-                                        <span id="grade_slec_1">
-                                            <select name="coursetype" id="" @change='getValue'>
-                                                <option value="" selected="selected">--请选择--</option>
-                                                <option value="major" >主修</option>
-                                                <option value="minor" >辅修</option>
-        <!--                                        <option v-for='item in optionList'>{{ item }}</option>-->
-                                            </select>
-                                        </span>
-                                    </span>
-                                    <!-- 学年 -->
-                                    <span class="div_cols" style="position: absolute;left: 30%;">
-                                        <label>学年：</label>
-                                        <span id="grade_slec_2">
-                                            <select name="year" id=""  @change='getValue'>
-                                                <option value="" selected="selected">--请选择--</option>
-                                                <option value="fst" >2018-2019</option>
-                                                <option value="sec" >2017-2018</option>
-                                                <option value="trd" >2016-2017</option>
-                                            </select>
-                                        </span>
-                                    </span>
-                                    <!-- 学期 -->
-                                    <span class="div_cols" style="position: absolute;left: 50%;">
-                                        <label>学期：</label>
-                                        <span id="grade_slec_3">
-                                            <select name="term" id=""  @change='getValue'>
-                                               <option value="" selected="selected">--请选择--</option>
-                                                <option value="s1" >第一学期</option>
-                                                <option value="s2" >第二学期</option>
-                                            </select>
-                                        </span>
-                                    </span>
-                                    <!-- 查询 -->
-                                    <span class="div_cols search-bot" style="position: absolute;left: 70%;top:20%;">
-                                        <button type="submit" class="btn search_btn ng-binding" id="btn_refer"  ng-disabled="classroomForm.$invalid">
-                                            <span class="fa fa-search refer"></span>查询
-                                        </button>
-                                    </span>
-                            </form>
-                        </div>
-
-                        <!-- 成绩显示 -->
-                        <div class="box box-info">
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <div class="table-responsive">
-                                    <table class="table no-margin">
-                                        <thead>
-                                        <tr>
-                                            <th>培养类别</th>
-                                            <th>课程名称</th>
-                                            <th>授课教师</th>
-                                            <th>学年</th>
-                                            <th>学期</th>
-                                            <th>学分</th>
-                                            <th>成绩</th>
-                                            <th>绩点</th>
-<!--                                            <th>通过情况</th>-->
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for course in courses %}
-                                        <tr>
-                                            <td>{{ course['coursetype'] }}</td>
-                                            <td>{{ course['cname'] }}</td>
-                                            <td>{{ course['tname'] }}</td>
-                                            <td>{{ course['courseyear'] }}</td>
-                                            <td>{{ course['courseterm'] }}</td>
-                                            <td>{{ course['coursepoint'] }}</td>
-                                            <td>{{ course['score'] }}</td>
-                                            <td>{{ course['gpa'] }}</td>
-                                        </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.table-responsive -->
-                            </div>
-                            <!-- /.box-body -->
-                            <!-- /.box-footer -->
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-      <!-- 成绩基本概览 -->
-      <div class="row">
-        <!-- Left col -->
-        <div class="col-md-8">
-          <!-- MAP & BOX PANE -->
-          <div class="box box-success">
-            <div class="box-header with-border">
-              <h3 class="box-title">成绩走势</h3>
-
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-              </div>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body no-padding">
-              <div class="row">
-                <div class="col-md-9 col-sm-8">
-                  <div class="pad">
-                    <!-- Map will be created here -->
-                    <div id="world-map-markers" style="height: 325px;"></div>
-                  </div>
-                </div>
-                <!-- /.col -->
-                <div class="col-md-3 col-sm-4">
-                  <div class="pad box-pane-right bg-green" style="min-height: 280px">
-                    <div class="description-block margin-bottom">
-<!--                      <div class="sparkbar pad" data-color="#fff">90,70,90,70,75,80,70</div>-->
-                      <h5 class="description-header">综合绩点</h5>
-                      <span class="description-text"></span>
-                    </div>
-                    <!-- /.description-block -->
-<!--                    <div class="description-block margin-bottom">-->
-<!--                      <div class="sparkbar pad" data-color="#fff">90,50,90,70,61,83,63</div>-->
-<!--                      <h5 class="description-header">30%</h5>-->
-<!--                      <span class="description-text">Referrals</span>-->
-<!--                    </div>-->
-                    <!-- /.description-block -->
-                    <div class="description-block">
-<!--                      <div class="sparkbar pad" data-color="#fff">90,50,90,70,61,83,63</div>-->
-                      <h5 class="description-header">综合排名</h5>
-                      <span class="description-text"></span>
-                    </div>
-                    <!-- /.description-block -->
-                  </div>
-                </div>
-                <!-- /.col -->
-              </div>
-              <!-- /.row -->
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-          <div class="row">
-            <div class="col-md-6">
-              <!-- DIRECT CHAT -->
-
-              <!--/.direct-chat -->
-            </div>
-            <!-- /.col -->
-
-            <!-- /.col -->
-          </div>
-          <!-- /.row -->
-
-          <!-- TABLE: LATEST ORDERS -->
-
-          <!-- /.box -->
-        </div>
-        <!-- /.col -->
-
-        <div class="col-md-4">
-          <!-- Info Boxes Style 2 -->
-          <div class="info-box bg-yellow">
-            <span class="info-box-icon">公必</span>
-
-            <div class="info-box-content">
-              <span class="info-box-text">平均绩点</span>
-              <span class="info-box-number">5,200</span>
-
-              <div class="progress">
-                <div class="progress-bar" style="width: 50%"></div>
-              </div>
-              <span class="progress-description">
-                    完成学分：/33
-                  </span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-          <div class="info-box bg-green">
-            <span class="info-box-icon">专必</span>
-
-            <div class="info-box-content">
-              <span class="info-box-text">平均绩点</span>
-              <span class="info-box-number">92,050</span>
-
-              <div class="progress">
-                <div class="progress-bar" style="width: 20%"></div>
-              </div>
-              <span class="progress-description">
-                    完成学分：/64
-                  </span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-          <div class="info-box bg-red">
-            <span class="info-box-icon">公选</span>
-
-            <div class="info-box-content">
-              <span class="info-box-text">平均绩点</span>
-              <span class="info-box-number">114,381</span>
-
-              <div class="progress">
-                <div class="progress-bar" style="width: 70%"></div>
-              </div>
-              <span class="progress-description">
-                    完成学分：/16
-                  </span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-          <div class="info-box bg-aqua">
-            <span class="info-box-icon">专选</span>
-
-            <div class="info-box-content">
-              <span class="info-box-text">平均绩点</span>
-              <span class="info-box-number">163,921</span>
-
-              <div class="progress">
-                <div class="progress-bar" style="width: 40%"></div>
-              </div>
-              <span class="progress-description">
-                    完成学分：/32
-                  </span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-
-          <!-- /.box -->
-
-          <!-- PRODUCT LIST -->
-
-          <!-- /.box -->
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
+	{% block content %} {% endblock%}
     </section>
     <!-- /.content -->
   </div>
@@ -1089,7 +570,7 @@
 
 <!-- Vuejs -->
 <!--<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>-->
-<script src="vue.js"></script>
+<script src="static/vue.js"></script>
 <script>
     new Vue({
         el: '#grade_slec_1',
