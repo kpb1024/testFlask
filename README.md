@@ -17,8 +17,9 @@ git commit -m "$Description"
 
 
 ## 4. 获取远程仓库主分支的更新
-`git pull origin master` 会将主分支的更新拉(pull)到本地，`git checkout master`可以回到主分支查看更新
-在自己的分支下，首先`git add --all & git commit -m "$Description"`把自己的所有更新提交到版本库，然后通过`git merge master`将版本库中的主分支的内容与自己的进行合并(merge)。合并完后需要在提示了发生改变的文件中查看更改，"======"分割线会划出不同的部分。
+`git pull origin master` 会将主分支的更新拉(pull)到本地，`git checkout master`可以回到主分支查看更新;
+在自己的分支下，首先`git add --all & git commit -m "$Description"`把自己的所有更新提交到版本库，然后通过`git merge master`将版本库中的主分支的内容与自己的进行合并(merge).
+合并完后需要在提示了发生改变的文件中查看更改，"======"分割线会划出不同的部分。
 
 
 # 运行应用
@@ -100,9 +101,10 @@ def getStudents():
   {% endfor %}
 {% endfor %}
 ```
-上面的使用示例是当教师用户访问（或被导向到）info/getStudents.html 时可以使教师在<form>中输入课程序号并提交后会得到所有选了该门课的学生的学号和姓名，该方法最后将带着包含所有信息的列表对象重定向到录入分数的页面；第二段代码块是前端使用该对象的方法。
-`cur = get_db().cursor()` 获取数据库的游标，负责执行SQL语句和获取结果
-`cur.execute(sql, args)`  参数列表导入SQL语句执行，返回值为受影响的行数(affected rows)
+上面的使用示例是当教师用户访问（或被导向到）info/getStudents.html 时可以使教师在<form>中输入课程序号并提交后会得到所有选了该门课的学生的学号和姓名，
+该方法最后将带着包含所有信息的列表对象重定向到录入分数的页面；第二段代码块是前端使用该对象的方法。
+`cur = get_db().cursor()` 获取数据库的游标，负责执行SQL语句和获取结果;
+`cur.execute(sql, args)`  参数列表导入SQL语句执行，返回值为受影响的行数(affected rows);
 `students = get_results(cur)`   get_results()方法接收游标作为参数，该例中返回的结果是一个列表，列表每一项是包含每个学生信息的字典:
 ```
 (
@@ -123,6 +125,25 @@ def getStudents():
 在数据库查询成功后将重要的属性加入到 session 对象中
 ## logout
 `session.clear()`清空会话对象
+
+# 前端的网页
+所有网页都在 /ssms/templates 文件夹下，base.html 是供其他所有网页继承的主网页，提供{% block content %}和{% block header %}。
+如果一个网页相对应的后端方法在 info.py 中，那么这个网页的路由前缀为/info，且网页文件应该放在/templates/info下。
+具体使用：
+```html
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>成绩查询</h1>
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+	------
+	</div>
+{% endblock %}
+
+```
 
 
 # 备用代码——init-db
