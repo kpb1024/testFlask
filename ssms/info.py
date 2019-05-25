@@ -15,11 +15,11 @@ def index(check_author=True):
 	db = get_db()
 	cur = db.cursor()
 	cur.execute(
-                'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa'
-                ' FROM studentCourse JOIN course'
-                ' WHERE sid = %s',
-                (id)
-        )
+				'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa'
+				' FROM studentCourse JOIN course'
+				' WHERE sid = %s',
+				(id)
+		)
 	courselist = get_results(cur)
 	if courselist is None:
 		abort(404, "Student id {0} doesn't have Course score.".format(id))

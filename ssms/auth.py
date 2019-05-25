@@ -21,16 +21,15 @@ def login_required(view):
 	return wrapped_view
 
 def teacher_required(view):
-        """View decorator that redirects anonymous users to the login page."""
-        @functools.wraps(view)
-        def wrapped_view(**kwargs):
-                if g.user is None:
-                        return redirect(url_for('auth.login'))
+	def wrapped_view(**kwargs):
+		if g.user is None:
+			return redirect(url_for('auth.login'))
 		elif g.user['auth'] is not 1:
 			flash('Only teachers are permitted to do this.')
-                return view(**kwargs)
 
-        return wrapped_view
+		return view(**kwargs)
+
+	return wrapped_view
 
 
 @bp.before_app_request
@@ -71,7 +70,7 @@ def register():
 		if error is None:
 			cur.execute(
 				'INSERT INTO user (id, username, password, auth, is_male) VALUES (%s, %s, %s, %s, %s)',
-				(id, username,  generate_password_hash(password), 0, 1)
+				(id, username,	generate_password_hash(password), 0, 1)
 			)
 			cur.execute(
 				'INSERT INTO student (id, name) VALUES (%s, %s)',
