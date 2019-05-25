@@ -11,7 +11,8 @@ def create_app(test_config=None):
 	#os.makedirs(app.instance_path)
 	MYSQL_DATABASE_USER='root',
 	MYSQL_DATABASE_PASSWORD='13148899',
-	MYSQL_DATABASE_DB='ssms'
+	MYSQL_DATABASE_DB='ssms',
+	MYSQL_DATABASE_HOST='129.204.15.237'
     )
 
     from ssms import db
