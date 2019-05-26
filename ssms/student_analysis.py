@@ -63,8 +63,12 @@ def score_distribution(sid):
 def top_subject(sid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select score, gpa, course.cid cid from course, studentCourse where sid = %s and course.cid = studentCourse.cid order by gpa desc limit 3', (sid))
-	top_subject = get_results(cur)
+	i = cur.execute('select score, gpa, course.cid cid, course.cname cname from course, studentCourse where sid = %s and course.cid = studentCourse.cid and score >= 90 order by gpa desc limit 3', (sid))
+	if i != 0:
+		top_subject = get_results(cur)
+	else:
+		cur.execute('select score, gpa, course.cid cid, course.cname cname from course, studentCourse where sid = %s and course.cid = studentCourse.cid order by gpa desc limit 1', (sid))
+		top_subject = get_results(cur)
 	return top_subject
 
 # 5. 劣势学科
@@ -72,8 +76,12 @@ def top_subject(sid):
 def worst_subject(sid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select score, gpa, course.cid cid from course, studentCourse where sid = %s and course.cid = studentCourse.cid order by gpa limit 3', (sid))
-	worse_subject = get_results(cur)
+	i = cur.execute('select score, gpa, course.cid cid, course.cname cname from course, studentCourse where sid = %s and course.cid = studentCourse.cid and score <= 70 order by gpa limit 3', (sid))
+	if i != 0:
+		worse_subject = get_results(cur)
+	else:
+		cur.execute('select score, gpa, course.cid cid, course.cname cname from course, studentCourse where sid = %s and course.cid = studentCourse.cid order by gpa limit 1', (sid))
+		worse_subject = get_results(cur)
 	return worse_subject
 	
 # 指定课程平均分 表
@@ -108,9 +116,27 @@ def student_rank(cid, sid):
 def course_score(cid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select score from studentCourse where cid = %s', (cid))
-	course_score = get_results(cur)
-	return course_score
+	cur.execute(
+		'select count(*) 小于60 from studentCourse where cid = %s and score < 60',
+		(cid))
+	score_distribution = get_results(cur)
+	cur.execute(
+		'select count(*) 60至70 from studentCourse where cid = %s and score >= 60 and score < 70',
+		(cid))
+	score_distribution.extend(get_results(cur))
+	cur.execute(
+		'select count(*) 70至80 from studentCourse where cid = %s and score >= 70 and score < 80',
+		(cid))
+	score_distribution.extend(get_results(cur))
+	cur.execute(
+		'select count(*) 80至90 from studentCourse where cid = %s and score >= 80 and score < 90',
+		(cid))
+	score_distribution.extend(get_results(cur))
+	cur.execute(
+		'select count(*) 90至100 from studentCourse where cid = %s and score >= 90',
+		(cid))
+	score_distribution.extend(get_results(cur))
+	return score_distribution
 
 # 6. 成绩分布	表
 # tested
@@ -120,3 +146,13 @@ def course_info(cid):
 	cur.execute('select avg(score) avg, max(score) max, count(score > 85 or null)/ count(*) good from studentCourse where cid = %s', (cid))
 	course_info = get_results(cur)
 	return course_info
+
+#6. 获得所有参加过的课程
+
+def course_involve(sid):
+	db = get_db()
+	cur = db.cursor()
+	cur.execute('select course.cid, cname from course, studentCourse where sid = %s and studentCourse.cid = course.cid', (sid))
+	course_involve = get_results(cur)
+	return course_involve
+

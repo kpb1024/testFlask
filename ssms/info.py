@@ -5,7 +5,7 @@ from flask.json import jsonify
 from werkzeug.exceptions import abort
 from ssms.auth import login_required
 from ssms.db import get_db, get_results
-from ssms.student_analysis import avg_coursetype, total_point, total_avg_gpa, courseterm_rank, score_distribution, top_subject, worst_subject, course_avg, course_count, student_rank, course_score, course_info
+from ssms.student_analysis import avg_coursetype, total_point, total_avg_gpa, courseterm_rank, score_distribution, top_subject, worst_subject, course_avg, course_count, student_rank, course_score, course_info, course_involve
 
 bp = Blueprint('info', __name__)
 
@@ -200,4 +200,73 @@ def score_pie():
 			score_list.append(score_dict)
 		
 	return jsonify(score_list)
+
+@bp.route('/sw_analysis', methods=('GET', 'POST'))
+@login_required
+def sw_analysis():
+	sid = session['id']
+	sw_list = {}
+	s_list = []
+	tp_subject = top_subject(sid)
+	for subject in tp_subject:
+		course = {}
+		course['cname'] = subject['cname']
+		course['score'] = subject['score']
+		course['gpa'] = subject['gpa']
+		course['course_count'] = course_count(subject['cid'])[0]['count']
+		course['course_avg'] = course_avg(subject['cid'])[0]['avg']
+		course['student_rank'] = student_rank(subject['cid'], sid)[0]['rnk']
+		s_list.append(course)
+	sw_list['s_list'] = s_list
+	w_list = []
+	wt_subject = worst_subject(sid)
+	for subject in wt_subject:
+		course = {}
+		course['cname'] = subject['cname']
+		course['score'] = subject['score']
+		course['gpa'] = subject['gpa']
+		course['course_count'] = course_count(subject['cid'])[0]['count']
+		course['course_avg'] = course_avg(subject['cid'])[0]['avg']
+		course['student_rank'] = student_rank(subject['cid'], sid)[0]['rnk']
+		w_list.append(course)
+	sw_list['w_list'] = w_list
+	return render_template('info/sw_analysis.html', sw_list=sw_list)
+
+
+@bp.route('/sco_distribution', methods=('GET', 'POST'))
+@login_required
+def sco_distribution():
+	sid = session['id']
+	involve = course_involve(sid)
+	courses = []
+	for course in involve:
+		cid = course['cid']
+		subject = {}
+		c = course_info(cid)
+		subject['cid'] = cid
+		subject['cname'] = course['cname']
+		subject['avg'] = c[0]['avg']
+		subject['max'] = c[0]['max']
+		subject['good'] = c[0]['good']
+		courses.append(subject)
+	return render_template('info/score_distribution.html', courses=courses)
+
+
+@bp.route('/score_distribution_graph/<cid>', methods=('GET', 'POST'))
+@login_required
+def score_distribution_graph(cid):
+	score_dis = course_score(cid)
+	score = {}
+	range = []
+	count = []
+	for s in score_dis:
+		for key, value in s.items():
+			range.append(key)
+			count.append(value)
+	score['range'] = range
+	score['count'] = count
+	return jsonify(score)
+
+
+
 
