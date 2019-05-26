@@ -5,7 +5,7 @@ from flask.json import jsonify
 from werkzeug.exceptions import abort
 from ssms.auth import login_required
 from ssms.db import get_db, get_results
-from ssms.student_analysis import *
+from ssms.student_analysis import avg_coursetype, total_point, total_avg_gpa, courseterm_rank, score_distribution, top_subject, worst_subject, course_avg, course_count, student_rank, course_score, course_info
 
 bp = Blueprint('info', __name__)
 
@@ -175,12 +175,14 @@ def total_rank():
 @login_required
 def term_rank():
 	sid = session['id']
-	courseterm_rank = courseterm_rank(sid)
+	term_rank = courseterm_rank(sid)
 	courseterm = []
 	rank = []
-	for cr in courseterm_rank:
+	for cr in term_rank:
 		courseterm.append(cr['courseterm'])
 		rank.append(cr['totalrank'])
+	print(courseterm)
+	print(rank)
 	return jsonify(term=courseterm, rnk=rank)
 
 
@@ -191,14 +193,11 @@ def score_pie():
 	score_list = []
 	distribution = score_distribution(sid)
 	for score in distribution:
-		score_dict = {}
-		score_dict['name'] = list(score.keys())[0]
-		score_dict['value'] = score.values()[0]
-		score_list.append(score_dict)
+		if list(score.values())[0] != 0:
+			score_dict = {}
+			score_dict['name'] = list(score.keys())[0]
+			score_dict['value'] = list(score.values())[0]
+			score_list.append(score_dict)
 		
 	return jsonify(score_list)
 
-
-
-	
-	

@@ -162,9 +162,11 @@
         }]
     });
     myChart.showLoading();
+    alert('loading');
     $.getJSON(url).done(function(json){
         myChart.hideLoading();
         term = json.term;
+        alert(term)
         avg = json.avg;
         max = json.max;
         min = json.min;

@@ -322,8 +322,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            {% if g.user['auth'] = 0 %} <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> 学生成绩分析</a></li> {% endif %}
-			{% if g.user['auth'] = 0 %} <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> 教师成绩分析</a></li> {% endif %}
+            {% if g.user['auth'] == 0 %} <li><a href="{{ url_for('info.total_rank') }}"><i class="fa fa-circle-o"></i> 学生成绩分析</a></li> {% endif %}
+			{% if g.user['auth'] == 1 %} <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> 教师成绩分析</a></li> {% endif %}
           </ul>
         </li>
         <li class="treeview">

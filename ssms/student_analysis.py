@@ -5,7 +5,7 @@ from ssms.db import get_db, get_results
 def avg_coursetype(sid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select avg(gpa) gpa, coursetype, sum(coursepoint) coursepoint from course, studentCourse where sid = ? and course.cid = studentCourse.cid group by coursetype', (sid))
+	cur.execute('select avg(gpa) gpa, coursetype, sum(coursepoint) coursepoint from course, studentCourse where sid = %s and course.cid = studentCourse.cid group by coursetype', (sid))
 	avg_coursetype = get_results(cur)
 	return avg_coursetype
 	
@@ -13,15 +13,16 @@ def avg_coursetype(sid):
 def total_point(sid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select sum(coursepoint) totalpoint from course, studentCourse where sid = ? and course.cid = studentCourse.cid', (sid))
+	cur.execute('select sum(coursepoint) totalpoint from course, studentCourse where sid = %s and course.cid = studentCourse.cid', (sid))
 	total_point = get_results(cur)
-	return total_point
+	point = total_point
+	return point
 
 # tested	
 def total_avg_gpa(sid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select sum(sc)/sum(coursepoint) avggpa from (select gpa*coursepoint sc, coursepoint from course, studentCourse where sid = ? and course.cid = studentCourse.cid) as s', (sid))
+	cur.execute('select sum(sc)/sum(coursepoint) avggpa from (select gpa*coursepoint sc, coursepoint from course, studentCourse where sid = %s and course.cid = studentCourse.cid) as s', (sid))
 	total_avg_gpa = get_results(cur)
 	return total_avg_gpa
 
@@ -30,8 +31,14 @@ def total_avg_gpa(sid):
 def courseterm_rank(sid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select courseterm, rank() over(order by avggpa desc) totalrank from (select sum(sc)/sum(coursepoint) avggpa, courseterm from (select gpa*coursepoint sc, coursepoint, courseterm from course, studentCourse where sid = ? and course.cid = studentCourse.cid) as s group by courseterm) as c', (sid))
-	total_avg_gpa = get_results(cur)
+	sql = '''
+	select totalrank, courseterm from (
+	select sid, courseterm, row_number() over(PARTITION by courseterm order by avggpa desc) totalrank from (
+	select sum(sc)/sum(coursepoint) avggpa, courseterm, sid from (
+	select gpa*coursepoint sc, coursepoint, courseterm, sid from course, studentCourse where course.cid = studentCourse.cid) as s group by courseterm, sid) as s) as s where sid = %s
+	'''
+	cur.execute(sql, (sid))
+	courseterm_rank = get_results(cur)
 	return courseterm_rank
 	
 # 3. 个人成绩分布图
@@ -39,15 +46,15 @@ def courseterm_rank(sid):
 def score_distribution(sid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select count(*) 小于60 from course, studentCourse where sid = ? and course.cid = studentCourse.cid and score < 60', (sid))
+	cur.execute('select count(*) 小于60 from course, studentCourse where sid = %s and course.cid = studentCourse.cid and score < 60', (sid))
 	score_distribution = get_results(cur)
-	cur.execute('select count(*) 60至70 from course, studentCourse where sid = ? and course.cid = studentCourse.cid and score >= 60 and score < 70', (sid))
+	cur.execute('select count(*) 60至70 from course, studentCourse where sid = %s and course.cid = studentCourse.cid and score >= 60 and score < 70', (sid))
 	score_distribution.extend(get_results(cur))
-	cur.execute('select count(*) 70至80 from course, studentCourse where sid = ? and course.cid = studentCourse.cid and score >= 70 and score < 80', (sid))
+	cur.execute('select count(*) 70至80 from course, studentCourse where sid = %s and course.cid = studentCourse.cid and score >= 70 and score < 80', (sid))
 	score_distribution.extend(get_results(cur))
-	cur.execute('select count(*) 80至90 from course, studentCourse where sid = ? and course.cid = studentCourse.cid and score >= 80 and score < 90', (sid))
+	cur.execute('select count(*) 80至90 from course, studentCourse where sid = %s and course.cid = studentCourse.cid and score >= 80 and score < 90', (sid))
 	score_distribution.extend(get_results(cur))
-	cur.execute('select count(*) 90至100 from course, studentCourse where sid = ? and course.cid = studentCourse.cid and score >= 90', (sid))
+	cur.execute('select count(*) 90至100 from course, studentCourse where sid = %s and course.cid = studentCourse.cid and score >= 90', (sid))
 	score_distribution.extend(get_results(cur))
 	return score_distribution
 	
@@ -56,7 +63,7 @@ def score_distribution(sid):
 def top_subject(sid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select score, gpa, course.cid cid from course, studentCourse where sid = ? and course.cid = studentCourse.cid order by gpa desc limit 3', (sid))
+	cur.execute('select score, gpa, course.cid cid from course, studentCourse where sid = %s and course.cid = studentCourse.cid order by gpa desc limit 3', (sid))
 	top_subject = get_results(cur)
 	return top_subject
 
@@ -65,7 +72,7 @@ def top_subject(sid):
 def worst_subject(sid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select score, gpa, course.cid cid from course, studentCourse where sid = ? and course.cid = studentCourse.cid order by gpa limit 3', (sid))
+	cur.execute('select score, gpa, course.cid cid from course, studentCourse where sid = %s and course.cid = studentCourse.cid order by gpa limit 3', (sid))
 	worse_subject = get_results(cur)
 	return worse_subject
 	
@@ -74,7 +81,7 @@ def worst_subject(sid):
 def course_avg(cid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select avg(score) avg from studentCourse where cid = ?', (cid))
+	cur.execute('select avg(score) avg from studentCourse where cid = %s', (cid))
 	course_avg = get_results(cur)
 	return course_avg
 	
@@ -83,7 +90,7 @@ def course_avg(cid):
 def course_count(cid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select count(*) count from studentCourse where cid = ?', (cid))
+	cur.execute('select count(*) count from studentCourse where cid = %s', (cid))
 	course_count = get_results(cur)
 	return course_count
 	
@@ -92,7 +99,7 @@ def course_count(cid):
 def student_rank(cid, sid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select rank() over(order by score desc) rnk from (select * from studentCourse where cid = ?) as s where sid = ?', (cid, sid))
+	cur.execute('select rank() over(order by score desc) rnk from (select * from studentCourse where cid = %s) as s where sid = %s', (cid, sid))
 	student_rank = get_results(cur)
 	return student_rank
 
@@ -101,7 +108,7 @@ def student_rank(cid, sid):
 def course_score(cid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select score from studentCourse where cid = ?', (cid))
+	cur.execute('select score from studentCourse where cid = %s', (cid))
 	course_score = get_results(cur)
 	return course_score
 
@@ -110,6 +117,6 @@ def course_score(cid):
 def course_info(cid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select avg(score) avg, max(score) max, count(score > 85 or null)/ count(*) good from studentCourse where cid = ?', (cid))
+	cur.execute('select avg(score) avg, max(score) max, count(score > 85 or null)/ count(*) good from studentCourse where cid = %s', (cid))
 	course_info = get_results(cur)
 	return course_info
