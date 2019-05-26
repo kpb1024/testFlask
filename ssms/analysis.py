@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#coding:utf-8
 from ssms.db import get_db, get_results
 
 # 1. 综合排名

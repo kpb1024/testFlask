@@ -5,7 +5,7 @@ from flask.json import jsonify
 from werkzeug.exceptions import abort
 from ssms.auth import login_required
 from ssms.db import get_db, get_results
-from ssms.student_analysis import avg_coursetype, total_point, total_avg_gpa, courseterm_rank, score_distribution, top_subject, worst_subject, course_avg, course_count, student_rank, course_score, course_info, course_involve
+from ssms.analysis import * 
 
 bp = Blueprint('info', __name__)
 
