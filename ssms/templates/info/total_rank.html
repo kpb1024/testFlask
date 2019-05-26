@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block header %}
+<h1>综合成绩分析</h1>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <!-- TOTAL RANK TABLE -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">综合分析表</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table class="table no-margin">
+                        <thead>
+                        <tr>
+                            <th>学科类别</th>
+                            <th>已修学分</th>
+                            <th>平均学分绩点</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for score in scores['avg_coursetype'] %}
+                        <tr>
+                            <td>{{ score['coursetype'] }}</td>
+                            <td>{{ score['coursepoint'] }}</td>
+                            <td>{{ score['gpa'] }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>综合</td>
+                            <td>{{ scores['total_point'][0]['totalpoint'] }}</td>
+                            <td>{{ scores['total_avg_gpa'][0]['avggpa'] }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="box box-danger">
+            <div class="box-header with-border">
+                <h3 class="box-title">综合分析图</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div id="myChart" class="responsive" style="width: 100%; height:500px; margin: 0 auto;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">成绩分布图</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+                <div class="box-body">
+                    <div id="myChart-2" class="responsive" style="width: 100%; height:500px; margin: 0 auto;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.common.js"></script>
+{#<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.simple.js"></script>#}
+<script src="http://libs.baidu.com/jquery/1.7.2/jquery.js"></script>
+<script type="text/javascript">
+var myChart = echarts.init(document.getElementById('myChart'))
+var url = "{{ url_for('info.term_rank') }}"
+myChart.setOption({
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            label: {
+                backgroundColor: '#6a7985'
+            }
+        }
+    },
+    legend: {
+        data: ['综合排名']
+    },
+    xAxis: {
+        type: 'category',
+        data: [],
+        boundaryGap: false
+    },
+    yAxis: {
+        name: '排名',
+        type: 'value'
+    },
+    series: [{
+        name: '综合排名',
+        data: [],
+        type: 'line',
+        smooth: true
+    }]
+});
+myChart.showLoading();
+$.getJSON(url).done(function (json) {
+    myChart.hideLoading();
+    term = json.term;
+    rank = json.rnk;
+    myChart.setOption({
+        xAxis: {
+            data: term
+        },
+        series: [{
+            name: '综合排名',
+            data: rank
+        }]
+    })
+})
+
+window.onresize = function(){
+    myChart.resize();
+}
+</script>
+<script type="text/javascript">
+var myChart2 = echarts.init(document.getElementById('myChart-2'));
+var url = "{{ url_for('info.score_pie') }}";
+myChart2.setOption({
+    tooltip: {
+        show: true,
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    visualMap: {
+        show: false,
+        min: 80,
+        max: 600,
+        inRange: {
+            colorLightness: [0, 1]
+        }
+    },
+    series: [{
+        name: '成绩',
+        type: 'pie',
+        radius: '55%',
+        center: ['50%', '50%'],
+        data:[],
+        roseType: 'radius',
+        label: {
+            normal: {
+              textStyle: {
+                  color: 'rgba(0, 0, 0, 0.7)'
+              }
+            }
+        },
+        labelLine: {
+            normal: {
+                lineStyle: {
+                    color: 'rgba(0, 0, 0, 0.7)'
+                },
+                smooth: 0.2,
+                length: 10,
+                length2: 20
+            }
+        },
+        itemStyle: {
+            normal: {
+                color: '#47abc2',
+                shadowBlur: 200,
+                shadowColor: 'rgba(71,171,194,0.5)'
+            }
+        },
+        animationType: 'scale',
+        animationEasing: 'elasticOut',
+        animationDelay: function(idx){
+            return Math.random() * 200;
+        }
+    }]
+})
+myChart2.showLoading();
+$.getJSON(url).done(
+    function (json) {
+        myChart2.hideLoading();
+        score = json;
+        myChart2.setOption({
+            series: {
+                data: score
+            }
+        })
+    }
+)
+</script>
+{% endblock %}

@@ -5,6 +5,7 @@ from flask.json import jsonify
 from werkzeug.exceptions import abort
 from ssms.auth import login_required
 from ssms.db import get_db, get_results
+from ssms.student_analysis import avg_coursetype, total_point, total_avg_gpa, courseterm_rank, score_distribution, top_subject, worst_subject, course_avg, course_count, student_rank, course_score, course_info, course_involve
 
 bp = Blueprint('info', __name__)
 
@@ -126,7 +127,6 @@ def update(id):
 
 	return render_template('blog/update.html', post=post)
 
-
 #@bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
@@ -160,10 +160,113 @@ def myScore():
 		results.append({'courseName': x[0], 'score': x[1], 'GPA': x[2], 'rank': x[3], 'entryStatus': x[4]})
 	return render_template('info/myScore.html', scores=results)
 
-@bp.route('/myAnalysis', methods=('GET', 'POST'))
-@login_required	
-def myAnalysis():
-	sid = session['sid']
-	
-	analysis = get_db().execute(
-		'select courseTerm, avg(score), max(score), min(score) from Performances, Courses where Performances.courseNo=Courses.courseNo')
+@bp.route('/total_rank', methods=('GET', 'POST'))
+@login_required		
+def total_rank():
+	total_rank = {}
+	sid = session['id']
+	total_rank['avg_coursetype'] = avg_coursetype(sid)
+	total_rank['total_point'] = total_point(sid)
+	total_rank['total_avg_gpa'] = total_avg_gpa(sid)
+	return render_template('info/total_rank.html', scores=total_rank)
+
+
+@bp.route('/term_rank', methods=('GET', 'POST'))
+@login_required
+def term_rank():
+	sid = session['id']
+	term_rank = courseterm_rank(sid)
+	courseterm = []
+	rank = []
+	for cr in term_rank:
+		courseterm.append(cr['courseterm'])
+		rank.append(cr['totalrank'])
+	print(courseterm)
+	print(rank)
+	return jsonify(term=courseterm, rnk=rank)
+
+
+@bp.route('/score_pie', methods=('GET', 'POST'))
+@login_required
+def score_pie():
+	sid = session['id']
+	score_list = []
+	distribution = score_distribution(sid)
+	for score in distribution:
+		if list(score.values())[0] != 0:
+			score_dict = {}
+			score_dict['name'] = list(score.keys())[0]
+			score_dict['value'] = list(score.values())[0]
+			score_list.append(score_dict)
+		
+	return jsonify(score_list)
+
+@bp.route('/sw_analysis', methods=('GET', 'POST'))
+@login_required
+def sw_analysis():
+	sid = session['id']
+	sw_list = {}
+	s_list = []
+	tp_subject = top_subject(sid)
+	for subject in tp_subject:
+		course = {}
+		course['cname'] = subject['cname']
+		course['score'] = subject['score']
+		course['gpa'] = subject['gpa']
+		course['course_count'] = course_count(subject['cid'])[0]['count']
+		course['course_avg'] = course_avg(subject['cid'])[0]['avg']
+		course['student_rank'] = student_rank(subject['cid'], sid)[0]['rnk']
+		s_list.append(course)
+	sw_list['s_list'] = s_list
+	w_list = []
+	wt_subject = worst_subject(sid)
+	for subject in wt_subject:
+		course = {}
+		course['cname'] = subject['cname']
+		course['score'] = subject['score']
+		course['gpa'] = subject['gpa']
+		course['course_count'] = course_count(subject['cid'])[0]['count']
+		course['course_avg'] = course_avg(subject['cid'])[0]['avg']
+		course['student_rank'] = student_rank(subject['cid'], sid)[0]['rnk']
+		w_list.append(course)
+	sw_list['w_list'] = w_list
+	return render_template('info/sw_analysis.html', sw_list=sw_list)
+
+
+@bp.route('/sco_distribution', methods=('GET', 'POST'))
+@login_required
+def sco_distribution():
+	sid = session['id']
+	involve = course_involve(sid)
+	courses = []
+	for course in involve:
+		cid = course['cid']
+		subject = {}
+		c = course_info(cid)
+		subject['cid'] = cid
+		subject['cname'] = course['cname']
+		subject['avg'] = c[0]['avg']
+		subject['max'] = c[0]['max']
+		subject['good'] = c[0]['good']
+		courses.append(subject)
+	return render_template('info/score_distribution.html', courses=courses)
+
+
+@bp.route('/score_distribution_graph/<cid>', methods=('GET', 'POST'))
+@login_required
+def score_distribution_graph(cid):
+	score_dis = course_score(cid)
+	score = {}
+	range = []
+	count = []
+	for s in score_dis:
+		for key, value in s.items():
+			range.append(key)
+			count.append(value)
+	score['range'] = range
+	score['count'] = count
+	return jsonify(score)
+
+
+
+
