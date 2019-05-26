@@ -5,6 +5,7 @@ from flask.json import jsonify
 from werkzeug.exceptions import abort
 from ssms.auth import login_required
 from ssms.db import get_db, get_results
+from student_analysis import *
 
 bp = Blueprint('info', __name__)
 
@@ -125,7 +126,7 @@ def update(id):
 			return redirect(url_for('blog.index'))
 
 	return render_template('blog/update.html', post=post)
-
+`
 
 #@bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
@@ -160,10 +161,70 @@ def myScore():
 		results.append({'courseName': x[0], 'score': x[1], 'GPA': x[2], 'rank': x[3], 'entryStatus': x[4]})
 	return render_template('info/myScore.html', scores=results)
 
-@bp.route('/myAnalysis', methods=('GET', 'POST'))
+@bp.route('/studentAnal', methods=('GET', 'POST'))
 @login_required	
-def myAnalysis():
-	sid = session['sid']
+def studentAnal():
+	sid = session['id']
+	avg_coursetype = avg_coursetype(sid)
+	total_point = total_point(sid)
+	total_avg_gpa = total_avg_gpa(sid)
+	courseterm_rank = courseterm_rank(sid)
+	score_distribution = score_distribution(sid)
+	top_subject = top_subject(sid)
+	course_avg = []
+	course_count = []
+	student_rank = []
+	for subject in top_subject:
+		course_avg.extend(course_avg(subject['cid']))
+		course_count.extend(course_count(subject['cid']))
+		student_rank.extend(student_rank(subject['cid']))
 	
-	analysis = get_db().execute(
-		'select courseTerm, avg(score), max(score), min(score) from Performances, Courses where Performances.courseNo=Courses.courseNo')
+	worst_subject = worst_subject(sid)
+	worst_course_avg = []
+	worst_course_count = []
+	worst_student_rank = []
+	for subject in top_subject:
+		worst_course_avg.extend(course_avg(subject['cid']))
+		worst_course_count.extend(course_count(subject['cid']))
+		worst_student_rank.extend(student_rank(subject['cid']))
+
+@bp.route('/total_rank', methods=('GET', 'POST'))
+@login_required		
+def total_rank():
+	total_rank = {}
+	sid = session['id']
+	total_rank['avg_coursetype'] = avg_coursetype(sid)
+	total_rank['total_point'] = total_point(sid)
+	total_rank['total_avg_gpa'] = total_avg_gpa(sid)
+	return render_template('info/total_rank.html', scores=total_rank)
+
+@bp.route('/term_rank', methods=('GET', 'POST'))
+@login_required
+def term_rank():
+	sid = session['id']
+	courseterm_rank = courseterm_rank(sid)
+	courseterm = []
+	rank = []
+	for cr in courseterm_rank:
+		courseterm.append(cr['courseterm'])
+		rank.append(cr['totalrank'])
+	return jsonify(term = courseterm, rnk = rank)
+
+@bp.route('/score_pie', methods=('GET', 'POST'))
+@login_required
+def score_pie():
+	sid = session['id']
+	score_list = []
+	distribution = score_distribution(sid)
+	for score in distribution:
+		score_dict = {}
+		score_dict['name'] = list(score.keys())[0]
+		score_dict['value'] = score.values()[0]
+		score_list.append(score_dict)
+		
+	return jsonify(score_list)
+
+
+
+	
+	
