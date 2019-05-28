@@ -1,27 +1,22 @@
-{% extends 'base.html' %}
-
-{% block header %}
-  <h1>{% block title %}登录{% endblock %}</h1>
-{% endblock %}
+{% extends 'authbase.html' %}
 
 {% block content %}
-  <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
-  <form id="myform" method="post">
-    <label for="username">NetID</label>
-    <input name="username" id="username" required>
-    <label for="password">密码</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" volue="Submit">
-  </form>
-  <button style="width:310px;height:40px;" id="TencentCaptcha" data-appid="2027467746" data-cbfn="callback">验证码登录</button>
-  <script>
-  window.callback = function(res){
-      console.log(res)
-      // res（用户主动关闭验证码）= {ret: 2, ticket: null}
-      // res（验证成功） = {ret: 0, ticket: "String", randstr: "String"}
-      if(res.ret === 0){
-          document.getElementById("myform").submit();
-      }
-  }
-  </script>
+<h3 class="page-title">登录学生成绩管理系统</h3>
+<form id="myform" method="post">
+	<div class="form-container">
+		<div class="form-group">
+			<input type="text" class="form-control" name="username" id="username" placeholder="姓名" autocomplete="current-username" required>
+		</div>
+		<div class="form-group">
+			<input type="password" class="form-control" name="password" id="password" placeholder="密码" autocomplete="current-password" required>
+		</div>
+		<div class="form_group">
+			<button class="btn btn-primary btn-block">登录</button>
+		</div>
+
+	</div>
+</form>
+<div style="text-align:right">
+	<button class="btn btn-primary"  id="TencentCaptcha" data-appid="2027467746" data-cbfn="callback">验证码登录</button>
+</div>
 {% endblock %}

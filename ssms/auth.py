@@ -61,16 +61,16 @@ def register():
 		password = request.form['password']
 		id = request.form['id']
 		sname	 = request.form['sname']
-		db = get_db()
-		cur = db.cursor()
+		auth = request.form['auth']
+		is_male = request.form['is_male']
+		cur = get_db().cursor()
 		error = None
-
 		if cur.execute('SELECT id FROM user WHERE username = %s', (username)) is not 0:
 			error = 'NetID {0} is already registered.'.format(username)
 		if error is None:
 			cur.execute(
 				'INSERT INTO user (id, username, password, auth, is_male) VALUES (%s, %s, %s, %s, %s)',
-				(id, username,	generate_password_hash(password), 0, 1)
+				(id, username,	generate_password_hash(password), auth, is_male)
 			)
 			cur.execute(
 				'INSERT INTO student (id, name) VALUES (%s, %s)',
