@@ -1,3 +1,6 @@
+#!/usr/bin/python
+#coding:utf-8
+
 from flask import (
 	Blueprint, flash, g, session, redirect, render_template, request, url_for, current_app
 )
@@ -11,7 +14,7 @@ bp = Blueprint('info', __name__)
 
 @bp.route('/')
 @login_required
-def index(check_author=True):
+def index():
 	id = session['id']
 	db = get_db()
 	cur = db.cursor()
@@ -98,7 +101,53 @@ def createCourse():
 			return redirect(url_for('info.index'))
 
 	return render_template('info/createCourse.html')
+
+@bp.route('/proposal', methods=('GET', 'POST'))
+@login_required
+def proposal():
+	db = get_db()
+        cur = db.cursor()
+        cur.execute(
+		'SELECT course.cid, cname'
+		' FROM studentCourse JOIN course'
+		' WHERE sid = %s',
+		(g.user['id'])
+	)
+	courses = get_results(cur)
+	db.commit()
+        if request.method == 'POST':
+                cid = request.form['course']
+                reason = request.form['reason']
+                error = None
+                if not cid:
+                        error = 'Course name is required.'
+                elif not reason:
+                        error = 'Reason is required'
+                if error is not None:
+                        flash(error)
+                else:
+                        db = get_db()
+                        cur = db.cursor()
+                        cur.execute(
+                                'INSERT INTO proposal(sid, cid, reason)'
+				'values(%s, %s, %s)'
+				, (g.user['id'], cid, reason)
+                        )
+                        db.commit()
+			flash('成功提交！')
+                        return redirect(url_for('info.showProposal'))
 	
+        return render_template('info/proposal.html', courses = courses)
+
+@bp.route('/showProposal', methods=('GET', 'POST'))
+@login_required
+def showProposal():
+        db = get_db()
+        cur = db.cursor()
+	id = g.user['id']
+        cur.execute('select * from proposal where sid = %s', id)
+        proposals = get_results(cur)
+	return render_template('info/showProposal.html', proposals = proposals)
 
 #@bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required

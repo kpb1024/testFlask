@@ -52,10 +52,11 @@ CREATE TABLE studentCourse (
   KEY 'cid' ('cid')
 );
 
-CREATE TABLE feedback (
-  fid INTEGER PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE proposal (
+  pid INTEGER PRIMARY KEY AUTO_INCREMENT,
   raisedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  cname VARCHAR(20) NOT NULL,
+  sid INTEGER UNSIGNED NOT NULL REFERENCES student (id),
+  cid INTEGER UNSIGNED NOT NULL REFERENCES course (cid),
   reason TEXT,
   reply TEXT,
   is_checked_by_teacher TINYINT(1) DEFAULT 0,
