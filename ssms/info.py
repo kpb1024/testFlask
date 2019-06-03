@@ -12,28 +12,38 @@ from ssms.analysis import *
 
 bp = Blueprint('info', __name__)
 
-@bp.route('/')
+@bp.route('/', methods=('GET','POST'))
 @login_required
 def index():
 	id = session['id']
 	db = get_db()
 	cur = db.cursor()
-	cur.execute(
-				'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa'
-				' FROM studentCourse JOIN course'
-				' WHERE sid = %s',
-				(id)
+	if request.method == 'POST':
+		coursetype = request.form['coursetype']
+		courseyear = request.form['courseyear']
+		courseterm = request.form['courseterm']
+		cur.execute(
+			'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa '
+			'FROM studentCourse sc JOIN course c where sc.cid = c.cid and '
+			'coursetype = %s and courseyear = %s and courseterm = %s and sid=%s',
+			(coursetype, courseyear, courseterm, id)
 		)
+		courselist = get_results(cur)
+		return render_template('info/index.html', courses=courselist)
+	cur.execute(
+		'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa '
+		'FROM studentCourse sc JOIN course c where sc.cid = c.cid and '
+		'sid=%s',
+		(id)
+	)
 	courselist = get_results(cur)
-	if courselist is None:
+	if len(courselist) is 0:
 		abort(404, "Student id {0} doesn't have Course score.".format(id))
-
 	return render_template('info/index.html', courses=courselist)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
-	"""Create a new post for the current user."""
 	if request.method == 'POST':
 		cname = request.form['cname']
 		score = request.form['score']
@@ -107,7 +117,7 @@ def createCourse():
 def proposal():
 	db = get_db()
         cur = db.cursor()
-        cur.execute(
+	cur.execute(
 		'SELECT course.cid, cname'
 		' FROM studentCourse JOIN course'
 		' WHERE sid = %s',
@@ -315,7 +325,5 @@ def score_distribution_graph(cid):
 	score['range'] = range
 	score['count'] = count
 	return jsonify(score)
-
-
 
 

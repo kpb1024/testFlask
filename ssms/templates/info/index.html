@@ -279,8 +279,8 @@
                                         <span id="grade_slec_1">
                                             <select name="coursetype" id="" @change='getValue'>
                                                 <option value="" selected="selected">--请选择--</option>
-                                                <option value="major" >主修</option>
-                                                <option value="minor" >辅修</option>
+                                                <option value="Main" >主修</option>
+                                                <option value="Sub" >辅修</option>
         <!--                                        <option v-for='item in optionList'>{{ item }}</option>-->
                                             </select>
                                         </span>
@@ -289,11 +289,11 @@
                                     <span class="div_cols" style="position: absolute;left: 30%;">
                                         <label>学年：</label>
                                         <span id="grade_slec_2">
-                                            <select name="year" id=""  @change='getValue'>
+                                            <select name="courseyear" id=""  @change='getValue'>
                                                 <option value="" selected="selected">--请选择--</option>
-                                                <option value="fst" >2018-2019</option>
-                                                <option value="sec" >2017-2018</option>
-                                                <option value="trd" >2016-2017</option>
+                                                <option value="2019" >2018-2019</option>
+                                                <option value="2018" >2017-2018</option>
+                                                <option value="2017" >2016-2017</option>
                                             </select>
                                         </span>
                                     </span>
@@ -301,10 +301,11 @@
                                     <span class="div_cols" style="position: absolute;left: 50%;">
                                         <label>学期：</label>
                                         <span id="grade_slec_3">
-                                            <select name="term" id=""  @change='getValue'>
+                                            <select name="courseterm" id=""  @change='getValue'>
                                                <option value="" selected="selected">--请选择--</option>
-                                                <option value="s1" >第一学期</option>
-                                                <option value="s2" >第二学期</option>
+                                                <option value="1" >第一学期</option>
+                                                <option value="2" >第二学期</option>
+                                                <option value="3" >第三学期</option>
                                             </select>
                                         </span>
                                     </span>
