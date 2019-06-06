@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>平时分占比</h1>
+{% endblock %}
+
+{% block content %}
+ <meta charset="UTF-8">
+ <b>{{str}}</b>
+ <script>
+		function test(num)
+		{
+		  var reg = /^((?!0)\d{1,2}|100)$/;
+		  if(!num.match(reg)){
+		   return false;
+		  }else{
+		   return true;
+		  }
+		 }
+		 </script>
+ <div class="box box-info">
+<form method="post">
+	<input type=int name="dailyScoreRatio" value="{{per[0]['dailyScoreRatio']}}" onkeyup="value=test(value)?value:''" required/><br> 
+    <!--<input type="range" name="dailyScoreRatio" value="40"> -->
+    <br><input type="submit" value="确定">
+</form>
+<button><a href="{{ url_for('info.updateScore') }}">返回</a></button>
+</div>
+{% endblock %}
