@@ -1,0 +1,22 @@
+{% extends 'authbase.html' %}
+
+{% block content %}
+<h3 class="page-title">登录学生成绩管理系统</h3>
+<form id="myform" method="post">
+	<div class="form-container">
+		<div class="form-group">
+			<input type="text" class="form-control" name="username" id="username" placeholder="姓名" autocomplete="current-username" required>
+		</div>
+		<div class="form-group">
+			<input type="password" class="form-control" name="password" id="password" placeholder="密码" autocomplete="current-password" required>
+		</div>
+		<div class="form_group">
+			<button class="btn btn-primary btn-block">登录</button>
+		</div>
+
+	</div>
+</form>
+<div style="text-align:right">
+	<button class="btn btn-primary"  id="TencentCaptcha" data-appid="2027467746" data-cbfn="callback">验证码登录</button>
+</div>
+{% endblock %}

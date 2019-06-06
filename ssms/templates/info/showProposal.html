@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>我的成绩申诉</h1>
+{% endblock %}
+
+{% block content %}
+{% for proposal in proposals %}
+	{% for value in proposal.values() %}
+		<span>{{ value }}</span>
+	{% endfor %}
+	<br>
+{% endfor %}
+{% endblock %}

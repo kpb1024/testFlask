@@ -1,0 +1,6 @@
+/venv
+*.pyc
+nohup.out
+*.swp
+/idea
+/_pycache_

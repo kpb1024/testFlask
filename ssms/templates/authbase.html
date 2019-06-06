@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<title>学生成绩管理系统</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="static/css/login.css">
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+  </head>
+  <body>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="navbar-brand" href="#"><img class="logo" src="static/images/logo.png" alt="中山大学Logo"></a>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		  <ul class="nav navbar-nav">
+			<li class="active"><a href="#">学生成绩管理系统 <span class="sr-only">(current)</span></a></li>
+		   
+			
+		  </ul>
+		  
+		  <ul class="nav navbar-nav navbar-right">
+			<li><a href="login">登录</a></li>
+			 <li><a href="register">注册</a></li>
+			
+		  </ul>
+		</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
+	<div class="main">
+		<div class="image">
+			<img class="biglogo" src="static/images/biglogo.png" alt="中大校徽">
+		</div>
+		{% block content %}{% endblock %}
+        <script>
+			window.callback = function(res){
+			// res（用户主动关闭验证码）= {ret: 2, ticket: null}
+			// res（验证成功） = {ret: 0, ticket: "String", randstr: "String"}
+				if(res.ret === 0){
+					return true;
+				}
+				else return false;
+			}
+        </script>
+	</div>
+  </body>
+</html>

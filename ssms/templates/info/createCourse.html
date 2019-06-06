@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}添加课程{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="cname">课程名称</label>
+    <input name="cname" id="cname" value="{{ request.form['cname'] }}" required>
+    <label for="courseterm">所在学期</label>
+    <input name="courseterm" id="courseterm" value="{{ request.form['courseterm'] }}" required>
+    <label for="coursepoint">学分</label>
+    <input name="coursepoint" id="coursepoint" value="{{ request.form['coursepoint'] }}" required>
+    <label for="courseyear">学年</label>
+    <input name="courseyear" id="courseyear" value="{{ request.form['courseyear'] }}" required>
+    <label for="coursetype">培养类别</label>
+    <input name="coursetype" id="coursetype" value="{{ request.form['coursetype'] }}" required>
+    <label for="tname">教师名称</label>
+    <input name="tname" id="tname" value="{{ request.form['tname'] }}" required>
+
+    <input type="submit" value="添加课程">
+  </form>
+{% endblock %}
