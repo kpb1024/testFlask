@@ -224,19 +224,23 @@ def total_rank():
 	total_rank['total_avg_gpa'] = total_avg_gpa(sid)
 	return render_template('info/total_rank.html', scores=total_rank)
 
-@bp.route('/term_gpa', methods=('GET', 'POST'))
+@bp.route('/term_gpa_rank', methods=('GET', 'POST'))
 @login_required
-def term_gpa():
+def term_gpa_rank():
 	sid = session['id']
 	term_gpa = term_avg_gpa(sid)
+	tr=courseterm_rank(sid)
 	courseterm = []
 	courseyear = []
 	gpa=[]
+	rank=[]
 	for tg in term_gpa:
 		gpa.append(tg['gp'])
-		courseyaer.append(tg['courseyear'])
+		courseyear.append(tg['courseyear'])
 		courseterm.append(tg['courseterm'])
-	return jsonify(term=courseterm, year=courseyaer, gpa=gpa)
+	for cr in tr:
+		rank.append(cr['totalrank'])
+	return jsonify(term=courseterm, year=courseyear, gpa=gpa,rnk=rank)
 
 @bp.route('/term_rank', methods=('GET', 'POST'))
 @login_required

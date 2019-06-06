@@ -522,8 +522,7 @@
 <script src="http://libs.baidu.com/jquery/1.7.2/jquery.js"></script>
 <script type="text/javascript">
     var myChart = echarts.init(document.getElementById('world-map-markers'))
-    var url = "{{ url_for('info.term_gpa') }}"
-    var url1 = "{{ url_for('info.term_rank') }}"
+    var url = "{{ url_for('info.term_gpa_rank') }}"
     var colors = ['#5793f3', '#d14a61', '#675bba'];
 
     myChart.setOption({
@@ -559,10 +558,10 @@
                     }
                 },
                 min:function(value) {
-                    return value.min - 0.3;
+                    return value.min - 0.2;
                 },
                 max: function(value) {
-                    return value.max + 0.3;
+                    return value.max + 0.2;
                 },
 
             },
@@ -602,19 +601,20 @@
                 name:'综合排名',
                 type:'line',
                 yAxisIndex:1,
-                data:[5, 15, 13, 9, 27]
+                data:[]
             },
             {
                 name:'综合绩点',
                 type:'line',
                 yAxisIndex:0,
-                data:[3.8,3.9,4.0,3.9,3.5]
+                data:[]
             },
 
         ]
     });
     myChart.showLoading();
-    $.getJSON(url).done(function (json) {
+    
+	$.getJSON(url).done(function (json) {
         myChart.hideLoading();
         gpa = json.gpa;
         myChart.setOption({
@@ -623,10 +623,7 @@
                 data: gpa
             }]
         })
-    })
-    $.getJSON(url1).done(function (json) {
-        myChart.hideLoading();
-        rank = json.rnk;
+		rank = json.rnk;
         myChart.setOption({
             series: [{
             name: '综合排名',
