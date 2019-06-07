@@ -8,6 +8,7 @@
 
 ## 3. 提交更新到远程仓库自己的分支
 ![git原理](http://blog.kangpb.cn/2019/03/27/gitskill/gitadd.jpg)
+### 提交到版本库
 提交到版本库的指令如下:
 ```git
 git add --all
@@ -15,11 +16,14 @@ git commit -m "$Description"
 ```
 在完成了某块功能时可以推送到远程仓库下自己的分支`git commit -m "关于改动的描述"`
 
+### 提交到远程仓库
+可以Fork到自己的Github仓库，再Clone到本地，保证开始开发前面对的代码是带有主分支所有commit histories的。
+**`git pull origin master`**会将主分支的更新拉(pull)到本地，`git checkout master`可以回到主分支查看更新;
 
-## 4. 获取远程仓库主分支的更新
-`git pull origin master` 会将主分支的更新拉(pull)到本地，`git checkout master`可以回到主分支查看更新;
 在自己的分支下，首先`git add --all & git commit -m "$Description"`把自己的所有更新提交到版本库，然后通过`git merge master`将版本库中的主分支的内容与自己的进行合并(merge).
+
 合并完后需要在提示了发生改变的文件中查看更改，"======"分割线会划出不同的部分。
+整合完后在 Github.com 上fork的自己的仓库下发起pull request。
 
 
 # 运行应用
@@ -108,7 +112,7 @@ def getStudents():
 `students = get_results(cur)`   get_results()方法接收游标作为参数，该例中返回的结果是一个列表，列表每一项是包含每个学生信息的字典:
 ```
 (
-{'id':16369028 , 'name':'康培邦'},
+{'id':16369028 , 'name':'康XX'},
 {'id':163690XX , 'name':'某某某'} 
 )
 ```
