@@ -39,7 +39,11 @@ def index():
 	courselist = get_results(cur)
 	if len(courselist) is 0:
 		abort(404, "Student id {0} doesn't have Course score.".format(id))
-	return render_template('info/index.html', courses=courselist)
+	total_rank = {}
+	total_rank['avg_coursetype'] = avg_coursetype(id)
+	total_rank['total_point'] = total_point(id)
+	total_rank['total_avg_gpa'] = total_avg_gpa(id)
+	return render_template('info/index.html', courses=courselist, scores=total_rank)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
