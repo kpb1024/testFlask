@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS score;
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS teacher;
 DROP TABLE IF EXISTS student;
-DROP TABLE IF EXISTS feedback;
+DROP TABLE IF EXISTS proposal;
 DROP TABLE IF EXISTS studentCourse;
 
 
@@ -20,12 +20,16 @@ CREATE TABLE user (
 
 CREATE TABLE student (
   id INTEGER UNSIGNED PRIMARY KEY REFERENCES user (id),
-  name VARCHAR(10) NOT NULL
+  name VARCHAR(10) NOT NULL,
+  school VARCHAR(10),
+  enrollyear YEAR 
 );
 
 CREATE TABLE teacher (
   id INTEGER UNSIGNED PRIMARY KEY REFERENCES user (id),
-  name VARCHAR(10) NOT NULL
+  name VARCHAR(10) NOT NULL,
+  school VARCHAR(10),
+  enrollyear YEAR
 );
 
 CREATE TABLE course (
@@ -35,8 +39,9 @@ CREATE TABLE course (
   courseyear YEAR NOT NULL,
   coursepoint TINYINT(1) UNSIGNED NOT NULL,
   coursetype VARCHAR(4) NOT NULL,
+  coursevolume TINYINT(4),
   tname VARCHAR(10) REFERENCES teacher (name),
-  dailyScoreRatio TINYINT UNSIGNED,
+  dailyScoreRatio TINYINT UNSIGNED
 );
 
 
@@ -47,18 +52,19 @@ CREATE TABLE studentCourse (
   gpa TINYINT(1) UNSIGNED,
   dailyScore TINYINT UNSIGNED,
   finalExamScore TINYINT UNSIGNED,
-  is_checked TINYINT(1) DEFAULT 0,
+  status VARCHAR(10),
   PRIMARY KEY ('sid', 'cid'),
   KEY 'cid' ('cid')
 );
 
 CREATE TABLE proposal (
-  pid INTEGER PRIMARY KEY AUTO_INCREMENT,
   raisedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   sid INTEGER UNSIGNED NOT NULL REFERENCES student (id),
   cid INTEGER UNSIGNED NOT NULL REFERENCES course (cid),
   reason TEXT,
   reply TEXT,
   is_checked_by_teacher TINYINT(1) DEFAULT 0,
-  is_checked_by_dean TINYINT(1) DEFAULT 0
+  is_checked_by_dean TINYINT(1) DEFAULT 0,
+  PRIMARY KEY ('cid', 'sid'),
+  KEY 'sid' ('sid')
 );

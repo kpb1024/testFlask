@@ -174,6 +174,14 @@ def showProposal():
 	proposals = get_results(cur)
 	return render_template('info/showProposal.html', proposals = proposals)
 
+@bp.route('cancelProposal/<cid>')
+@login_required
+def cancelProposal(cid):
+	cur = get_db().cursor()
+	id = g.user['id']
+	cur.execute('delete from proposal where cid = %s and sid = %s', cid, id)
+	re
+
 @bp.route('/myScore', methods=('GET', 'POST'))
 # @login_required
 def myScore():
