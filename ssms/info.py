@@ -126,7 +126,7 @@ def proposal():
 	db = get_db()
 	cur = db.cursor()
 	cur.execute(
-		'SELECT course.cid, cname'
+		'SELECT distinct course.cid, cname'
 		' FROM studentCourse JOIN course'
 		' WHERE sid = %s',
 		(g.user['id'])
