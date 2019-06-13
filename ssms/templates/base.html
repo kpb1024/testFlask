@@ -285,7 +285,11 @@
         </div>
         <div class="pull-left info">
           <p>{{ g.user['username'] }}</p>
-          {% if g.user['auth'] %}  <p>学生用户</p> {% endif %}
+          {% if g.user['auth'] == 0 %}
+            <p>学生用户</p> 
+          {% else %}
+            <p>教师用户</p> 
+          {% endif %}
         </div>
       </div>
       <ul class="sidebar-menu" data-widget="tree">
@@ -299,6 +303,8 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="/"><i class="fa fa-circle-o"></i>成绩查询主页</a></li>
+            <li><a href="proposal"><i class="fa fa-circle-o"></i>提交成绩申诉</a></li>
+            <li><a href="showProposal"><i class="fa fa-circle-o"></i>查看成绩申诉</a></li>
             <li><a href="proposal"><i class="fa fa-circle-o"></i>成绩申诉</a></li>
           </ul>
         </li>
@@ -312,9 +318,23 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{ url_for('info.total_rank') }}"><i class="fa fa-circle-o"></i> 综合成绩分析</a></li>
-            <li><a href="{{ url_for('info.sco_distribution') }}"><i class="fa fa-circle-o"></i> 课程总体分布分析</a></li>
-			<li><a href="{{ url_for('info.sw_analysis') }}"><i class="fa fa-circle-o"></i> 优劣势学科分析</a></li>
+            <li><a href="total_rank"><i class="fa fa-circle-o"></i>综合成绩分析</a></li>
+            <li><a href="sco_distribution"><i class="fa fa-circle-o"></i>课程总体分布分析</a></li>
+            <li><a href="sw_analysis"><i class="fa fa-circle-o"></i>优劣势学科分析</a></li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-pie-chart"></i>
+            <span>成绩录入</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="updateScore"><i class="fa fa-circle-o"></i>成绩录入</a></li>
+            <li><a href="review"><i class="fa fa-circle-o"></i>成绩审核情况</a></li>
           </ul>
         </li>
         {% endif %}
