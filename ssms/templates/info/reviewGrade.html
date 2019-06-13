@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>成绩审核</h1>
+{% endblock %}
+
+{% block content %}
+      <div class="box box-info">
+        <!-- /.box-header -->
+        <div class="box-body">
+			<div class="table-responsive">
+                <table class="table no-margin">
+                <thead>
+                     <th>学号</th>
+                	 <th>姓名</th>
+                     <th>平时成绩</th>
+                     <th>期末成绩</th>
+                     <th>总成绩</th>
+                     <th>状态</th>
+                </thead>
+				<tbody>
+				<meta charset="UTF-8">
+				{% for score in scores %}
+				 <tr>
+					{% for value in score.values() %}
+						<td>{{value}}</td>
+					{% endfor %}
+				 </tr>
+                {% endfor %}
+              </tbody>
+              </table>
+      </div>
+	  </div>
+	  <div align="center">
+	  <form method="post">
+	  <input type="submit" value="提交审核">
+	  <button><a href="{{ url_for('info.review') }}">返回</a></button>
+	  </div>
+	</div>
+{% endblock %}

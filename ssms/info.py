@@ -18,46 +18,42 @@ def index():
 	id = session['id']
 	db = get_db()
 	cur = db.cursor()
-	if request.method == 'POST':
-		coursetype = request.form['coursetype']
-		courseyear = request.form['courseyear']
-		courseterm = request.form['courseterm']
-		cur.execute(
-			'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa,`status` st  '
-			'FROM studentCourse sc JOIN course c where sc.cid = c.cid and '
-			'coursetype = %s and courseyear = %s and courseterm = %s and sid=%s',
-			(coursetype, courseyear, courseterm, id)
-		)
-		courselist = get_results(cur)
-		total_rank = {}
-		total_rank['avg_coursetype'] = avg_coursetype(id)
-		total_rank['total_point'] = total_point(id)
-		total_rank['total_avg_gpa'] = total_avg_gpa(id)
-		return render_template('info/index.html', courses=courselist, scores=total_rank)
-
-	cur.execute(
-		'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa '
-		'FROM studentCourse sc JOIN course c where sc.cid = c.cid and '
-		'sid=%s',
-		(id)
-	)
-	courselist = get_results(cur)
-
-	if len(courselist) is 0:
-		abort(404, "Student id {0} doesn't have Course score.".format(id))
-
-
 	total_rank = {}
 	total_rank['avg_coursetype'] = avg_coursetype(id)
 	total_rank['total_point'] = total_point(id)
 	total_rank['total_avg_gpa'] = total_avg_gpa(id)
-
 	courseClass= {}
 	courseClass['gx'] = courseclass_gpa_rank(id)[1]
 	courseClass['gb'] = courseclass_gpa_rank(id)[2]
 	courseClass['zx'] = courseclass_gpa_rank(id)[0]
 	courseClass['zb'] = courseclass_gpa_rank(id)[3]
-
+	sql = 'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa,`status` st '
+	sql += 'FROM studentCourse sc JOIN course c where sc.cid = c.cid and '
+	sql += 'sid = %s' % id
+	if request.method == 'POST':
+		type = request.form['coursetype']
+		year = request.form['courseyear']
+		term = request.form['courseterm']
+		if type == u'' and year == u'' and term == u'':
+			pass
+		if type is not u'':
+			sql += ' and coursetype = %s' % type
+		if year is not u'':
+			sql += ' and courseyear = %s' % year
+		if term is not u'':
+			sql += ' and courseterm = %s' % term
+		cur.execute(sql)
+		courselist = get_results(cur)
+		return render_template('info/index.html', courses=courselist, scores=total_rank, cc=courseClass)
+	cur.execute(sql)
+	courselist = get_results(cur)
+	if len(courselist) is 0:
+		abort(404, "Student id {0} doesn't have Course score.".format(id))
+	courseClass= {}
+	courseClass['gx'] = courseclass_gpa_rank(id)[1]
+	courseClass['gb'] = courseclass_gpa_rank(id)[2]
+	courseClass['zx'] = courseclass_gpa_rank(id)[0]
+	courseClass['zb'] = courseclass_gpa_rank(id)[3]
 	return render_template('info/index.html', courses=courselist, scores=total_rank,cc=courseClass)
 
 @bp.route('/create', methods=('GET', 'POST'))

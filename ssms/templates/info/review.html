@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block header %}
+	<h1>成绩审核</h1>
+{% endblock %}
+
+{% block content %}
+<meta charset="UTF-8">
+<!-- 课程显示 -->
+<div class="box box-info">
+	<!-- /.box-header -->
+	<div class="box-body">
+	<div class="table-responsive">
+	<table class="table no-margin">
+		 <thead>
+			 <th>课程号</th>
+        	 <th>课程名称</th>
+			 <th>类别</th>
+			 <th>学分</th>
+			 <th>课容量</th>
+             <th>授课教师</th>
+			 <th>操作</th>
+		 </thead>
+		 <tbody>
+        {% for course in courses %}
+
+			 <tr>
+				{% for value in course.values() %}
+				 <th>{{value}}</td>
+				{% endfor %}
+				<td><button><a href="{{url_for('info.reviewGrade',cid=course['cid']) }}">查看</a></button></td>
+             </tr>
+        {% endfor %}
+		 </tbody>
+	 </table>
+	 </div>
+	 </div>
+</div>
+{% endblock %}

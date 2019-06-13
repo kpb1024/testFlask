@@ -294,20 +294,20 @@
       </div>
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">主要功能</li>
+        {% if g.user['auth'] == 0 %}
         <li class="treeview menu-open">
           <a href="index">
-            <i class="fa fa-dashboard"></i> <span>成绩查询</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+            <i class="fa fa-dashboard"></i>
+            <span>成绩查询</span>
+            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
           </a>
           <ul class="treeview-menu">
             <li><a href="/"><i class="fa fa-circle-o"></i>成绩查询主页</a></li>
             <li><a href="proposal"><i class="fa fa-circle-o"></i>提交成绩申诉</a></li>
             <li><a href="showProposal"><i class="fa fa-circle-o"></i>查看成绩申诉</a></li>
-            <li><a href="proposal"><i class="fa fa-circle-o"></i>成绩申诉</a></li>
           </ul>
         </li>
+        {% endif %}
         {% if g.user['auth'] == 0 %}
         <li class="treeview">
           <a href="#">
