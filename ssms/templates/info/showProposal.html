@@ -5,10 +5,41 @@
 {% endblock %}
 
 {% block content %}
-{% for proposal in proposals %}
-	{% for value in proposal.values() %}
-		<span>{{ value }}</span>
-	{% endfor %}
-	<br>
-{% endfor %}
+	<div class="box box-info">
+		<div class="box-body">
+			<div class="table-responsive">
+				<table class="table no-margin">
+					<thead>
+					<tr>
+						<th>课程名称</th>
+						<th>课程目前成绩</th>
+						<th>申诉提交时间</th>
+						<th>申诉原因</th>
+						<th>被授课教师查看</th>
+						<th>被教务老师查看</th>
+						<th>申诉回复</th>
+						<th>取消申诉</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for proposal in proposals %}
+					<tr>
+						<td>{{ proposal['cname'] }}</td>
+						<td>{{ proposal['score'] }}</td>
+						<td>{{ proposal['raisedTime'] }}</td>
+						<td>{{ proposal['reason'] }}</td>
+						<td>{{ proposal['is_checked_by_teacher'] }}</td>
+						<td>{{ proposal['is_checked_by_dean '] }}</td>
+						<td>{{ proposal['reply'] }}</td>
+						<td><a href="proposal" class="myButton">取消</a></td>
+					</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
 {% endblock %}
+
+

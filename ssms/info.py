@@ -138,8 +138,8 @@ def proposal():
 	cur = db.cursor()
 	cur.execute(
 		'SELECT distinct course.cid, cname'
-		' FROM studentCourse JOIN course'
-		' WHERE sid = %s',
+        ' FROM studentCourse JOIN course'
+        ' WHERE sid = %s',
 		(g.user['id'])
 	)
 	courses = get_results(cur)
@@ -174,7 +174,7 @@ def showProposal():
 	db = get_db()
 	cur = db.cursor()
 	id = g.user['id']
-	cur.execute('select * from proposal where sid = %s', id)
+	cur.execute('select DISTINCT cname,raisedTime,score, reason, reply,is_checked_by_teacher, is_checked_by_dean  from proposal, course,studentCourse where course.cid = studentCourse.cid and proposal.cid=course.cid  and proposal.sid = studentCourse.sid and  proposal.sid = %s', id)
 	proposals = get_results(cur)
 	return render_template('info/showProposal.html', proposals = proposals)
 
