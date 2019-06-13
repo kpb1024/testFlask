@@ -23,7 +23,7 @@ def index():
 		courseyear = request.form['courseyear']
 		courseterm = request.form['courseterm']
 		cur.execute(
-			'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa '
+			'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa,`status` st  '
 			'FROM studentCourse sc JOIN course c where sc.cid = c.cid and '
 			'coursetype = %s and courseyear = %s and courseterm = %s and sid=%s',
 			(coursetype, courseyear, courseterm, id)
@@ -34,6 +34,7 @@ def index():
 		total_rank['total_point'] = total_point(id)
 		total_rank['total_avg_gpa'] = total_avg_gpa(id)
 		return render_template('info/index.html', courses=courselist, scores=total_rank)
+
 	cur.execute(
 		'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa '
 		'FROM studentCourse sc JOIN course c where sc.cid = c.cid and '
@@ -41,13 +42,23 @@ def index():
 		(id)
 	)
 	courselist = get_results(cur)
+
 	if len(courselist) is 0:
 		abort(404, "Student id {0} doesn't have Course score.".format(id))
+
+
 	total_rank = {}
 	total_rank['avg_coursetype'] = avg_coursetype(id)
 	total_rank['total_point'] = total_point(id)
 	total_rank['total_avg_gpa'] = total_avg_gpa(id)
-	return render_template('info/index.html', courses=courselist, scores=total_rank)
+
+	courseClass= {}
+	courseClass['gx'] = courseclass_gpa_rank(id)[1]
+	courseClass['gb'] = courseclass_gpa_rank(id)[2]
+	courseClass['zx'] = courseclass_gpa_rank(id)[0]
+	courseClass['zb'] = courseclass_gpa_rank(id)[3]
+
+	return render_template('info/index.html', courses=courselist, scores=total_rank,cc=courseClass)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -237,6 +248,19 @@ def total_rank():
 	total_rank['total_avg_gpa'] = total_avg_gpa(sid)
 	return render_template('info/total_rank.html', scores=total_rank)
 
+@bp.route('/term_gpa', methods=('GET', 'POST'))
+@login_required
+def term_gpa():
+	sid = session['id']
+	term_gpa = term_avg_gpa(sid)
+	courseterm = []
+	courseyear = []
+	gpa=[]
+	for tg in term_gpa:
+		gpa.append(tg['gp'])
+		courseyaer.append(tg['courseyear'])
+		courseterm.append(tg['courseterm'])
+	return jsonify(term=courseterm, year=courseyaer, gpa=gpa)
 
 @bp.route('/term_rank', methods=('GET', 'POST'))
 @login_required

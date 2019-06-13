@@ -272,46 +272,25 @@
                         <!-- 成绩筛选 -->
                         <div class="grade_select" style="padding:20px">
                             <!-- 培养类型 -->
-                            <form method="post">
-                                <span>条件筛选：</span>
-                                    <span class="div_cols" style="position: absolute;left: 10%;">
+                            <form method="post" style="height: 50px;">
+                                <span style="top: auto;">条件筛选：</span>
+                                <span class="div_cols" style="position: relative;left: 1%;top: auto;">
                                         <label>课程类别：</label>
-                                        <span id="grade_slec_1">
-                                            <select name="coursetype" id="" @change='getValue'>
-                                                <option value="" selected="selected">--请选择--</option>
-                                                <option value="Main" >主修</option>
-                                                <option value="Sub" >辅修</option>
-        <!--                                        <option v-for='item in optionList'>{{ item }}</option>-->
-                                            </select>
-                                        </span>
+                                        <span id="grade_slec_1"><select name="coursetype" id=""><option value="" selected="selected">--请选择--</option> <option value="Main">主修</option> <option value="Sub">辅修</option></select></span>
                                     </span>
-                                    <!-- 学年 -->
-                                    <span class="div_cols" style="position: absolute;left: 30%;">
+                                <!-- 学年 -->
+                                <span class="div_cols" style="position: relative;left: 5%;">
                                         <label>学年：</label>
-                                        <span id="grade_slec_2">
-                                            <select name="courseyear" id=""  @change='getValue'>
-                                                <option value="" selected="selected">--请选择--</option>
-                                                <option value="2019" >2018-2019</option>
-                                                <option value="2018" >2017-2018</option>
-                                                <option value="2017" >2016-2017</option>
-                                            </select>
-                                        </span>
+                                        <span id="grade_slec_2"><select name="courseyear" id=""><option value="" selected="selected">--请选择--</option> <option value="2019">2018-2019</option> <option value="2018">2017-2018</option> <option value="2017">2016-2017</option></select></span>
                                     </span>
-                                    <!-- 学期 -->
-                                    <span class="div_cols" style="position: absolute;left: 50%;">
+                                <!-- 学期 -->
+                                <span class="div_cols" style="position: relative;left: 9%;">
                                         <label>学期：</label>
-                                        <span id="grade_slec_3">
-                                            <select name="courseterm" id=""  @change='getValue'>
-                                               <option value="" selected="selected">--请选择--</option>
-                                                <option value="1" >第一学期</option>
-                                                <option value="2" >第二学期</option>
-                                                <option value="3" >第三学期</option>
-                                            </select>
-                                        </span>
+                                        <span id="grade_slec_3"><select name="courseterm" id=""><option value="" selected="selected">--请选择--</option> <option value="1">第一学期</option> <option value="2">第二学期</option> <option value="3">第三学期</option></select></span>
                                     </span>
-                                    <!-- 查询 -->
-                                    <span class="div_cols search-bot" style="position: absolute;left: 70%;top:20%;">
-                                        <button type="submit" class="btn search_btn ng-binding" id="btn_refer"  ng-disabled="classroomForm.$invalid">
+                                <!-- 查询 -->
+                                <span class="div_cols search-bot" style="position: relative;left: 15%;top: 0px;">
+                                        <button type="submit" class="btn search_btn ng-binding" id="btn_refer" ng-disabled="classroomForm.$invalid">
                                             <span class="fa fa-search refer"></span>查询
                                         </button>
                                     </span>
@@ -334,6 +313,8 @@
                                             <th>学分</th>
                                             <th>成绩</th>
                                             <th>绩点</th>
+                                            <th>状态</th>
+                                            <th>申诉</th>
 <!--                                            <th>通过情况</th>-->
                                         </tr>
                                         </thead>
@@ -348,6 +329,8 @@
                                             <td>{{ course['coursepoint'] }}</td>
                                             <td>{{ course['score'] }}</td>
                                             <td>{{ course['gpa'] }}</td>
+                                            <td>{{ course['st'] }}</td>
+                                            <td><a href="proposal" class="myButton">申诉</a></td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>
@@ -445,13 +428,13 @@
 
             <div class="info-box-content">
               <span class="info-box-text">平均绩点</span>
-              <span class="info-box-number">5,200</span>
+              <span class="info-box-number">{{cc['gb']['gp']}}</span>
 
               <div class="progress">
                 <div class="progress-bar" style="width: 50%"></div>
               </div>
               <span class="progress-description">
-                    完成学分：/33
+                    完成学分：{{cc['gb']['ttpoint']}}/33
                   </span>
             </div>
             <!-- /.info-box-content -->
@@ -462,13 +445,13 @@
 
             <div class="info-box-content">
               <span class="info-box-text">平均绩点</span>
-              <span class="info-box-number">92,050</span>
+              <span class="info-box-number">{{cc['zb']['gp']}}</span>
 
               <div class="progress">
                 <div class="progress-bar" style="width: 20%"></div>
               </div>
               <span class="progress-description">
-                    完成学分：/64
+                    完成学分：{{cc['gb']['ttpoint']}}/64
                   </span>
             </div>
             <!-- /.info-box-content -->
@@ -479,13 +462,13 @@
 
             <div class="info-box-content">
               <span class="info-box-text">平均绩点</span>
-              <span class="info-box-number">114,381</span>
+              <span class="info-box-number">{{cc['gx']['gp']}}</span>
 
               <div class="progress">
                 <div class="progress-bar" style="width: 70%"></div>
               </div>
               <span class="progress-description">
-                    完成学分：/16
+                    完成学分：{{cc['gx']['ttpoint']}}/16
                   </span>
             </div>
             <!-- /.info-box-content -->
@@ -496,13 +479,13 @@
 
             <div class="info-box-content">
               <span class="info-box-text">平均绩点</span>
-              <span class="info-box-number">163,921</span>
+              <span class="info-box-number">{{cc['zx']['gp']}}</span>
 
               <div class="progress">
                 <div class="progress-bar" style="width: 40%"></div>
               </div>
               <span class="progress-description">
-                    完成学分：/32
+                    完成学分：{{cc['zx']['ttpoint']}}/32
                   </span>
             </div>
             <!-- /.info-box-content -->
@@ -518,4 +501,129 @@
         <!-- /.col -->
       </div>
       <!-- /.row -->
+
+
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.common.js"></script>
+{#<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.simple.js"></script>#}
+<script src="http://libs.baidu.com/jquery/1.7.2/jquery.js"></script>
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('world-map-markers'))
+    var url = "{{ url_for('info.term_gpa') }}"
+    var url1 = "{{ url_for('info.term_rank') }}"
+    var colors = ['#5793f3', '#d14a61', '#675bba'];
+
+    myChart.setOption({
+        color: colors,
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['综合绩点', '综合排名']
+        },
+        grid: {
+            left: '1%',
+            right: '1%',
+            bottom: '5%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        yAxis: [
+            {
+                type: 'value',
+                name:'综合绩点',
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLine: {
+                    onZero: false,
+                    lineStyle: {
+                        color: colors[1]
+                    }
+                },
+                min:function(value) {
+                    return value.min - 0.3;
+                },
+                max: function(value) {
+                    return value.max + 0.3;
+                },
+
+            },
+            {
+                type: 'value',
+                name:'综合排名',
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLine: {
+                    onZero: false,
+                    lineStyle: {
+                        color: colors[0]
+                    }
+                },
+                minInterval: 1,
+                min:function(value) {
+                    return 0.9*value.min ;
+                },
+                max: function(value) {
+                    return 1.1*value.max;
+                },
+
+            }
+        ],
+        xAxis: [
+            {
+                type: 'category',
+                name:'学年-学期',
+                nameLocation:'middle',
+                nameGap:23,
+                data: ["2017-1", "2017-2", "2018-1", "2018-2", "2019-1"]
+            }
+        ],
+        series: [
+            {
+                name:'综合排名',
+                type:'line',
+                yAxisIndex:1,
+                data:[5, 15, 13, 9, 27]
+            },
+            {
+                name:'综合绩点',
+                type:'line',
+                yAxisIndex:0,
+                data:[3.8,3.9,4.0,3.9,3.5]
+            },
+
+        ]
+    });
+    myChart.showLoading();
+    $.getJSON(url).done(function (json) {
+        myChart.hideLoading();
+        gpa = json.gpa;
+        myChart.setOption({
+            series: [{
+                name: '综合绩点',
+                data: gpa
+            }]
+        })
+    })
+    $.getJSON(url1).done(function (json) {
+        myChart.hideLoading();
+        rank = json.rnk;
+        myChart.setOption({
+            series: [{
+                name: '综合排名',
+                data: rank
+            }]
+        })
+    })
+
+    window.onresize = function(){
+        myChart.resize();
+    }
+</script>
+
 {% endblock %}

@@ -20,6 +20,7 @@ def total_point(sid):
 	point = total_point
 	return point
 
+
 # tested	
 def total_avg_gpa(sid):
 	db = get_db()
@@ -27,6 +28,24 @@ def total_avg_gpa(sid):
 	cur.execute('select sum(sc)/sum(coursepoint) avggpa from (select gpa*coursepoint sc, coursepoint from course, studentCourse where sid = %s and course.cid = studentCourse.cid) as s', (sid))
 	total_avg_gpa = get_results(cur)
 	return total_avg_gpa
+
+# 综合绩点变化趋势
+# tested
+def term_avg_gpa(sid):
+	db = get_db()
+	cur = db.cursor()
+	cur.execute('select ANY_VALUE(sum(gpa*coursepoint)/sum( coursepoint)) gp,courseyear,courseterm from course, studentCourse where sid = %s and course.cid = studentCourse.cid group by courseyear,courseterm', (sid))
+	term_avg_gpa = get_results(cur)
+	return term_avg_gpa
+
+# 公选公必
+# tested
+def courseclass_gpa_rank(sid):
+	db = get_db()
+	cur = db.cursor()
+	cur.execute('select ANY_VALUE(sum(gpa*coursepoint)/sum( coursepoint)) gp,  ANY_VALUE(sum(coursepoint)) ttpoint, courseclass from course, studentCourse where sid = %s and course.cid = studentCourse.cid group by courseclass', (sid))
+	courseclass_gpa_rank = get_results(cur)
+	return courseclass_gpa_rank
 
 # 2. 综合排名变化趋势
 # tested
