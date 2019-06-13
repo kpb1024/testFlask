@@ -163,50 +163,6 @@ def showProposal():
 	proposals = get_results(cur)
 	return render_template('info/showProposal.html', proposals = proposals)
 
-#@bp.route('/<int:id>/update', methods=('GET', 'POST'))
-@login_required
-def update(id):
-	"""Update a post if the current user is the author."""
-	post = get_post(id)
-
-	if request.method == 'POST':
-		title = request.form['title']
-		body = request.form['body']
-		error = None
-
-		if not title:
-			error = 'Title is required.'
-
-		if error is not None:
-			flash(error)
-		else:
-			db = get_db()
-			db.execute(
-				'UPDATE post SET title = ?, body = ? WHERE id = ?',
-				(title, body, id)
-			)
-			db.commit()
-			return redirect(url_for('blog.index'))
-
-	return render_template('blog/update.html', post=post)
-
-#@bp.route('/<int:id>/delete', methods=('POST',))
-@login_required
-def delete(id):
-	"""Delete a post.
-
-	Ensures that the post exists and that the logged in user is the
-	author of the post.
-	"""
-	get_post(id)
-	db = get_db()
-	get_post(id)
-	db = get_db()
-	db.execute('DELETE FROM post WHERE id = ?', (id,))
-	db.commit()
-	return redirect(url_for('blog.index'))
-
-
 @bp.route('/myScore', methods=('GET', 'POST'))
 # @login_required
 def myScore():
@@ -330,4 +286,93 @@ def score_distribution_graph(cid):
 	score['count'] = count
 	return jsonify(score)
 
+@bp.route('/myAnalysis', methods=('GET', 'POST'))
+@login_required	
+def myAnalysis():
+	sid = session['sid']
+	
+	analysis = get_db().execute(
+		'select courseTerm, avg(score), max(score), min(score) from Performances, Courses where Performances.courseNo=Courses.courseNo')
 
+@bp.route('/updateScore', methods=['GET', 'POST'])
+@login_required
+def updateScore():
+	id=session['id']
+	db =get_db()
+	cur = db.cursor()
+	cur.execute('select cid,cname,coursetype,coursepoint,coursevolume from course,teacher '
+							 'where teacher.id=%s and teacher.name=course.tname',(id))
+	courses = get_results(cur)
+	return render_template('info/updateScore.html', courses=courses)
+	
+
+@bp.route('/importScore?cid=<cid>', methods=['GET', 'POST'])
+@login_required
+def importScore(cid):	
+	tid = session['id']
+	CourseId = cid
+	if request.method=="POST":
+		db = get_db()
+		cur = db.cursor()
+		cur.execute('select sid,name from studentCourse,student where cid=%s and sid=student.id',(cid))
+		Students=get_results(cur)
+		for student in Students:
+			dailyScore = request.form[str(student['sid'])]
+			finalExamScore = request.form[student['name']]
+			db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,student['sid'],cid))
+		db.commit()
+		return redirect(url_for('info.seeScore',cid=CourseId))
+	db = get_db()
+	cur = db.cursor()	
+	cur.execute('select sid ,name,dailyScore,finalExamScore from student,studentCourse where cid=%s and sid=student.id', (cid))
+	students=get_results(cur)
+	return render_template('info/importScore.html', students=students,cid=cid)
+	
+
+
+@bp.route('/seeScore?cid=<cid>')
+@login_required
+def seeScore(cid):
+	tid = session['id']
+	db = get_db()
+	cur = db.cursor()
+	cur.execute('update studentCourse set score = (dailyScore*dailyScoreRatio/100+finalExamScore*(100-dailyScoreRatio)/100) where cid=%s',(cid))
+	cur1 = db.cursor()
+	cur1.execute('select sid ,name,dailyScore,finalExamScore,score,status from student,studentCourse where cid=%s and sid=student.id',(cid))
+	scores=get_results(cur1)	
+	db.commit()
+	return render_template('info/seeScore.html', scores=scores)
+	
+@bp.route('/setPercent?cid=<cid>', methods=['GET', 'POST'])
+@login_required
+def setPercent(cid):
+	if request.method == 'POST':
+		tid = session['id']
+		dailyScoreRatio=request.form['dailyScoreRatio']
+		db = get_db()
+		db.cursor().execute('update studentCourse set dailyScoreRatio=%s where cid=%s',(dailyScoreRatio,cid))
+		db.commit()
+	db1 = get_db()
+	cur1=db1.cursor()
+	cur1.execute('select distinct dailyScoreRatio from studentCourse where cid=%s',(cid))
+	per=get_results(cur1)
+	db1.commit()
+	return render_template('info/setPercent.html',cid=cid,per=per)	
+	
+@bp.route('/review', methods=['GET', 'POST'])
+@login_required
+def review():
+	db = get_db()
+	cur = db.cursor()
+	cur.execute('select cid,cname,coursetype,coursepoint,coursevolume,tname from course,teacher')
+	courses = get_results(cur)
+	return render_template('info/review.html', courses=courses)
+	
+@bp.route('/reviewGrade?cid=<cid>', methods=['GET', 'POST'])
+@login_required
+def reviewGrade(cid):
+	db = get_db()
+	cur = db.cursor()
+	cur.execute('select sid ,name,dailyScore,finalExamScore,score,status from student,studentCourse where cid=%s and sid=student.id',(cid))
+	scores=get_results(cur)
+	return render_template('info/reviewGrade.html', scores=scores)

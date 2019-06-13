@@ -26,9 +26,9 @@
 				{% for value in course.values() %}
 				 <th>{{value}}</td>
 				{% endfor %} 
-					 <td><button><a href="{{url_for('info.importScore',cid=course['cid']) }}">导入</a></button>
-					 <button><a href="{{url_for('info.seeScore',cid=course['cid']) }}">查看</a></button>
-					 <button><a href="{{url_for('info.setPercent',cid=course['cid']) }}">平时分占比</a></button></td>
+				<td><button><a href="{{url_for('info.importScore',cid=course['cid']) }}">导入</a></button>
+				<button><a href="{{url_for('info.seeScore',cid=course['cid']) }}">查看</a></button>
+				<button><a href="{{url_for('info.setPercent',cid=course['cid']) }}">平时分占比</a></button></td>
 			 </tr>
 		
 		 {% endfor %}
