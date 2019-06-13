@@ -34,10 +34,7 @@ def teacher_required(view):
 
 @bp.before_app_request
 def load_logged_in_user():
-	"""If a user id is stored in the session, load the user object from
-	the database into ``g.user``."""
 	id = session.get('id')
-
 	if id is None:
 		g.user = None
 	else:
@@ -63,7 +60,8 @@ def register():
 		sname	 = request.form['sname']
 		auth = request.form['auth']
 		is_male = request.form['is_male']
-		cur = get_db().cursor()
+		db = get_db()
+		cur = db.cursor()
 		error = None
 		if cur.execute('SELECT id FROM user WHERE username = %s', (username)) is not 0:
 			error = 'NetID {0} is already registered.'.format(username)

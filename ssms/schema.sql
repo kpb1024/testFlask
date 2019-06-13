@@ -53,8 +53,7 @@ CREATE TABLE studentCourse (
   dailyScore TINYINT UNSIGNED,
   finalExamScore TINYINT UNSIGNED,
   status VARCHAR(10),
-  PRIMARY KEY ('sid', 'cid'),
-  KEY 'cid' ('cid')
+  PRIMARY KEY (sid, cid)
 );
 
 CREATE TABLE proposal (
@@ -65,6 +64,5 @@ CREATE TABLE proposal (
   reply TEXT,
   is_checked_by_teacher TINYINT(1) DEFAULT 0,
   is_checked_by_dean TINYINT(1) DEFAULT 0,
-  PRIMARY KEY ('cid', 'sid'),
-  KEY 'sid' ('sid')
+  PRIMARY KEY (cid,sid)
 );
