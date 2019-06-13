@@ -29,7 +29,11 @@ def index():
 			(coursetype, courseyear, courseterm, id)
 		)
 		courselist = get_results(cur)
-		return render_template('info/index.html', courses=courselist)
+		total_rank = {}
+		total_rank['avg_coursetype'] = avg_coursetype(id)
+		total_rank['total_point'] = total_point(id)
+		total_rank['total_avg_gpa'] = total_avg_gpa(id)
+		return render_template('info/index.html', courses=courselist, scores=total_rank)
 	cur.execute(
 		'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa '
 		'FROM studentCourse sc JOIN course c where sc.cid = c.cid and '
