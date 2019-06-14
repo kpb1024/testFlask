@@ -56,6 +56,14 @@ def index():
 	courseClass['zb'] = courseclass_gpa_rank(id)[3]
 	return render_template('info/index.html', courses=courselist, scores=total_rank,cc=courseClass)
 
+
+@bp.route('/index2', methods=('GET','POST'))
+@login_required
+def index2():
+    return render_template('info/index2.html')
+
+
+
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
