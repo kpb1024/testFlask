@@ -15,6 +15,8 @@ bp = Blueprint('info', __name__)
 @bp.route('/', methods=('GET','POST'))
 @login_required
 def index():
+	if session['auth'] == 1:
+		return render_template('info/index2.html')
 	id = session['id']
 	db = get_db()
 	cur = db.cursor()
@@ -56,14 +58,6 @@ def index():
 	courseClass['zb'] = courseclass_gpa_rank(id)[3]
 	return render_template('info/index.html', courses=courselist, scores=total_rank,cc=courseClass)
 
-
-@bp.route('/index2', methods=('GET','POST'))
-@login_required
-def index2():
-    return render_template('info/index2.html')
-
-
-
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
@@ -72,12 +66,10 @@ def create():
 		score = request.form['score']
 		gpa = request.form['gpa']
 		error = None
-
 		if not cname:
 			error = 'Course name is required.'
 		elif not score:
 			error = 'Score is required'
-
 		if error is not None:
 			flash(error)
 		else:
