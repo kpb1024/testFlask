@@ -381,10 +381,8 @@ def importScore(cid):
 def seeScore(cid):
 	tid = session['id']
 	db = get_db()
-	cur = db.cursor()
-	cur.execute('update studentCourse set score = (dailyScore*dailyScoreRatio/100+finalExamScore*(100-dailyScoreRatio)/100) where cid=%s',(cid))
 	cur1 = db.cursor()
-	cur1.execute('select sid ,name,dailyScore,finalExamScore,score,status from student,studentCourse where cid=%s and sid=student.id',(cid))
+	cur1.execute('select sid ,name,dailyScore,finalExamScore,score,scoreReviewStatus from student,studentCourse where cid=%s and sid=student.id',(cid))
 	scores=get_results(cur1)	
 	db.commit()
 	return render_template('info/seeScore.html', scores=scores)
@@ -410,7 +408,7 @@ def setPercent(cid):
 def review():
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select cid,cname,coursetype,coursepoint,coursevolume,tname from course,teacher')
+	cur.execute('select cid,cname,coursetype,coursepoint,coursevolume,name from course,teacher')
 	courses = get_results(cur)
 	return render_template('info/review.html', courses=courses)
 	
@@ -422,3 +420,79 @@ def reviewGrade(cid):
 	cur.execute('select sid ,name,dailyScore,finalExamScore,score,status from student,studentCourse where cid=%s and sid=student.id',(cid))
 	scores=get_results(cur)
 	return render_template('info/reviewGrade.html', scores=scores)
+
+@bp.route('/teacher', methods=('GET', 'POST'))
+@login_required
+def teacher():
+	db = get_db()
+	cur = db.cursor()
+	cur.execute(
+		'SELECT distinct courseyear,courseterm'
+		' FROM teacher JOIN course'
+		' WHERE id = %s',
+		(g.user['id'])
+	)
+	courses = get_results(cur)
+	db.commit()
+	return render_template('info/teacher.html', courses = courses)
+
+@bp.route('/showCourse', methods=('GET', 'POST'))
+@login_required
+def showCourse():
+	if request.method == 'POST':
+		year = request.form['year']
+		term = request.form['term']
+		db = get_db()
+		cur = db.cursor()
+		cur.execute(
+			'SELECT cid, cname,courseyear,courseterm FROM course JOIN teacher WHERE courseyear = %s and courseterm = %s', (year,term)
+		)
+		courses = get_results(cur)
+	return render_template('info/showCourse.html', courses = courses)
+
+
+@bp.route('/teacher2',methods=('GET','POST'))
+@login_required
+def teacher2():
+	if request.method == 'POST':
+		cid = request.form['cid']
+		db = get_db()
+		cur = db.cursor()
+		fail = course_fail(cid)
+		count = course_count2(cid)
+		cur.execute(
+			'SELECT id, name, dailyScore, finalExamScore, score FROM studentCourse JOIN student ON id = sid WHERE cid = %s',
+			(cid)
+		)
+		students = get_results(cur)
+
+		cur.execute(
+			'SELECT cid,cname FROM course WHERE cid = %s',
+			(cid)
+		)
+		course = get_results(cur)
+
+		cur.execute(
+			'SELECT avg(score), max(score), min(score) FROM studentCourse JOIN student ON id = sid WHERE cid = %s',
+			(cid)
+		)
+		score = get_results(cur)
+
+		db.commit()
+	return render_template('info/teacher2.html', students = students,course = course, score=score, fail=fail, count=count)
+	
+
+@bp.route('/teacher2_graph/<cid>', methods=('GET', 'POST'))
+@login_required
+def teacher2_graph(cid):
+	score_dis = course_score(cid)
+	score = {}
+	range = []
+	count = []
+	for s in score_dis:
+		for key, value in s.items():
+			range.append(key)
+			count.append(value)
+	score['range'] = range
+	score['count'] = count
+	return jsonify(score)

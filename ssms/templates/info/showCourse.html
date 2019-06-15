@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block header %}
+<h1>成绩分析</h1>
+{% endblock %}
+
+{% block content %}
+
+{% for course in courses %}
+<form action="/teacher2" method="post">
+<table class="table no-margin" >
+	<thead>
+	<tr>
+		<th>cid</th>
+		<th>cname</th>
+		<th>year</th>
+		<th>term</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		{% for key in course.keys() %}
+			<td><input type="text" name="{{key}}" value="{{course[key]}}" readonly="readonly"></td>
+		{% endfor %}
+			<td><button>分析</button></td>
+	</tr>
+	</tbody>
+</table>
+</form>
+{% endfor %}
+
+{% endblock %}
+
