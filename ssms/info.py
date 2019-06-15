@@ -93,35 +93,26 @@ def create():
 @bp.route('/createCourse', methods=('GET', 'POST'))
 @login_required
 def createCourse():
-	"""Create a new post for the current user."""
 	if request.method == 'POST':
 		cname = request.form['cname']
 		courseterm = request.form['courseterm']
 		coursepoint = request.form['coursepoint']
-		coursetype = request.form['coursetype']	
-		courseyear = request.form['courseyear']	
-		tname = request.form['tname']	
-		error = None
-
-		if not cname:
-			error = 'Course name is required.'
-		elif not courseterm:
-			error = 'Course term is required'
-		elif not courseterm:
-			error = 'Course point is required'
-
-		if error is not None:
-			flash(error)
-		else:
-			db = get_db()
-			cur = db.cursor()
-			cur.execute(
-				'INSERT INTO course (cname, courseyear, coursetype, courseterm, coursepoint, tname)'
-				' VALUES (%s, %s, %s, %s, %s, %s)',
-				(cname, courseyear, coursetype, courseterm, coursepoint, tname)
-			)
-			db.commit()
-			return redirect(url_for('info.index'))
+		coursetype = request.form['coursetype']
+		coursevolume = request.form['coursevolume']
+		courseyear = request.form['courseyear']
+		courseclass = request.form['courseclass']
+		scoreType = request.form['scoreType']
+		dailyScoreRatio = request.form['dailyScoreRatio']
+		dailyScoreRatioDesc = request.form['dailyScoreRatioDesc']
+		tid = g.user['id']
+		db = get_db()
+		cur = db.cursor()
+		cur.execute(
+			'INSERT INTO course VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+			(cname, courseterm, courseyear, coursepoint, coursetype, coursevolume, tid, dailyScoreRatio, dailyScoreRatioDesc, courseclass, scoreType)
+		)
+		db.commit()
+		return redirect(url_for('info.index'))
 
 	return render_template('info/createCourse.html')
 
