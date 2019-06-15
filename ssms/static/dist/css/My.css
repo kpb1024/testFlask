@@ -1,0 +1,75 @@
+
+.myButton {
+	-moz-box-shadow:inset 0px 39px 0px -24px #e67a73;
+	-webkit-box-shadow:inset 0px 39px 0px -24px #e67a73;
+	box-shadow:inset 0px 39px 0px -24px #e67a73;
+	background-color:#e4685d;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+	border:1px solid #ffffff;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:13px;
+	padding:4px 6px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #b23e35;
+}
+.myButton:hover {
+	background-color:#eb675e;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+
+.box1 {
+	position: relative;
+	top: 15px;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.box1 select {
+	position:relative;
+	right:25px;
+	background-color: #f9fafc;
+	color: black;
+	padding: 10px;
+	width: 150px;
+	border: none;
+	font-size: 15px;
+	box-shadow: 0 0px 1px rgba(0, 0, 0, 0.3);
+	-webkit-appearance: button;
+	appearance: button;
+	outline: none;
+}
+
+.box1::before {
+	content: "\f13a";
+	font-family: FontAwesome;
+	position: relative;
+	top: 5px;
+	left: 115px;
+	width: 20%;
+	height: 100%;
+	text-align: center;
+	font-size: 28px;
+	line-height: 45px;
+	color: rgba(66, 133, 231, 0.5);
+	background-color: rgba(255, 255, 255, 0.1);
+	pointer-events: none;
+	z-index:1;
+}
+
+.box1:hover::before {
+	color: rgba(145, 226, 255, 0.6);
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.box1 select option {
+	padding: 30px;
+}
