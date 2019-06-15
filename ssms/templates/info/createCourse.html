@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="box-body">
   <form method="post">
     <label for="cname">课程名称</label>
     <input name="cname" id="cname" value="{{ request.form['cname'] }}" required>
@@ -16,9 +17,10 @@
     <input name="courseyear" id="courseyear" value="{{ request.form['courseyear'] }}" required>
     <label for="coursetype">培养类别</label>
     <input name="coursetype" id="coursetype" value="{{ request.form['coursetype'] }}" required>
-    <label for="tname">教师名称</label>
-    <input name="tname" id="tname" value="{{ request.form['tname'] }}" required>
+    <label for="tid">教师名称</label>
+    <input name="tid" id="tid" value="{{ teacher}}" required>
 
     <input type="submit" value="添加课程">
   </form>
+</div>
 {% endblock %}

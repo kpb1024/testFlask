@@ -276,7 +276,7 @@
                                 <span style="top: auto;">条件筛选：</span>
                                 <span class="div_cols" style="position: relative;left: 1%;top: auto;">
                                         <label>课程类别：</label>
-                                        <span id="grade_slec_1"><select name="coursetype" id=""><option value="" selected="selected">--请选择--</option> <option value="Main">主修</option> <option value="Sub">辅修</option></select></span>
+                                        <span id="grade_slec_1"><select name="coursetype" id=""><option value="" selected="selected">--请选择--</option> <option value="主修">主修</option> <option value="辅修">辅修</option></select></span>
                                     </span>
                                 <!-- 学年 -->
                                 <span class="div_cols" style="position: relative;left: 5%;">
@@ -313,7 +313,8 @@
                                             <th>学分</th>
                                             <th>成绩</th>
                                             <th>绩点</th>
-                                            <th>状态</th>
+                                            <th>成绩状态</th>
+                                            <th>考试情况</th>
                                             <th>申诉</th>
 <!--                                            <th>通过情况</th>-->
                                         </tr>
@@ -321,15 +322,16 @@
                                         <tbody>
                                         {% for course in courses %}
                                         <tr>
-                                            <td>{% if course['coursetype'] == 'Main' %}主修{% else %}辅修{% endif %}</td>
+                                            <td>{{ course['coursetype']}}</td>
                                             <td>{{ course['cname'] }}</td>
-                                            <td>{{ course['tname'] }}</td>
+                                            <td>{{ course['name'] }}</td>
                                             <td>{{ course['courseyear'] }}</td>
                                             <td>{{ course['courseterm'] }}</td>
                                             <td>{{ course['coursepoint'] }}</td>
                                             <td>{{ course['score'] }}</td>
                                             <td>{{ course['gpa'] }}</td>
                                             <td>{{ course['st'] }}</td>
+                                            <td>{{ course['studentExamStatus'] }}</td>
                                             <td><a href="proposal" class="myButton">申诉</a></td>
                                         </tr>
                                         {% endfor %}

@@ -35,13 +35,14 @@ CREATE TABLE teacher (
 CREATE TABLE course (
   cid INTEGER PRIMARY KEY AUTO_INCREMENT,
   cname VARCHAR(20) NOT NULL,
-  courseterm TINYINT(1) UNSIGNED NOT NULL,
-  courseyear YEAR NOT NULL,
-  coursepoint TINYINT(1) UNSIGNED NOT NULL,
-  coursetype VARCHAR(4) NOT NULL,
+  courseterm TINYINT(1) UNSIGNED,
+  courseyear YEAR,
+  coursepoint TINYINT(1) UNSIGNED,
+  coursetype VARCHAR(4),
   coursevolume TINYINT(4),
-  tname VARCHAR(10) REFERENCES teacher (name),
-  dailyScoreRatio TINYINT UNSIGNED
+  tid INTEGER REFERENCES teacher (id),
+  dailyScoreRatio TINYINT UNSIGNED,
+  dailyScoreRatioDesc VARCHAR(40)
 );
 
 
@@ -52,7 +53,9 @@ CREATE TABLE studentCourse (
   gpa TINYINT(1) UNSIGNED,
   dailyScore TINYINT UNSIGNED,
   finalExamScore TINYINT UNSIGNED,
-  status VARCHAR(10),
+  scoreType VARCHAR(10),
+  scoreReviewStatus VARCHAR(10),
+  studentExamStatus VARCHAR(10),
   PRIMARY KEY (sid, cid)
 );
 

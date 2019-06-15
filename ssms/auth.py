@@ -59,7 +59,13 @@ def register():
 		id = request.form['id']
 		sname	 = request.form['sname']
 		auth = request.form['auth']
+		if auth == 0:
+			tablename = 'student'
+		else:
+			tablename = 'teacher'
 		is_male = request.form['is_male']
+		school = request.form['school']
+		enrollyear = request.form['enrollyear']
 		db = get_db()
 		cur = db.cursor()
 		error = None
@@ -71,8 +77,8 @@ def register():
 				(id, username,	generate_password_hash(password), auth, is_male)
 			)
 			cur.execute(
-				'INSERT INTO student (id, name) VALUES (%s, %s)',
-				(id, sname)
+				'INSERT INTO %s (id, name, school, enrollyear) VALUES (%s, %s, %s, %s)',
+				(tablename, id, sname, school, enrollyear)
 		)
 			db.commit()
 			return redirect(url_for('auth.login'))
