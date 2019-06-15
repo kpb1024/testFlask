@@ -347,8 +347,9 @@ def updateScore():
 	id=session['id']
 	db =get_db()
 	cur = db.cursor()
-	cur.execute('select cid,cname,coursetype,coursepoint,coursevolume from course,teacher '
-							 'where teacher.id=%s and teacher.name=course.tname',(id))
+	cur.execute(
+		'select cid,cname,coursetype,coursepoint,coursevolume from course, teacher '
+		'where teacher.id = course.tid and teacher.id = %s',(id))
 	courses = get_results(cur)
 	return render_template('info/updateScore.html', courses=courses)
 	
@@ -382,10 +383,8 @@ def importScore(cid):
 def seeScore(cid):
 	tid = session['id']
 	db = get_db()
-	cur = db.cursor()
-	cur.execute('update studentCourse set score = (dailyScore*dailyScoreRatio/100+finalExamScore*(100-dailyScoreRatio)/100) where cid=%s',(cid))
 	cur1 = db.cursor()
-	cur1.execute('select sid ,name,dailyScore,finalExamScore,score,status from student,studentCourse where cid=%s and sid=student.id',(cid))
+	cur1.execute('select sid ,name,dailyScore,finalExamScore,score,scoreReviewStatus from student,studentCourse where cid=%s and sid=student.id',(cid))
 	scores=get_results(cur1)	
 	db.commit()
 	return render_template('info/seeScore.html', scores=scores)
@@ -411,7 +410,7 @@ def setPercent(cid):
 def review():
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select cid,cname,coursetype,coursepoint,coursevolume,tname from course,teacher')
+	cur.execute('select cid,cname,coursetype,coursepoint,coursevolume,name from course,teacher')
 	courses = get_results(cur)
 	return render_template('info/review.html', courses=courses)
 	
