@@ -16,7 +16,25 @@ bp = Blueprint('info', __name__)
 @login_required
 def index():
 	if session['auth'] == 1:
-		return render_template('info/index2.html')
+		id=session['id']
+		db =get_db()
+		cur = db.cursor()
+		sql='select course.cid,cname,dailyScoreRatioDesc,coursepoint,courseyear,courseterm,scoreType,scoreReviewStatus from course,teacher,studentCourse  where teacher.id=%s and teacher.id=course.tid and teacher.id=studentCourse.tid and studentCourse.cid=course.cid'% id
+		if request.method == 'POST':
+			year = request.form['courseyear']
+			term = request.form['courseterm']
+			if year == u'' and term == u'':
+				pass
+			if year is not u'':
+				sql += ' and courseyear = %s' % year
+			if term is not u'':
+				sql += ' and courseterm = %s' % term
+			cur.execute(sql)
+			courses = get_results(cur)
+			return render_template('info/index2.html', courses=courses)
+		cur.execute(sql)
+		courses = get_results(cur)
+		return render_template('info/index2.html', courses=courses)
 	id = session['id']
 	db = get_db()
 	cur = db.cursor()
@@ -159,7 +177,7 @@ def showProposal():
 	db = get_db()
 	cur = db.cursor()
 	id = g.user['id']
-	sql = 'select DISTINCT cname,raisedTime,score, reason, reply,is_checked_by_teacher, is_checked_by_dean  from proposal, course,studentCourse where course.cid = studentCourse.cid and proposal.cid=course.cid  and proposal.sid = studentCourse.sid'
+	sql = 'select DISTINCT cname,raisedTime,score, reason, reply,is_checked_by_teacher, is_checked_by_dean,course.cid  from proposal, course,studentCourse where course.cid = studentCourse.cid and proposal.cid=course.cid  and proposal.sid = studentCourse.sid'
 	if g.user['auth'] == 0:
 		sql += ' and proposal.sid =%s' % id
 		cur.execute(sql)

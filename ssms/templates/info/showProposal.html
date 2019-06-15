@@ -31,7 +31,8 @@
 						<td>{{ proposal['is_checked_by_teacher'] }}</td>
 						<td>{{ proposal['is_checked_by_dean '] }}</td>
 						<td>{{ proposal['reply'] }}</td>
-						<td><a href="proposal" class="myButton">取消</a></td>
+						{% set i = proposal['cid'] %}
+						<td><a href="{{ url_for('info.cancelProposal',cid=i) }}" class="myButton">取消</a></td>
 					</tr>
 					{% endfor %}
 					</tbody>
