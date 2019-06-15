@@ -25,10 +25,9 @@ def index():
 	total_rank['total_point'] = total_point(id)
 	total_rank['total_avg_gpa'] = total_avg_gpa(id)
 	courseClass= {}
-	courseClass['gx'] = courseclass_gpa_rank(id)[1]
-	courseClass['gb'] = courseclass_gpa_rank(id)[2]
-	courseClass['zx'] = courseclass_gpa_rank(id)[0]
-	courseClass['zb'] = courseclass_gpa_rank(id)[3]
+	for i in range(len(courseclass_gpa_rank(id))):
+	    ctype=courseclass_gpa_rank(id)[i]['courseclass']
+	    courseClass[ctype]=courseclass_gpa_rank(id)[i]
 	sql = 'SELECT coursetype, cname, tname, courseyear, courseterm, coursepoint, score, gpa,`status` st '
 	sql += 'FROM studentCourse sc JOIN course c where sc.cid = c.cid and '
 	sql += 'sid = %s' % id
@@ -52,10 +51,9 @@ def index():
 	if len(courselist) is 0:
 		abort(404, "Student id {0} doesn't have Course score.".format(id))
 	courseClass= {}
-	courseClass['gx'] = courseclass_gpa_rank(id)[1]
-	courseClass['gb'] = courseclass_gpa_rank(id)[2]
-	courseClass['zx'] = courseclass_gpa_rank(id)[0]
-	courseClass['zb'] = courseclass_gpa_rank(id)[3]
+	for i in range(len(courseclass_gpa_rank(id))):
+	    ctype=courseclass_gpa_rank(id)[i]['courseclass']
+	    courseClass[ctype]=courseclass_gpa_rank(id)[i]
 	return render_template('info/index.html', courses=courselist, scores=total_rank,cc=courseClass)
 
 @bp.route('/create', methods=('GET', 'POST'))
