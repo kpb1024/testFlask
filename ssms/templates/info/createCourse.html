@@ -7,20 +7,65 @@
 {% block content %}
 <div class="box-body">
   <form method="post">
-    <label for="cname">课程名称</label>
+    <label for="cname">课程名称：</label>
     <input name="cname" id="cname" value="{{ request.form['cname'] }}" required>
-    <label for="courseterm">所在学期</label>
-    <input name="courseterm" id="courseterm" value="{{ request.form['courseterm'] }}" required>
-    <label for="coursepoint">学分</label>
-    <input name="coursepoint" id="coursepoint" value="{{ request.form['coursepoint'] }}" required>
-    <label for="courseyear">学年</label>
-    <input name="courseyear" id="courseyear" value="{{ request.form['courseyear'] }}" required>
-    <label for="coursetype">培养类别</label>
-    <input name="coursetype" id="coursetype" value="{{ request.form['coursetype'] }}" required>
-    <label for="tid">教师名称</label>
-    <input name="tid" id="tid" value="{{ teacher}}" required>
+    <div class="box1" style="font-size: 15px;">
+      <select name="courseyear">
+        <option value="" selected="selected">请选择课程所在学年</option>
+        <option value="2020">2020</option>
+        <option value="2019">2019</option>
+        <option value="2018">2018</option>
+      </select>
+    </div>
+    <div class="box1" style="font-size: 15px;">
+      <select name="courseterm">
+        <option value="" selected="selected">请选择课程所在学期</option>
+        <option value="1">第一学期</option>
+        <option value="2">第二学期</option>
+      </select>
+    </div>
+    <div class="box1" style="font-size: 15px;">
+      <select name="coursepoint">
+        <option value="" selected="selected">请选择课程学分</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+      </select>
+    </div>
+    <div class="box1" style="font-size: 15px;">
+      <select name="coursetype">
+        <option value="" selected="selected">请选择培养类别</option>
+        <option value="主修">主修课程</option>
+        <option value="辅修">辅修课程</option>
+      </select>
+    </div>
+    <div class="box1" style="font-size: 15px;">
+      <select name="courseclass">
+        <option value="" selected="selected">请选择课程类型</option>
+        <option value="gb">公必</option>
+        <option value="gx">公选</option>
+        <option value="zb">专必</option>
+        <option value="zx">专选</option>
+      </select>
+    </div>
+    <label for="coursevolume">课程容量：</label>
+    <input name="coursevolume" id="coursevolume" value="{{ request.form['coursevolume'] }}" required>
+    <label for="dailyScoreRatio">平时分占比：</label>
+    <input name="dailyScoreRatio" id="dailyScoreRatio" value="{{ request.form['dailyScoreRatio'] }}" required>%</input>
+    <div>
+      <textarea class="textarea" name="dailyScoreRationDesc" placeholder="在此编辑成绩分项及比例.."
+        style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+      </textarea>
+    </div>
 
-    <input type="submit" value="添加课程">
+    <div class="box-footer clearfix">
+      <button type="submit" class="pull-right btn btn-default"  id="createCourse">添加课程
+      <i class="fa fa-arrow-circle-right"></i></button>
+    </div>
+
   </form>
 </div>
 {% endblock %}
