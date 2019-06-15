@@ -29,10 +29,19 @@
 	<div class="box-body">
 
 		<form method="post">
-			<div class="form-group">
-				<input type="text" class="form-control" name="course" placeholder="申诉课程名称">
-			</div>
-			<div class="form-group">
+<!--			<div class="form-group">-->
+<!--				<input type="text" class="form-control" name="course" placeholder="申诉课程名称">-->
+				<div class="box1" style="font-size: 15px;">
+					<select name="course">
+						<option value="" selected="selected">请选择课程</option>
+						{% for course in courses %}
+						<option value="{{ course['cid']  }}">{{ course['cname']  }}</option>
+						{% endfor %}
+					</select>
+				</div>
+<!--			</div>-->
+
+			<div class="form-group" style="margin-top:20px">
 				<input type="text" class="form-control" name="teacher" placeholder="课程教师">
 			</div>
 			<div>
