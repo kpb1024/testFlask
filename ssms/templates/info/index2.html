@@ -254,13 +254,102 @@
     <!-- /.col -->
 </div>
 
+    <!-- 成绩显示栏 -->
+    <div class="row">
+    <div class="col-md-12">
+        <div class="box">
+
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="tips">
+                    <h5>使用提示：</h5>
+                    <ol>
+                        <li>学年不选，学期不选，即可查询所有科目的成绩。</li>
+                        <li>在成绩查询结果表格，点击课程名称，可将该课程置灰，表格顶部总学分及总绩点实时变动，实现自定义计算绩点功能(比如置灰所有公选科目)。</li>
+                        <li>在成绩查询结果表格，点击 该科目的成绩，即可查询该科目的具体分项成绩，比如平时分+期末分，以及具体权值。</li>
+                    </ol>
+                </div>
+                <!-- 成绩筛选 -->
+                <div class="grade_select" style="padding:20px">
+                    <!-- 培养类型 -->
+                    <form method="post" style="height: 50px;">
+                        <span style="top: auto;">条件筛选：</span>
+<!--                        <span class="div_cols" style="position: relative;left: 1%;top: auto;">-->
+<!--                                            <label>课程类别：</label>-->
+<!--                                            <span id="grade_slec_1"><select name="coursetype" id=""><option value="" selected="selected">&#45;&#45;请选择&#45;&#45;</option> <option value="Main">公选</option> <option value="Sub">公必</option><option value="Sub">专必</option><option value="Sub">专必</option></select></span>-->
+<!--                                        </span>-->
+                        <!-- 学年 -->
+                        <span class="div_cols" style="position: relative;left: 1%;">
+                                            <label>学年：</label>
+                                            <span id="grade_slec_2"><select name="courseyear" id=""><option value="" selected="selected">--请选择--</option> <option value="2019">2018-2019</option> <option value="2018">2017-2018</option> <option value="2017">2016-2017</option></select></span>
+                                        </span>
+                        <!-- 学期 -->
+                        <span class="div_cols" style="position: relative;left: 5%;">
+                                            <label>学期：</label>
+                                            <span id="grade_slec_3"><select name="courseterm" id=""><option value="" selected="selected">--请选择--</option> <option value="1">第一学期</option> <option value="2">第二学期</option> <option value="3">第三学期</option></select></span>
+                                        </span>
+                        <!-- 查询 -->
+                        <span class="div_cols search-bot" style="position: relative;left: 11%;top: 0px;">
+                                            <button type="submit" class="btn search_btn ng-binding" id="btn_refer" ng-disabled="classroomForm.$invalid">
+                                                <span class="fa fa-search refer"></span>查询
+                                            </button>
+                                        </span>
+                    </form>
+                </div>
+
+                <!-- 成绩显示 -->
+                <div class="box box-info">
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table no-margin">
+                                <thead>
+                                <tr>
+                                    <th>学年</th>
+                                    <th>学期</th>
+                                    <th>课程号</th>
+                                    <th>课程名称</th>
+                                    <th>学分</th>
+                                    <th>平时分比例</th>
+                                    <th>记录方式</th>
+                                    <th>审核状态</th>
+                                    <!--                                            <th>通过情况</th>-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for course in courses %}
+                                <tr>
+                                    <td>{{ course['courseyear'] }}</td>
+                                    <td>{{ course['courseterm'] }}</td>
+                                    <td>{{ course['cid'] }}</td>
+                                    <td>{{ course['cname'] }}</td>
+                                    <td>{{ course['coursepoint'] }}</td>
+									<td>{{ course['dailyScoreRatioDesc'] }}</td>
+									<td>{{ course['scoreType'] }}</td>
+									<td>{{ course['scoreReviewStatus'] }}</td>
+                                    <td><a href="proposal" class="myButton">操作</a></td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.box-body -->
+                    <!-- /.box-footer -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- TO DO List -->
     <div class="box box-primary">
         <div class="box-header">
             <i class="ion ion-clipboard"></i>
 
-            <h3 class="box-title">To Do List</h3>
+            <h3 class="box-title">任务列表</h3>
 
             <div class="box-tools pull-right">
                 <ul class="pagination pagination-sm inline">
