@@ -170,9 +170,17 @@ def showProposal():
 	db = get_db()
 	cur = db.cursor()
 	id = g.user['id']
-	cur.execute('select DISTINCT cname,raisedTime,score, reason, reply,is_checked_by_teacher, is_checked_by_dean  from proposal, course,studentCourse where course.cid = studentCourse.cid and proposal.cid=course.cid  and proposal.sid = studentCourse.sid and  proposal.sid = %s', id)
+	sql = 'select DISTINCT cname,raisedTime,score, reason, reply,is_checked_by_teacher, is_checked_by_dean  from proposal, course,studentCourse where course.cid = studentCourse.cid and proposal.cid=course.cid  and proposal.sid = studentCourse.sid'
+	if g.user['auth'] == 0:
+		sql += ' and proposal.sid =%s' % id
+		cur.execute(sql)
+	else:
+		sql += ' and proposal.cid =%s'
+		cur.executemany(sql, g.user['cid'])
 	proposals = get_results(cur)
 	return render_template('info/showProposal.html', proposals = proposals)
+
+
 
 @bp.route('/cancelProposal/<cid>')
 @login_required

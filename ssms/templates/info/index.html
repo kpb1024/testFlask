@@ -321,7 +321,7 @@
                                         <tbody>
                                         {% for course in courses %}
                                         <tr>
-                                            <td>{{ course['coursetype'] }}</td>
+                                            <td>{% if course['coursetype'] == 'Main' %}主修{% else %}辅修{% endif %}</td>
                                             <td>{{ course['cname'] }}</td>
                                             <td>{{ course['tname'] }}</td>
                                             <td>{{ course['courseyear'] }}</td>
