@@ -177,7 +177,7 @@ def showProposal():
 	db = get_db()
 	cur = db.cursor()
 	id = g.user['id']
-	sql = 'select DISTINCT cname,raisedTime,score, reason, reply,is_checked_by_teacher, is_checked_by_dean,course.cid  from proposal, course,studentCourse where course.cid = studentCourse.cid and proposal.cid=course.cid  and proposal.sid = studentCourse.sid'
+	sql='select DISTINCT cname,raisedTime,score, reason, reply,is_checked_by_teacher, is_checked_by_dean,course.cid  from proposal, course,studentCourse where course.cid = studentCourse.cid and proposal.cid=course.cid  and proposal.sid = studentCourse.sid'
 	if g.user['auth'] == 0:
 		sql += ' and proposal.sid =%s' % id
 		cur.execute(sql)
@@ -194,8 +194,8 @@ def showProposal():
 def cancelProposal(cid):
 	cur = get_db().cursor()
 	id = g.user['id']
-	cur.execute('delete from proposal where cid = %s and sid = %s', cid, id)
-	redirect(url_for('info.index'))
+	cur.execute('delete from proposal where cid = %s and sid = %s', (cid,id))
+	return redirect(url_for('info.index'))
 
 @bp.route('/myScore', methods=('GET', 'POST'))
 # @login_required
@@ -347,9 +347,7 @@ def updateScore():
 	id=session['id']
 	db =get_db()
 	cur = db.cursor()
-	cur.execute(
-		'select cid,cname,coursetype,coursepoint,coursevolume from course, teacher '
-		'where teacher.id = course.tid and teacher.id = %s',(id))
+	cur.execute('select course.cid,cname,dailyScoreRatioDesc,coursepoint,courseyear,courseterm,scoreType,scoreReviewStatus from course,teacher,studentCourse  where teacher.id=%s and teacher.id=course.tid and teacher.id=studentCourse.tid and studentCourse.cid=course.cid',(id))
 	courses = get_results(cur)
 	return render_template('info/updateScore.html', courses=courses)
 	
