@@ -74,57 +74,108 @@
                           <h3 class="box-title">消息列表</h3>
 
                       </div>
+
                       <!-- /.box-header -->
                       <div class="box-body">
                           <!-- Conversations are loaded here -->
                           <div class="direct-chat-messages">
                               <!-- Message. Default to the left -->
-                              <div class="direct-chat-msg">
+                              {% if t[0]>=3 %}
+                                 <div class="direct-chat-msg">
+                                    <div class="direct-chat-info clearfix">
+                                        <span class="direct-chat-name pull-left">资管{{ notice['name'] }}老师</span>
+
+                                     </div>
+                                     <!-- /.direct-chat-info -->
+                                     <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
+                                     <!-- /.direct-chat-img -->
+                                     <div class="direct-chat-text">
+                                         {{ notice['courseyear'] }}年{{ notice['cname'] }}课程成绩已经上传，教务{{ notice['scoreReviewStatus'] }}！
+                                   </div>
+                                   <!-- /.direct-chat-text -->
+                                 </div>
+                                <!-- /.direct-chat-msg -->
+
+                                 <!-- Message. Default to the left -->
+                                 <div class="direct-chat-msg">
+                                     <div class="direct-chat-info clearfix">
+                                        <span class="direct-chat-name pull-left">资管{{ notice1['name'] }}老师</span>
+
+                                      </div>
+                                     <!-- /.direct-chat-info -->
+                                    <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
+                                    <!-- /.direct-chat-img -->
+                                    <div class="direct-chat-text">
+                                        {{ notice1['courseyear'] }}年{{ notice1['cname'] }}课程成绩已经上传，教务{{ notice1['scoreReviewStatus'] }}！
+                                    </div>
+                                    <!-- /.direct-chat-text -->
+                                </div>
+                                 <!-- /.direct-chat-msg -->
+
+
+                                <div class="direct-chat-msg">
                                   <div class="direct-chat-info clearfix">
-                                      <span class="direct-chat-name pull-left">资管徐健老师</span>
-                                      <span class="direct-chat-timestamp pull-right">28 Jan 2:00 pm</span>
-                                  </div>
-                                  <!-- /.direct-chat-info -->
-                                  <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
-                                  <!-- /.direct-chat-img -->
-                                  <div class="direct-chat-text">
-                                      2018年数据结构课程成绩已经上传，等待教务审核！
-                                  </div>
-                                  <!-- /.direct-chat-text -->
-                              </div>
-                              <!-- /.direct-chat-msg -->
+                                      <span class="direct-chat-name pull-left">资管{{ notice2['name'] }}老师</span>
 
-                              <!-- Message. Default to the left -->
-                              <div class="direct-chat-msg">
-                                  <div class="direct-chat-info clearfix">
-                                      <span class="direct-chat-name pull-left">资管教务柯栋老师</span>
-                                      <span class="direct-chat-timestamp pull-right">23 Jan 5:37 pm</span>
-                                  </div>
-                                  <!-- /.direct-chat-info -->
-                                  <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
-                                  <!-- /.direct-chat-img -->
-                                  <div class="direct-chat-text">
-                                      2018年离散数学课程成绩已经审核完毕，开放查询！
-                                  </div>
-                                  <!-- /.direct-chat-text -->
-                              </div>
-                              <!-- /.direct-chat-msg -->
+                                     </div>
+                                     <!-- /.direct-chat-info -->
+                                      <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
+                                   <!-- /.direct-chat-img -->
+                                   <div class="direct-chat-text">
+                                      {{ notice2['courseyear'] }}年{{ notice2['cname'] }}课程成绩已经上传，教务{{ notice2['scoreReviewStatus'] }}！
+                                    </div>
+                                   <!-- /.direct-chat-text -->
+                                 </div>
+                              {% endif %}
+                               {% if t[0]==2 %}
+                                 <div class="direct-chat-msg">
+                                    <div class="direct-chat-info clearfix">
+                                        <span class="direct-chat-name pull-left">资管{{ notice['name'] }}老师</span>
 
+                                     </div>
+                                     <!-- /.direct-chat-info -->
+                                     <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
+                                     <!-- /.direct-chat-img -->
+                                     <div class="direct-chat-text">
+                                         {{ notice['courseyear'] }}年{{ notice['cname'] }}课程成绩已经上传，教务{{ notice['scoreReviewStatus'] }}！
+                                   </div>
+                                   <!-- /.direct-chat-text -->
+                                 </div>
+                                <!-- /.direct-chat-msg -->
 
-                              <div class="direct-chat-msg">
-                                  <div class="direct-chat-info clearfix">
-                                      <span class="direct-chat-name pull-left">资管教务柯栋老师</span>
-                                      <span class="direct-chat-timestamp pull-right">23 Jan 5:37 pm</span>
-                                  </div>
-                                  <!-- /.direct-chat-info -->
-                                  <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
-                                  <!-- /.direct-chat-img -->
-                                  <div class="direct-chat-text">
-                                      2018年离散数学课程成绩已经审核完毕，开放查询！
-                                  </div>
-                                  <!-- /.direct-chat-text -->
-                              </div>
+                                 <!-- Message. Default to the left -->
+                                 <div class="direct-chat-msg">
+                                     <div class="direct-chat-info clearfix">
+                                        <span class="direct-chat-name pull-left">资管{{ notice1['name'] }}老师</span>
 
+                                      </div>
+                                     <!-- /.direct-chat-info -->
+                                    <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
+                                    <!-- /.direct-chat-img -->
+                                    <div class="direct-chat-text">
+                                        {{ notice1['courseyear'] }}年{{ notice1['cname'] }}课程成绩已经上传，教务{{ notice1['scoreReviewStatus'] }}！
+                                    </div>
+                                    <!-- /.direct-chat-text -->
+                                </div>
+                                 <!-- /.direct-chat-msg -->
+                                {% endif %}
+
+                                {% if t[0]==1 %}
+                                 <div class="direct-chat-msg">
+                                    <div class="direct-chat-info clearfix">
+                                        <span class="direct-chat-name pull-left">资管{{ notice['name'] }}老师</span>
+
+                                     </div>
+                                     <!-- /.direct-chat-info -->
+                                     <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
+                                     <!-- /.direct-chat-img -->
+                                     <div class="direct-chat-text">
+                                         {{ notice['courseyear'] }}年{{ notice['cname'] }}课程成绩已经上传，教务{{ notice['scoreReviewStatus'] }}！
+                                   </div>
+                                   <!-- /.direct-chat-text -->
+                                 </div>
+                                <!-- /.direct-chat-msg -->
+                                {% endif %}
                           </div>
                           <!--/.direct-chat-messages-->
 

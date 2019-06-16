@@ -4,3 +4,4 @@ nohup.out
 *.swp
 /idea
 /_pycache_
+/.idea
