@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block header %}
-	<h1>成绩导入</h1>
+	<h1>成绩登记</h1>
 {% endblock %}
 {% block content %}
 <div class='row'>
@@ -18,22 +18,35 @@
 		  }
 		 }
 		 </script>
-		<table class="table no-margin">
 		<form action='{{ url_for('info.importScore',cid=cid)}}' method="post">
 		<table class="table no-margin">
 			<thead>
 				<th>学号</th>
-        		<th>姓名</th>
+				<th>姓名</th>
+				<th>学院</th>
+				<th>专业</th>
 				<th>平时成绩</th>
-				<th>期末成绩</th>
+				<th>考试成绩</th>
+				<th>考试状态</th>
 			</thead>
 			<tbody>
 			{% for student in students %}
 			<tr>
 				<td>{{student['sid']}}</td>
 				<td>{{student['name']}}</td>
+				<td>{{student['school']}}</td>
+				<td>{{student['major']}}</td>
 				<td><input type="text" name="{{student['sid']}}" value="{{student['dailyScore']}}" onkeyup="value=test(value)?value:''" size=6 required/> </td>
 				<td><input type="text" name="{{student['name']}}" value="{{student['finalExamScore']}}"  onkeyup="value=test(value)?value:''" size=6 required/></td>
+				<td>
+					<select name="status">
+						<option value="正常" selected="selected">正常</option>
+						<option value="免修" >免修</option>
+						<option value="缺考" >缺考</option>
+						<option value="缓考" >缓考</option>
+						<option value="作弊" >作弊</option>
+					</select>
+				</td>
 			</tr>
 			{% endfor %}
 			</tbody>
@@ -42,7 +55,7 @@
 		</form>
 		</div>
 	</div>
-<div align="center"><button><a href="{{ url_for('info.updateScore') }}">返回</a></button></div>
+<div align="center"><button><a href="{{ url_for('info.scoreMain',cid=cid) }}">返回</a></button></div>
 </div>
 </div>
 {% endblock %}

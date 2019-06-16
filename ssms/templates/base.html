@@ -20,7 +20,16 @@
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="static/dist/css/skins/_all-skins.min.css">
-  <!-- Google Font -->
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="static/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="static/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <!-- bootstrap wysihtml5 - text editor -->
+    <link rel="stylesheet" href="static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <!-- fullCalendar -->
+  <link rel="stylesheet" href="static/bower_components/fullcalendar/dist/fullcalendar.min.css">
+  <link rel="stylesheet" href="static/bower_components/fullcalendar/dist/fullcalendar.print.min.css" media="print">
+    <!-- Google Font -->
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -578,48 +587,6 @@
 </div>
 <!-- ./wrapper -->
 
-<!-- Vuejs -->
-<!--<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>-->
-<script src="static/vue.js"></script>
-<script>
-    new Vue({
-        el: '#grade_slec_1',
-        data: {
-            select1: '',
-            optionList: ['主修', '辅修']
-        },
-        methods: {
-            getValue: function(){
-                console.log('您选择了', this.select1)
-            }
-        }
-    })
-    new Vue({
-        el: '#grade_slec_2',
-        data: {
-            select1: '',
-            optionList: [ '2018-2019','2017-2018','2016-2017']
-        },
-        methods: {
-            getValue: function(){
-                console.log('您选择了', this.select2)
-            }
-        }
-    })
-    new Vue({
-        el: '#grade_slec_3',
-        data: {
-            select1: '',
-            optionList: ['第一学期', '第二学期']
-        },
-        methods: {
-            getValue: function(){
-                console.log('您选择了', this.select3)
-            }
-        }
-    })
-</script>
-
 
 
 
@@ -629,6 +596,9 @@
 <script src="static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- jquery-ui -->
 <script src="static/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!-- DataTables -->
+<script src="static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="static/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- FastClick -->
 <script src="static/bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
@@ -638,10 +608,6 @@
 <!-- jvectormap  -->
 <script src="static/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
 <script src="static/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-
-
-<script src="static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="static/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- SlimScroll -->
 <script src="static/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- ChartJS -->
@@ -653,6 +619,13 @@
 <!-- fullCalendar -->
 <script src="static/bower_components/moment/moment.js"></script>
 <script src="static/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+<!-- daterangepicker -->
+<script src="static/bower_components/moment/min/moment.min.js"></script>
+<script src="static/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- datepicker -->
+<script src="static/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 {% block jsfile %} {% endblock %}
 </body>
 </html>
