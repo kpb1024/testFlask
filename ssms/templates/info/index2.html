@@ -327,7 +327,8 @@
 									<td>{{ course['dailyScoreRatioDesc'] }}</td>
 									<td>{{ course['scoreType'] }}</td>
 									<td>{{ course['scoreReviewStatus'] }}</td>
-                                    <td><a href="proposal" class="myButton">操作</a></td>
+                                    {% set i = course['cid'] %}
+                                    <td><a href="{{ url_for('info.scoreMain',cid=course['cid']) }}" class="myButton">操作</a></td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
