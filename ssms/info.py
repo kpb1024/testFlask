@@ -2,7 +2,7 @@
 #coding:utf-8
 
 from flask import (
-	Blueprint, flash, g, session, redirect, render_template, request, url_for, current_app
+	Blueprint, flash, g, session, redirect, render_template, request, url_for, current_app, make_response
 )
 from flask.json import jsonify
 from werkzeug.exceptions import abort
@@ -10,6 +10,7 @@ from ssms.auth import login_required
 from ssms.db import get_db, get_results
 from ssms.analysis import * 
 from ssms.analysis2 import *
+from ssms.utils import *
 
 bp = Blueprint('info', __name__)
 
@@ -529,3 +530,13 @@ def scoreMain(cid):
 	cur.execute('SELECT sid,name,school,major,dailyScore,finalExamScore,score,studentExamStatus FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
 	courses = get_results(cur)
 	return render_template('info/scoreMain.html', courses=courses, cid=cid)
+
+@bp.route('/getExcelByCid/<cid>')
+def getExcelByCid(cid):
+	respdata = exportScoreList(cid)
+	resp = make_response(respdata[0])
+	resp.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(respdata[1])
+	resp.headers['Content-Type'] = 'application/x-xlsx'
+	return resp
+
+
