@@ -80,115 +80,17 @@
                           <!-- Conversations are loaded here -->
                           <div class="direct-chat-messages">
                               <!-- Message. Default to the left -->
-                              {% if t[0]>=3 %}
+                              {% for notice in notices %}
                                  <div class="direct-chat-msg">
                                     <div class="direct-chat-info clearfix">
                                         <span class="direct-chat-name pull-left">资管{{ notice['name'] }}老师</span>
-
                                      </div>
-                                     <!-- /.direct-chat-info -->
                                      <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
-                                     <!-- /.direct-chat-img -->
                                      <div class="direct-chat-text">
                                          {{ notice['courseyear'] }}年{{ notice['cname'] }}课程成绩已经上传，教务{{ notice['scoreReviewStatus'] }}！
-                                   </div>
-                                   <!-- /.direct-chat-text -->
-                                 </div>
-                                <!-- /.direct-chat-msg -->
-
-                                 <!-- Message. Default to the left -->
-                                 <div class="direct-chat-msg">
-                                     <div class="direct-chat-info clearfix">
-                                        <span class="direct-chat-name pull-left">资管{{ notice1['name'] }}老师</span>
-
-                                      </div>
-                                     <!-- /.direct-chat-info -->
-                                    <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
-                                    <!-- /.direct-chat-img -->
-                                    <div class="direct-chat-text">
-                                        {{ notice1['courseyear'] }}年{{ notice1['cname'] }}课程成绩已经上传，教务{{ notice1['scoreReviewStatus'] }}！
-                                    </div>
-                                    <!-- /.direct-chat-text -->
-                                </div>
-                                 <!-- /.direct-chat-msg -->
-
-
-                                <div class="direct-chat-msg">
-                                  <div class="direct-chat-info clearfix">
-                                      <span class="direct-chat-name pull-left">资管{{ notice2['name'] }}老师</span>
-
                                      </div>
-                                     <!-- /.direct-chat-info -->
-                                      <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
-                                   <!-- /.direct-chat-img -->
-                                   <div class="direct-chat-text">
-                                      {{ notice2['courseyear'] }}年{{ notice2['cname'] }}课程成绩已经上传，教务{{ notice2['scoreReviewStatus'] }}！
-                                    </div>
-                                   <!-- /.direct-chat-text -->
                                  </div>
-                                  <div class="direct-chat-msg">
-                                  <div class="direct-chat-info clearfix">
-                                      <span class="direct-chat-name pull-left">资管{{ notice3['name'] }}老师</span>
-
-                                     </div>
-                                     <!-- /.direct-chat-info -->
-                                      <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
-                                   <!-- /.direct-chat-img -->
-                                   <div class="direct-chat-text">
-                                      {{ notice3['courseyear'] }}年{{ notice2['cname'] }}课程成绩已经上传，教务{{ notice3['scoreReviewStatus'] }}！
-                                    </div>
-                                   <!-- /.direct-chat-text -->
-                                 </div>
-                              {% endif %}
-                               {% if t[0]==2 %}
-                                 <div class="direct-chat-msg">
-                                    <div class="direct-chat-info clearfix">
-                                        <span class="direct-chat-name pull-left">资管{{ notice['name'] }}老师</span>
-
-                                     </div>
-                                     <!-- /.direct-chat-info -->
-                                     <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
-                                     <!-- /.direct-chat-img -->
-                                     <div class="direct-chat-text">
-                                         {{ notice['courseyear'] }}年{{ notice['cname'] }}课程成绩已经上传，教务{{ notice['scoreReviewStatus'] }}！
-                                   </div>
-                                   <!-- /.direct-chat-text -->
-                                 </div>
-                                <!-- /.direct-chat-msg -->
-
-                                 <!-- Message. Default to the left -->
-                                 <div class="direct-chat-msg">
-                                     <div class="direct-chat-info clearfix">
-                                        <span class="direct-chat-name pull-left">资管{{ notice1['name'] }}老师</span>
-
-                                      </div>
-                                     <!-- /.direct-chat-info -->
-                                    <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
-                                    <!-- /.direct-chat-img -->
-                                    <div class="direct-chat-text">
-                                        {{ notice1['courseyear'] }}年{{ notice1['cname'] }}课程成绩已经上传，教务{{ notice1['scoreReviewStatus'] }}！
-                                    </div>
-                                    <!-- /.direct-chat-text -->
-                                </div>
-                                 <!-- /.direct-chat-msg -->
-                                {% endif %}
-
-                                {% if t[0]==1 %}
-                                 <div class="direct-chat-msg">
-                                    <div class="direct-chat-info clearfix">
-                                        <span class="direct-chat-name pull-left">资管{{ notice['name'] }}老师</span>
-
-                                     </div>
-                                     <!-- /.direct-chat-info -->
-                                     <img class="direct-chat-img" src="static/dist/img/user1-128x128.jpg" alt="message user image">
-                                     <!-- /.direct-chat-img -->
-                                     <div class="direct-chat-text">
-                                         {{ notice['courseyear'] }}年{{ notice['cname'] }}课程成绩已经上传，教务{{ notice['scoreReviewStatus'] }}！
-                                   </div>
-                                   <!-- /.direct-chat-text -->
-                                 </div>
-                                <!-- /.direct-chat-msg -->
-                                {% endif %}
+                              {% endfor %}
                           </div>
                           <!--/.direct-chat-messages-->
 

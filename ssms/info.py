@@ -21,7 +21,7 @@ def index():
 		id=session['id']
 		db =get_db()
 		cur = db.cursor()
-		sql='select distinct course.cid,cname,dailyScoreRatioDesc,coursepoint,courseyear,courseterm,scoreType,scoreReviewStatus from course,teacher,studentCourse  where teacher.id=%s and teacher.id=course.tid and teacher.id=studentCourse.tid and studentCourse.cid=course.cid'% id
+		sql='select distinct c.cid,cname,dailyScoreRatioDesc,coursepoint,courseyear,courseterm,scoreType,scoreReviewStatus from course c,teacher t,studentCourse sc where t.id=%s and t.id=c.tid and t.id=sc.tid and sc.cid=c.cid' % id
 		if request.method == 'POST':
 			year = request.form['courseyear']
 			term = request.form['courseterm']
@@ -77,59 +77,8 @@ def index():
 	sql = 'SELECT distinct cname, t.name,courseyear,scoreReviewStatus FROM studentCourse sc JOIN course c JOIN teacher t where sc.tid = t.id and sc.cid = c.cid and '
 	sql += 'sid = %s' % id
 	cur.execute(sql)
-	length=len(get_results(cur))
-	t={}
-	s=[length]
-	t['data']=s
-	if length>=3:
-		notice_1 = get_results(cur)[0]
-		notice_2 = get_results(cur)[1]
-		notice_3 =  get_results(cur)[2]
-		notice_4 =  get_results(cur)[3]
-		return render_template('info/index.html', courses=courselist, scores=total_rank,cc=courseClass,notice=notice_1,notice1=notice_2,notice2=notice_3,notice3=notice_4,t=t['data'])
-	if length==2:
-		notice_1 = get_results(cur)[0]
-		notice_2 = get_results(cur)[1]
-		return render_template('info/index.html', courses=courselist, scores=total_rank, cc=courseClass,
-							   notice=notice_1, notice1=notice_2,t=t['data'])
-	if length==1:
-		notice_1 = get_results(cur)[0]
-
-		return render_template('info/index.html', courses=courselist, scores=total_rank, cc=courseClass,
-							   notice=notice_1,t=t['data'])
-@bp.route('/create', methods=('GET', 'POST'))
-@login_required
-def create():
-	if request.method == 'POST':
-		cname = request.form['cname']
-		score = request.form['score']
-		gpa = request.form['gpa']
-		error = None
-		if not cname:
-			error = 'Course name is required.'
-		elif not score:
-			error = 'Score is required'
-		if error is not None:
-			flash(error)
-		else:
-			db = get_db()
-			cur = db.cursor()
-			cur.execute(
-				'SELECT * FROM course WHERE cname = %s ', (cname)
-			)
-			course = get_results(cur)
-			if len(course) is 0:
-				error= 'Course do not exist'
-				flash(error)
-			db.execute(
-				'INSERT INTO studentCourse (sid, cid, score, gpa)'
-				' VALUES ( %s, %s, %s, %s)',
-				(g.user['id'], course['cid'], score, gpa)
-			)
-			db.commit()
-			return redirect(url_for('info.index'))
-
-	return render_template('info/create.html')
+	notices = get_results(cur)
+	return render_template('info/index.html', courses=courselist, scores=total_rank,cc=courseClass,notices=notices)
 
 @bp.route('/createCourse', methods=('GET', 'POST'))
 @login_required
@@ -387,13 +336,16 @@ def importScore(cid):
 		if request.method=="POST":
 			db = get_db()
 			cur = db.cursor()
+			cur.execute('select dailyScoreRatio from course where cid = %s' % cid)
+			ratio = get_results(cur)[0]['dailyScoreRatio']
 			cur.execute('select sid,name from studentCourse,student where cid=%s and sid=student.id',(cid))
 			Students=get_results(cur)
 			for student in Students:
 				dailyScore = request.form[str(student['sid'])]
 				finalExamScore = request.form[student['name']]
+				score = (dailyScore*ratio + (100-ratio)*finalExamScore)/100
 				StudentExamStatus = request.form['status']
-				db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,student['sid'],cid))
+				db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s,score=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,score,student['sid'],cid))
 			db.commit()
 			return redirect(url_for('info.scoreMain',cid=CourseId))
 		db = get_db()
