@@ -9,6 +9,7 @@ from werkzeug.exceptions import abort
 from ssms.auth import login_required
 from ssms.db import get_db, get_results
 from ssms.analysis import * 
+from ssms.analysis2 import *
 
 bp = Blueprint('info', __name__)
 
@@ -19,7 +20,7 @@ def index():
 		id=session['id']
 		db =get_db()
 		cur = db.cursor()
-		sql='select course.cid,cname,dailyScoreRatioDesc,coursepoint,courseyear,courseterm,scoreType,scoreReviewStatus from course,teacher,studentCourse  where teacher.id=%s and teacher.id=course.tid and teacher.id=studentCourse.tid and studentCourse.cid=course.cid'% id
+		sql='select distinct course.cid,cname,dailyScoreRatioDesc,coursepoint,courseyear,courseterm,scoreType,scoreReviewStatus from course,teacher,studentCourse  where teacher.id=%s and teacher.id=course.tid and teacher.id=studentCourse.tid and studentCourse.cid=course.cid'% id
 		if request.method == 'POST':
 			year = request.form['courseyear']
 			term = request.form['courseterm']
