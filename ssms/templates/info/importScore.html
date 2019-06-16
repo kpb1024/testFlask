@@ -3,8 +3,16 @@
 	<h1>成绩登记</h1>
 {% endblock %}
 {% block content %}
-<div class='row'>
+<div class='row' style="position: relative;left: 20px;width: 99%;">
 <div class="box box-info">
+	<br>
+	<p style="position: relative;left: 15px;">目前平时分比例为：{{per[0]['dailyScoreRatio']}}<p>
+	<form action="{{ url_for('info.setPercent',cid=cid)}}" method="post" style="position: relative;left: 15px;">
+		<span>设置平时分比例：</span>
+		<input type=int name="dailyScoreRatio" value="{{per[0]['dailyScoreRatio']}}" onkeyup="value=test(value)?value:''" required style="width:5%;">
+		<input type="submit" value="确定">
+	</form>
+	<br>
 	<div class="box-body">
 		<div class="table-responsive">
 		<script>
@@ -36,15 +44,15 @@
 				<td>{{student['name']}}</td>
 				<td>{{student['school']}}</td>
 				<td>{{student['major']}}</td>
-				<td><input type="text" name="{{student['sid']}}" value="{{student['dailyScore']}}" onkeyup="value=test(value)?value:''" size=6 required/> </td>
-				<td><input type="text" name="{{student['name']}}" value="{{student['finalExamScore']}}"  onkeyup="value=test(value)?value:''" size=6 required/></td>
+				<td><input type="text" class="am-form-field" name="{{student['sid']}}" value="{{student['dailyScore']}}" onkeyup="value=test(value)?value:''" size=6 required/> </td>
+				<td><input type="text" class="am-form-field" name="{{student['name']}}" value="{{student['finalExamScore']}}"  onkeyup="value=test(value)?value:''" size=6 required/></td>
 				<td>
-					<select name="status">
+					<select name="status" id="status">
 						<option value="正常" selected="selected">正常</option>
-						<option value="免修" >免修</option>
-						<option value="缺考" >缺考</option>
-						<option value="缓考" >缓考</option>
-						<option value="作弊" >作弊</option>
+						<option value="免修" onclick="block()">免修</option>
+						<option value="缺考" onclick="block()">缺考</option>
+						<option value="缓考" onclick="block()">缓考</option>
+						<option value="作弊" onclick="block()">作弊</option>
 					</select>
 				</td>
 			</tr>
@@ -58,4 +66,23 @@
 <div align="center"><button><a href="{{ url_for('info.scoreMain',cid=cid) }}">返回</a></button></div>
 </div>
 </div>
+{% endblock %}
+{% block jsfile %}
+<script type="text/JavaScript">
+	$("#status").on("change",function(){
+		if($("option:selected",this).val() != "正常"){
+			// $(this).parents('td').siblings().find('input').css('color','red');
+			$(this).parents('td').siblings().find('input').attr('disabled',true);
+		}
+		if($("option:selected",this).val() == "正常"){
+			// $(this).parents('td').siblings().find('input').css('color','red');
+			$(this).parents('td').siblings().find('input').attr('disabled',false);
+		}
+	});
+	$("#submit").click(fuction(){
+		alert("确认要提交吗？")
+
+	});
+
+</script>
 {% endblock %}
