@@ -383,33 +383,44 @@ def importScore(cid):
 	cur1=db1.cursor()
 	cur1.execute('select distinct scoreType from studentCourse where cid=%s',(cid))
 	type=get_results(cur1)
+	db = get_db()
+	cur = db.cursor()
+	cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
+	students = get_results(cur)
+	cur.execute('select  dailyScoreRatio from course where cid =%s',cid)
+	per = get_results(cur)
 	if type[0]['scoreType']=='百分制':
 		if request.method=="POST":
 			db = get_db()
 			cur = db.cursor()
 			cur.execute('select sid,name from studentCourse,student where cid=%s and sid=student.id',(cid))
-			Students=get_results(cur)
-			for student in Students:
+			Students1=get_results(cur)
+			
+			for student in Students1:
 				dailyScore = request.form[str(student['sid'])]
 				finalExamScore = request.form[student['name']]
 				StudentExamStatus = request.form['status']
+				if(dailyScore==''):
+					dailyScore=None
+				else:
+					dailyScore=int(dailyScore)
+				if(finalExamScore==''):
+					finalExamScore=None
+				else:
+					finalExamScore=int(finalExamScore)
 				db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,student['sid'],cid))
 			db.commit()
-			return redirect(url_for('info.scoreMain',cid=CourseId))
-		db = get_db()
-		cur = db.cursor()
-		cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
-		students = get_results(cur)
-		cur.execute('select  dailyScoreRatio from course where cid =%s',cid)
-		per = get_results(cur)
+			return redirect(url_for('info.scoreMain', cid=cid))
 		return render_template('info/importScore.html', students=students, cid=cid,per=per)
 	else:
 		if request.method=="POST":
 			db = get_db()
 			cur = db.cursor()
 			cur.execute('select sid,name from studentCourse,student where cid=%s and sid=student.id',(cid))
-			Students=get_results(cur)
-			for student in Students:
+			Students1=get_results(cur)
+			dailyScore=None
+			finalExamScore=None
+			for student in Students1:
 				level=request.form['level']
 				StudentExamStatus = request.form['status']
 				if level=='优秀':
@@ -422,16 +433,12 @@ def importScore(cid):
 					score=65
 				elif level=='不合格':
 					score=55
-				db.cursor().execute('update studentCourse set score=%s,StudentExamStatus=%s where sid=%s and cid=%s',(score,StudentExamStatus,student['sid'],cid))
+				else:
+					score=None	#空键处理
+				db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,score=%s,StudentExamStatus=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,score,StudentExamStatus,student['sid'],cid))
 			db.commit()
-			return redirect(url_for('info.scoreMain',cid=CourseId))
-		db = get_db()
-		cur = db.cursor()
-		cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
-		students = get_results(cur)
-		cur.execute('select  dailyScoreRatio from course where cid =%s',cid)
-		per = get_results(cur)
-		return render_template('info/importScore0.html', students=students, cid=cid,per=per)
+			return redirect(url_for('info.scoreMain', cid=cid))
+		return render_template('info/importScore.html', students=students, cid=cid,per=per)#需要等级制页面吗
 	
 
 
@@ -553,7 +560,9 @@ def scoreMain(cid):
 	cur = db.cursor()
 	cur.execute('SELECT sid,name,school,major,dailyScore,finalExamScore,score,studentExamStatus FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
 	courses = get_results(cur)
-	return render_template('info/scoreMain.html', courses=courses, cid=cid)
+	cur.execute('select courseyear,courseterm,cname,dailyScoreRatioDesc from course where cid = %s',(cid))
+	info = get_results(cur)
+	return render_template('info/scoreMain.html', courses=courses, cid=cid,info=info)
 
 @bp.route('/getExcelByCid/<cid>')
 def getExcelByCid(cid):

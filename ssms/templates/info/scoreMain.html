@@ -14,7 +14,7 @@
             </div>
             <!-- 按钮 -->
             <div class="box-body">
-                <p>你目前正在查看:</p>
+                <p>你目前正在查看:  {{info[0]['cname']}}--{{info[0]['courseyear']}}--{{info[0]['courseterm']}}--{{info[0]['dailyScoreRatioDesc']}}</p>
                 <a class="btn btn-app" href="{{url_for('info.importScore',cid=cid) }}">
                     <i class="fa fa-edit"></i> 成绩登记
                 </a>
