@@ -9,7 +9,7 @@ from werkzeug.exceptions import abort
 from ssms.auth import login_required
 from ssms.db import get_db, get_results
 from ssms.analysis import * 
-
+from ssms.analysis2 import * 
 bp = Blueprint('info', __name__)
 
 @bp.route('/', methods=('GET','POST'))
@@ -355,8 +355,7 @@ def updateScore():
 @bp.route('/importScore?cid=<cid>', methods=['GET', 'POST'])
 @login_required
 def importScore(cid):	
-	tid = session['id']
-	CourseId = cid
+	id = session['id']
 	if request.method=="POST":
 		db = get_db()
 		cur = db.cursor()
@@ -365,14 +364,16 @@ def importScore(cid):
 		for student in Students:
 			dailyScore = request.form[str(student['sid'])]
 			finalExamScore = request.form[student['name']]
-			db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,student['sid'],cid))
+			StudentExamStatus = request.form['status']
+			db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,student['sid'],cid))
 		db.commit()
-		return redirect(url_for('info.seeScore',cid=CourseId))
+		return redirect(url_for('info.scoreMain',cid=CourseId))
 	db = get_db()
-	cur = db.cursor()	
-	cur.execute('select sid ,name,dailyScore,finalExamScore from student,studentCourse where cid=%s and sid=student.id', (cid))
-	students=get_results(cur)
-	return render_template('info/importScore.html', students=students,cid=cid)
+	cur = db.cursor()
+	cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
+	students = get_results(cur)
+	return render_template('info/importScore.html', students=students, cid=cid)
+	
 	
 
 
@@ -505,4 +506,4 @@ def scoreMain(cid):
 	cur = db.cursor()
 	cur.execute('SELECT sid,name,school,major,dailyScore,finalExamScore,score,studentExamStatus FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
 	courses = get_results(cur)
-	return render_template('info/scoreMain.html', courses=courses)
+	return render_template('info/scoreMain.html', courses=courses, cid=cid)
