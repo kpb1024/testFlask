@@ -97,7 +97,8 @@ myChart.setOption({
     },
     yAxis: {
         name: '排名',
-        type: 'value'
+        type: 'value',
+        inverse: true
     },
     series: [{
         name: '综合排名',
@@ -169,9 +170,8 @@ myChart2.setOption({
         },
         itemStyle: {
             normal: {
-                color: '#47abc2',
                 shadowBlur: 200,
-                shadowColor: 'rgba(71,171,194,0.5)'
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
             }
         },
         animationType: 'scale',
@@ -188,7 +188,7 @@ $.getJSON(url).done(
         score = json;
         myChart2.setOption({
             series: {
-                data: score
+                data: score.sort(function (a, b) { return a.value - b.value; }),
             }
         })
     }
