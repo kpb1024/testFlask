@@ -400,6 +400,7 @@ def importScore(cid):
 				dailyScore = request.form[str(student['sid'])]
 				finalExamScore = request.form[student['name']]
 				StudentExamStatus = request.form['status']
+				score = (dailyScore*ratio + (100-ratio)*finalExamScore)/100
 				if(dailyScore==''):
 					dailyScore=None
 				else:
@@ -408,7 +409,7 @@ def importScore(cid):
 					finalExamScore=None
 				else:
 					finalExamScore=int(finalExamScore)
-				db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,student['sid'],cid))
+				db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s,score=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,score,student['sid'],cid))
 			db.commit()
 			return redirect(url_for('info.scoreMain', cid=cid))
 		return render_template('info/importScore.html', students=students, cid=cid,per=per)
