@@ -496,3 +496,13 @@ def teacher2_graph(cid):
 	score['range'] = range
 	score['count'] = count
 	return jsonify(score)
+	
+@bp.route('/scoreMain?cid=<cid>', methods=('GET','POST'))
+@login_required
+def scoreMain(cid):
+	id = session['id']
+	db = get_db()
+	cur = db.cursor()
+	cur.execute('SELECT sid,name,school,major,dailyScore,finalExamScore,score,studentExamStatus FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
+	courses = get_results(cur)
+	return render_template('info/scoreMain.html', courses=courses)
