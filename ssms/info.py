@@ -368,7 +368,7 @@ def updateScore():
 	id=session['id']
 	db =get_db()
 	cur = db.cursor()
-	cur.execute('select course.cid,cname,dailyScoreRatioDesc,coursepoint,courseyear,courseterm,scoreType,scoreReviewStatus from course,teacher,studentCourse  where teacher.id=%s and teacher.id=course.tid and teacher.id=studentCourse.tid and studentCourse.cid=course.cid',(id))
+	cur.execute('select distinct course.cid,cname,coursetype,coursepoint,courseyear,courseterm,coursevolume,dailyScoreRatioDesc,scoreType,scoreReviewStatus from course,teacher,studentCourse  where teacher.id=%s and teacher.id=course.tid and teacher.id=studentCourse.tid and studentCourse.cid=course.cid',(id))
 	courses = get_results(cur)
 	return render_template('info/updateScore.html', courses=courses)
 	
@@ -377,34 +377,65 @@ def updateScore():
 @login_required
 def importScore(cid):	
 	id = session['id']
-	if request.method=="POST":
+	db1=get_db()
+	cur1=db1.cursor()
+	cur1.execute('select distinct scoreType from studentCourse where cid=%s',(cid))
+	type=get_results(cur1)
+	if type[0]['scoreType']=='百分制':
+		if request.method=="POST":
+			db = get_db()
+			cur = db.cursor()
+			cur.execute('select sid,name from studentCourse,student where cid=%s and sid=student.id',(cid))
+			Students=get_results(cur)
+			for student in Students:
+				dailyScore = request.form[str(student['sid'])]
+				finalExamScore = request.form[student['name']]
+				StudentExamStatus = request.form['status']
+				db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,student['sid'],cid))
+			db.commit()
+			return redirect(url_for('info.scoreMain',cid=CourseId))
 		db = get_db()
 		cur = db.cursor()
-		cur.execute('select sid,name from studentCourse,student where cid=%s and sid=student.id',(cid))
-		Students=get_results(cur)
-		for student in Students:
-			dailyScore = request.form[str(student['sid'])]
-			finalExamScore = request.form[student['name']]
-			StudentExamStatus = request.form['status']
-			db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,student['sid'],cid))
-		db.commit()
-		return redirect(url_for('info.scoreMain',cid=CourseId))
-	db = get_db()
-	cur = db.cursor()
-	cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
-	students = get_results(cur)
-	return render_template('info/importScore.html', students=students, cid=cid)
-	
-	
-
+		cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
+		students = get_results(cur)
+		return render_template('info/importScore.html', students=students, cid=cid)
+	else:
+		if request.method=="POST":
+			db = get_db()
+			cur = db.cursor()
+			cur.execute('select sid,name from studentCourse,student where cid=%s and sid=student.id',(cid))
+			Students=get_results(cur)
+			for student in Students:
+				level=request.form['level']
+				StudentExamStatus = request.form['status']
+				if level=='优秀':
+					score=95
+				elif level=='良好':
+					score=85
+				elif level=='一般':
+					score=75
+				elif level=='合格':
+					score=65
+				elif level=='不合格':
+					score=55
+				db.cursor().execute('update studentCourse set score=%s,StudentExamStatus=%s where sid=%s and cid=%s',(score,StudentExamStatus,student['sid'],cid))
+			db.commit()
+			return redirect(url_for('info.scoreMain',cid=CourseId))
+		db = get_db()
+		cur = db.cursor()
+		cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
+		students = get_results(cur)
+		return render_template('info/importScore0.html', students=students, cid=cid)
 
 @bp.route('/seeScore?cid=<cid>')
 @login_required
 def seeScore(cid):
 	tid = session['id']
 	db = get_db()
+	cur = db.cursor()
+	cur.execute('update studentCourse,course set score = (dailyScore*dailyScoreRatio/100+finalExamScore*(100-dailyScoreRatio)/100) where course.cid=%s',(cid))
 	cur1 = db.cursor()
-	cur1.execute('select sid ,name,dailyScore,finalExamScore,score,scoreReviewStatus from student,studentCourse where cid=%s and sid=student.id',(cid))
+	cur1.execute('select sid ,name,dailyScore,finalExamScore,score from student,studentCourse where cid=%s and sid=student.id',(cid))
 	scores=get_results(cur1)	
 	db.commit()
 	return render_template('info/seeScore.html', scores=scores)
@@ -415,12 +446,14 @@ def setPercent(cid):
 	if request.method == 'POST':
 		tid = session['id']
 		dailyScoreRatio=request.form['dailyScoreRatio']
+		a=100-int(dailyScoreRatio)
+		dailyScoreRatioDesc="平时成绩("+dailyScoreRatio+"%)，期末成绩("+str(a)+"%)"
 		db = get_db()
-		db.cursor().execute('update studentCourse set dailyScoreRatio=%s where cid=%s',(dailyScoreRatio,cid))
+		db.cursor().execute('update course set dailyScoreRatio=%s,dailyScoreRatioDesc=%s where cid=%s',(dailyScoreRatio,dailyScoreRatioDesc,cid))
 		db.commit()
 	db1 = get_db()
 	cur1=db1.cursor()
-	cur1.execute('select distinct dailyScoreRatio from studentCourse where cid=%s',(cid))
+	cur1.execute('select distinct dailyScoreRatio from course where cid=%s',(cid))
 	per=get_results(cur1)
 	db1.commit()
 	return render_template('info/setPercent.html',cid=cid,per=per)	
@@ -430,16 +463,28 @@ def setPercent(cid):
 def review():
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select cid,cname,coursetype,coursepoint,coursevolume,name from course,teacher')
+	cur.execute('select cid,cname,coursetype,coursepoint,courseyear,courseterm,coursevolume,name from course,teacher')
 	courses = get_results(cur)
 	return render_template('info/review.html', courses=courses)
 	
 @bp.route('/reviewGrade?cid=<cid>', methods=['GET', 'POST'])
 @login_required
 def reviewGrade(cid):
+	if request.method == 'POST':
+		radio=request.form['radio']
+		if radio=='√':
+			db1 = get_db()	
+			cur1 = db1.cursor()
+			cur1.execute('update studentCourse set scoreReviewStatus=%s where cid=%s',('审核完毕',cid))
+			db1.commit()
+		else:
+			feedback=request.form['feedback']
+			db2 = get_db()	
+			cur2 = db2.cursor()
+			cur1.execute('update studentCourse set scoreReviewStatus=%s where cid=%s',(feedback,cid))
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select sid ,name,dailyScore,finalExamScore,score,status from student,studentCourse where cid=%s and sid=student.id',(cid))
+	cur.execute('select sid ,name,dailyScore,finalExamScore,score,scoreReviewStatus from student,studentCourse where cid=%s and sid=student.id',(cid))
 	scores=get_results(cur)
 	return render_template('info/reviewGrade.html', scores=scores)
 
