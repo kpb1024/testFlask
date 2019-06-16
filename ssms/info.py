@@ -73,7 +73,7 @@ def index():
 	for i in range(len(courseclass_gpa_rank(id))):
 	    ctype=courseclass_gpa_rank(id)[i]['courseclass']
 	    courseClass[ctype]=courseclass_gpa_rank(id)[i]
-	sql = 'SELECT cname, t.name,courseyear,scoreReviewStatus FROM studentCourse sc JOIN course c JOIN teacher t where sc.tid = t.id and sc.cid = c.cid and '
+	sql = 'SELECT distinct cname, t.name,courseyear,scoreReviewStatus FROM studentCourse sc JOIN course c JOIN teacher t where sc.tid = t.id and sc.cid = c.cid and '
 	sql += 'sid = %s' % id
 	cur.execute(sql)
 	length=len(get_results(cur))
@@ -83,8 +83,9 @@ def index():
 	if length>=3:
 		notice_1 = get_results(cur)[0]
 		notice_2 = get_results(cur)[1]
-		notice_3=  get_results(cur)[2]
-		return render_template('info/index.html', courses=courselist, scores=total_rank,cc=courseClass,notice=notice_1,notice1=notice_2,notice2=notice_3,t=t['data'])
+		notice_3 =  get_results(cur)[2]
+		notice_4 =  get_results(cur)[3]
+		return render_template('info/index.html', courses=courselist, scores=total_rank,cc=courseClass,notice=notice_1,notice1=notice_2,notice2=notice_3,notice3=notice_4,t=t['data'])
 	if length==2:
 		notice_1 = get_results(cur)[0]
 		notice_2 = get_results(cur)[1]
