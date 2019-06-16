@@ -128,7 +128,7 @@ def course_count(cid):
 def student_rank(cid, sid):
 	db = get_db()
 	cur = db.cursor()
-	cur.execute('select rank() over(order by score desc) rnk from (select * from studentCourse where cid = %s) as s where sid = %s', (cid, sid))
+	cur.execute('select rnk from (select sid, rank() over(order by score desc) rnk from (select * from studentCourse where cid = %s) as s) as c where sid=%s', (cid, sid))
 	student_rank = get_results(cur)
 	return student_rank
 
