@@ -352,7 +352,9 @@ def importScore(cid):
 		cur = db.cursor()
 		cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
 		students = get_results(cur)
-		return render_template('info/importScore.html', students=students, cid=cid)
+		cur.execute('select  dailyScoreRatio from course where cid =%s',cid)
+		per = get_results(cur)
+		return render_template('info/importScore.html', students=students, cid=cid,per=per)
 	else:
 		if request.method=="POST":
 			db = get_db()
@@ -379,11 +381,31 @@ def importScore(cid):
 		cur = db.cursor()
 		cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
 		students = get_results(cur)
-		return render_template('info/importScore0.html', students=students, cid=cid)
+		cur.execute('select  dailyScoreRatio from course where cid =%s',cid)
+		per = get_results(cur)
+		return render_template('info/importScore0.html', students=students, cid=cid,per=per)
+	
+
+
+@bp.route('/seeScore?cid=<cid>')
+@login_required
+def seeScore(cid):
+	tid = session['id']
+	db = get_db()
+	cur1 = db.cursor()
+	cur1.execute('select sid ,name,dailyScore,finalExamScore,score,scoreReviewStatus from student,studentCourse where cid=%s and sid=student.id',(cid))
+	scores=get_results(cur1)	
+	db.commit()
+	return render_template('info/seeScore.html', scores=scores)
 
 @bp.route('/setPercent?cid=<cid>', methods=['GET', 'POST'])
 @login_required
 def setPercent(cid):
+	tid = session['id']
+	db = get_db()
+	cur = db.cursor()
+	cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,tid))
+	students = get_results(cur)
 	if request.method == 'POST':
 		tid = session['id']
 		dailyScoreRatio=request.form['dailyScoreRatio']
@@ -392,12 +414,14 @@ def setPercent(cid):
 		db = get_db()
 		db.cursor().execute('update course set dailyScoreRatio=%s,dailyScoreRatioDesc=%s where cid=%s',(dailyScoreRatio,dailyScoreRatioDesc,cid))
 		db.commit()
+		return redirect(url_for('info.importScore', cid=cid))
 	db1 = get_db()
 	cur1=db1.cursor()
 	cur1.execute('select distinct dailyScoreRatio from course where cid=%s',(cid))
 	per=get_results(cur1)
 	db1.commit()
-	return render_template('info/setPercent.html',cid=cid,per=per)	
+	return redirect(url_for('info.importScore', cid=cid))	
+
 	
 @bp.route('/review', methods=['GET', 'POST'])
 @login_required
