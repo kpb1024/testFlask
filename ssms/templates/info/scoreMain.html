@@ -12,7 +12,20 @@
             <div class="box-header">
                 <h3 class="box-title">课程成绩</h3>
             </div>
-            <!-- /.box-header -->
+            <!-- 按钮 -->
+            <div class="box-body">
+                <p>你目前正在查看:</p>
+                <a class="btn btn-app" href="{{url_for('info.importScore',cid=cid) }}">
+                    <i class="fa fa-edit"></i> 成绩登记
+                </a>
+                <a class="btn btn-app" >
+                    <i class="fa fa-bar-chart"></i> 成绩分析
+                </a>
+                <a class="btn btn-app">
+                    <i class="fa fa-save"></i> 打印
+                </a>
+            </div>
+            <!-- 表格 -->
             <div class="box-body">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
@@ -28,31 +41,20 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <meta charset="UTF-8">
                     {% for course in courses %}
                     <tr>
-                        <td>{{ course['id'] }}</td>
+                        <td>{{ course['sid'] }}</td>
                         <td>{{ course['name'] }}</td>
                         <td>{{ course['school'] }}</td>
                         <td>{{ course['major'] }}</td>
                         <td>{{ course['dailyScore'] }}</td>
                         <td>{{ course['finalExamScore'] }}</td>
-                        <td>{{ course['Score'] }}</td>
+                        <td>{{ course['score'] }}</td>
                         <td>{{ course['studentExamStatus'] }}</td>
                     </tr>
                     {% endfor %}
                     </tbody>
-                    <tfoot>
-                    <tr>
-                        <th>学号</th>
-                        <th>姓名</th>
-                        <th>学院</th>
-                        <th>专业</th>
-                        <th>平时成绩</th>
-                        <th>考试成绩</th>
-                        <th>最终成绩</th>
-                        <th>成绩状态</th>
-                    </tr>
-                    </tfoot>
                 </table>
             </div>
             <!-- /.box-body -->
