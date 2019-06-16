@@ -400,7 +400,9 @@ def importScore(cid):
 		cur = db.cursor()
 		cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
 		students = get_results(cur)
-		return render_template('info/importScore.html', students=students, cid=cid)
+		cur.execute('select  dailyScoreRatio from course where cid =%s',cid)
+		per = get_results(cur)
+		return render_template('info/importScore.html', students=students, cid=cid,per=per)
 	else:
 		if request.method=="POST":
 			db = get_db()
@@ -427,7 +429,9 @@ def importScore(cid):
 		cur = db.cursor()
 		cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
 		students = get_results(cur)
-		return render_template('info/importScore0.html', students=students, cid=cid)
+		cur.execute('select  dailyScoreRatio from course where cid =%s',cid)
+		per = get_results(cur)
+		return render_template('info/importScore0.html', students=students, cid=cid,per=per)
 	
 
 
@@ -442,7 +446,6 @@ def seeScore(cid):
 	db.commit()
 	return render_template('info/seeScore.html', scores=scores)
 
->>>>>>> master
 @bp.route('/setPercent?cid=<cid>', methods=['GET', 'POST'])
 @login_required
 def setPercent(cid):
