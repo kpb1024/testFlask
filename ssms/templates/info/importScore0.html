@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block header %}
+	<h1>成绩登记</h1>
+{% endblock %}
+{% block content %}
+
+<div class='row'>
+<div class="box box-info">
+	<div class="box-body">
+		<div class="table-responsive">
+            <form action='{{ url_for('info.importScore',cid=cid)}}' method="post">
+		<table class="table no-margin">
+			<thead>
+				<th>学号</th>
+				<th>姓名</th>
+				<th>学院</th>
+				<th>专业</th>
+				<th>成绩</th>
+				<th>考试状态</th>
+			</thead>
+			<tbody>
+			{% for student in students %}
+			<tr>
+				<td>{{student['sid']}}</td>
+				<td>{{student['name']}}</td>
+				<td>{{student['school']}}</td>
+				<td>{{student['major']}}</td>
+				<td>
+					<select name="level">
+						<option value="优秀" >优秀</option>
+						<option value="良好" selected="selected">良好</option>
+						<option value="一般" >一般</option>
+						<option value="合格" >合格</option>
+						<option value="不合格" >不合格</option>
+					</select>
+				</td>
+				<td>
+					<select name="status">
+						<option value="正常" selected="selected">正常</option>
+						<option value="免修" >免修</option>
+						<option value="缺考" >缺考</option>
+						<option value="缓考" >缓考</option>
+						<option value="作弊" >作弊</option>
+					</select>
+				</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		<div align="center"><input type="submit" value="确认" name="submit"/></div>
+		</form>
+		</div>
+	</div>
+<div align="center"><button><a href="{{ url_for('info.scoreMain',cid=cid) }}">返回</a></button></div>
+</div>
+</div>
+{% endblock %}

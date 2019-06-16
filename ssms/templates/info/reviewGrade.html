@@ -32,7 +32,16 @@
 	  </div>
 	  <div align="center">
 	  <form method="post">
-	  <input type="submit" value="提交审核">
+	  <input type="radio" name="radio" value="√" size=16 >
+	  <textarea name="" cols="50"  readonly> 
+        通过成绩录入,在成绩管理系统显示成绩
+      </textarea>
+	  <input type="radio" name="radio" value="×" size=16>
+	  <textarea name="feedback" cols="50" > 
+        成绩录入审核不通过，填写审核意见
+      </textarea><br>
+	  <input type="submit" value="提交">
+	  </form>
 	  <button><a href="{{ url_for('info.review') }}">返回</a></button>
 	  </div>
 	</div>
