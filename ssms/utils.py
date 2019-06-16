@@ -18,12 +18,12 @@ def exportScoreList(cid):
 	# worksheet.set_default_row(35)  # 设置默认行高
 	style1 = workbook.add_format({'font_size': '11', 'align': 'center', 'valign': 'vcenter', 'bold': True})   # 设置风格    'bg_color': '#34A0FF',
 	style2 = workbook.add_format({'font_size': '11', 'align': 'center', 'valign': 'vcenter', 'bold': False})   # 'font_color': '#217346'
-	worksheet.set_column('A:F', None, style2)
+	worksheet.set_column('A:H', None, style2)
 	worksheet.set_column(0, 7, 20)  # 设置列宽
-	title = ['学号', '姓名', '平时成绩', '期末成绩', '总成绩', '成绩审核状态']
+	title = ['学号', '姓名', '学院','专业','平时成绩', '期末成绩', '最终成绩', '成绩状态']
 	worksheet.write_row('A1', title, style1)
 	cur.execute(
-		'select sid, name, dailyScore, finalExamScore, score, scoreReviewStatus from student, studentCourse '
+		'select sid, name, school, major, dailyScore, finalExamScore, score, studentExamStatus from student, studentCourse '
 		'where sid = id and cid = %s',
 		(cid)
 	)
@@ -33,10 +33,12 @@ def exportScoreList(cid):
 		data = [
 			score['sid'],
 			score['name'],
+			score['school'],
+			score['major'],
 			score['dailyScore'],
 			score['finalExamScore'],
 			score['score'],
-			score['scoreReviewStatus']
+			score['studentExamStatus']
 		]
 		worksheet.write_row('A'+ str(i+2), data)
 		i = i + 1

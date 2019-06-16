@@ -18,10 +18,10 @@
                 <a class="btn btn-app" href="{{url_for('info.importScore',cid=cid) }}">
                     <i class="fa fa-edit"></i> 成绩登记
                 </a>
-                <a class="btn btn-app" >
+                <a class="btn btn-app" href="{{url_for('info.courseAnalysis',cid=cid) }}">
                     <i class="fa fa-bar-chart"></i> 成绩分析
                 </a>
-                <a class="btn btn-app">
+                <a class="btn btn-app" href="{{url_for('info.getExcelByCid',cid=cid) }}">
                     <i class="fa fa-save"></i> 打印
                 </a>
             </div>
