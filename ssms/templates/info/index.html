@@ -484,7 +484,7 @@
               <span class="info-box-number">{{cc['gb']['gp']}}</span>
 
               <div class="progress">
-                <div class="progress-bar" style="width: 50%"></div>
+                <div class="progress-bar" style="width: {{cc['gb']['ttpoint']/33 * 100}}%"></div>
               </div>
               <span class="progress-description">
                     完成学分：{{cc['gb']['ttpoint']}}/33
@@ -501,10 +501,10 @@
               <span class="info-box-number">{{cc['zb']['gp']}}</span>
 
               <div class="progress">
-                <div class="progress-bar" style="width: 20%"></div>
+                <div class="progress-bar" style="width: {{cc['zb']['ttpoint']/64 * 100}}%"></div>
               </div>
               <span class="progress-description">
-                    完成学分：{{cc['gb']['ttpoint']}}/64
+                    完成学分：{{cc['zb']['ttpoint']}}/64
                   </span>
             </div>
             <!-- /.info-box-content -->
@@ -518,7 +518,7 @@
               <span class="info-box-number">{{cc['gx']['gp']}}</span>
 
               <div class="progress">
-                <div class="progress-bar" style="width: 70%"></div>
+                <div class="progress-bar" style="width: {{cc['gx']['ttpoint']/16 * 100}}%"></div>
               </div>
               <span class="progress-description">
                     完成学分：{{cc['gx']['ttpoint']}}/16
@@ -535,7 +535,7 @@
               <span class="info-box-number">{{cc['zx']['gp']}}</span>
 
               <div class="progress">
-                <div class="progress-bar" style="width: 40%"></div>
+                <div class="progress-bar" style="width: {{cc['zx']['ttpoint']/32 * 100}}%"></div>
               </div>
               <span class="progress-description">
                     完成学分：{{cc['zx']['ttpoint']}}/32

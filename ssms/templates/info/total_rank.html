@@ -122,10 +122,6 @@ $.getJSON(url).done(function (json) {
         }]
     })
 })
-
-window.onresize = function(){
-    myChart.resize();
-}
 </script>
 <script type="text/javascript">
 var myChart2 = echarts.init(document.getElementById('myChart-2'));
@@ -193,5 +189,9 @@ $.getJSON(url).done(
         })
     }
 )
+window.onresize = function(){
+    myChart2.resize();
+	myChart.resize();
+}
 </script>
 {% endblock %}

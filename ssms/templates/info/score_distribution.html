@@ -42,6 +42,9 @@
         {% endfor %}
     </div>
     <div class="col-md-6">
+		<script type="text/javascript">
+		var myCharts=new Array();
+		</script>
         {% for subject in courses %}
         <div class="box box-info">
             <div class="box-header with-border">
@@ -58,7 +61,8 @@
         <script type="text/javascript">
         var url = '{{ url_for('info.score_distribution_graph', cid=subject['cid']) }}';
         $.getJSON(url).done(function(json){
-            echarts.init(document.getElementById('myChart-{{ subject['cid'] }}')).setOption({
+			myChart = echarts.init(document.getElementById('myChart-{{ subject['cid'] }}'))
+            myChart.setOption({
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -87,9 +91,17 @@
                 smooth: true
             }]
         });
+		myCharts.push(myChart)
         })
         </script>
         {% endfor %}
+		<script type="text/javascript">
+		window.onresize = function(){
+			for (let x of myCharts){
+				x.resize();
+			}
+		}
+		</script>
     </div>
 </div>
 {% endblock %}
