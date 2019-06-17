@@ -84,7 +84,8 @@
         <script type="text/javascript">
         var url = '{{ url_for('info.teacher2_graph', cid=subject['cid']) }}';
         $.getJSON(url).done(function(json){
-            echarts.init(document.getElementById('myChart-{{ subject['cid'] }}')).setOption({
+            myChart = echarts.init(document.getElementById('myChart-{{ subject['cid'] }}'))
+            myChart.setOption({
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -114,6 +115,9 @@
             }]
         });
         })
+        window.onresize = function(){
+			myChart.resize();
+		}
         </script>
         {% endfor %}
     </div>

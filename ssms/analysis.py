@@ -1,6 +1,10 @@
 #!/usr/bin/python
 #coding:utf-8
 from ssms.db import get_db, get_results
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.header import Header
 
 # 1. 综合排名
 # tested
@@ -176,4 +180,21 @@ def course_involve(sid):
 	cur.execute('select course.cid, cname from course, studentCourse where sid = %s and studentCourse.cid = course.cid', (sid))
 	course_involve = get_results(cur)
 	return course_involve
+
+def send_email(msg, to):
+	# 三个参数：第一个为文本内容，第二个 plain 设置文本格式，第三个 utf-8 设置编码
+	message = MIMEText(msg, 'plain', 'utf-8')
+	message['from'] = '757139408@qq.com'
+	password = "ythmxdzhmcxhbahi"
+	message['subject'] = Header(u'教务系统消息', 'utf-8').encode()
+	smtp_server = "smtp.qq.com"
+	server = smtplib.SMTP(smtp_server, 25)  # SMTP协议默认端口是25
+	# 打印出和SMTP服务器交互的所有信息。
+	# server.set_debuglevel(1)
+	# 登录SMTP服务器
+	server.login(message['from'], password)
+	# 发邮件，由于可以一次发给多个人，所以传入一个list;
+	# 邮件正文是一个str，as_string()把MIMEText对象变成str。
+	server.sendmail(message['from'], to, message.as_string())
+	server.quit()
 
