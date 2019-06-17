@@ -148,15 +148,14 @@ def createCourse():
 		coursevolume = request.form['coursevolume']
 		courseyear = request.form['courseyear']
 		courseclass = request.form['courseclass']
-		scoreType = request.form['scoreType']
 		dailyScoreRatio = request.form['dailyScoreRatio']
 		dailyScoreRatioDesc = request.form['dailyScoreRatioDesc']
 		tid = g.user['id']
 		db = get_db()
 		cur = db.cursor()
 		cur.execute(
-			'INSERT INTO course VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-			(cname, courseterm, courseyear, coursepoint, coursetype, coursevolume, tid, dailyScoreRatio, dailyScoreRatioDesc, courseclass, scoreType)
+			'INSERT INTO course(cname, courseterm, courseyear, coursepoint, coursetype, coursevolume, tid, dailyScoreRatio, dailyScoreRatioDesc, courseclass) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+			(cname, courseterm, courseyear, coursepoint, coursetype, coursevolume, tid, dailyScoreRatio, dailyScoreRatioDesc, courseclass)
 		)
 		db.commit()
 		return redirect(url_for('info.index'))
