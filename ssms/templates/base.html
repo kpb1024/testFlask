@@ -299,8 +299,10 @@
           <p>{{ g.user['username'] }}</p>
           {% if g.user['auth'] == 0 %}
             <p>学生用户</p> 
-          {% else %}
+          {% elif g.user['auth'] == 1 %}
             <p>教师用户</p> 
+          {% else %}
+            <p>教务员用户</p> 
           {% endif %}
         </div>
       </div>
@@ -319,8 +321,6 @@
             <li><a href="showProposal"><i class="fa fa-circle-o"></i>查看成绩申诉</a></li>
           </ul>
         </li>
-        {% endif %}
-        {% if g.user['auth'] == 0 %}
         <li class="treeview">
           <a href="#">
             <i class="fa fa-pie-chart"></i>
@@ -335,7 +335,7 @@
             <li><a href="sw_analysis"><i class="fa fa-circle-o"></i>优劣势学科分析</a></li>
           </ul>
         </li>
-        {% else %}
+        {% elif g.user['auth'] == 1 %}
         <li class="treeview">
           <a href="#">
             <i class="fa fa-pie-chart"></i>
@@ -346,9 +346,9 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="updateScore"><i class="fa fa-circle-o"></i>课程详情</a></li>
-            <li><a href="review"><i class="fa fa-circle-o"></i>成绩审核（教务员）</a></li>
           </ul>
         </li>
+        {% else %}
         <li class="treeview">
           <a href="#">
             <i class="fa fa-pie-chart"></i>
@@ -359,6 +359,7 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="createCourse"><i class="fa fa-circle-o"></i>创建课程</a></li>
+            <li><a href="review"><i class="fa fa-circle-o"></i>课程成绩审核</a></li>
           </ul>
         </li>
 

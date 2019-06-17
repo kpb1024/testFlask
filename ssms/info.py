@@ -12,17 +12,32 @@ from ssms.analysis import *
 from ssms.analysis2 import *
 from ssms.utils import *
 
-
-mesg='''
-同学您好, 您所参加的课程{}的成绩已经审核完毕,
-请尽快登录教务系统查看,谢谢!
-'''
-
 bp = Blueprint('info', __name__)
 
 @bp.route('/', methods=('GET','POST'))
 @login_required
 def index():
+	if session['auth'] == 2:
+		id=session['id']
+		db =get_db()
+		cur = db.cursor()
+		sql='select distinct course.cid,cname,dailyScoreRatioDesc,coursepoint,courseyear,courseterm,scoreType,scoreReviewStatus from course,teacher,studentCourse  where teacher.id=%s and teacher.id=course.tid and teacher.id=studentCourse.tid and studentCourse.cid=course.cid'% id
+		if request.method == 'POST':
+			year = request.form['courseyear']
+			term = request.form['courseterm']
+			if year == u'' and term == u'':
+			        pass
+			if year is not u'':
+			        sql += ' and courseyear = %s' % year
+			if term is not u'':
+			        sql += ' and courseterm = %s' % term
+			cur.execute(sql)
+			courses = get_results(cur)
+			return render_template('info/index3.html', courses=courses)
+		cur.execute(sql)
+		courses = get_results(cur)
+		return render_template('info/index3.html', courses=courses)
+
 	if session['auth'] == 1:
 		id=session['id']
 		db =get_db()
