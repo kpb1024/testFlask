@@ -1,19 +1,23 @@
 
 {% extends 'base.html' %}
 {% block header %}
-{% for c in course %}
-	<h1>课程名：{{c['cname']}}</h1>
-{% endfor %}
-{% for c in count %}
-	<h1>选课人数：{{c['count']}}</h1>
-{% endfor %}
+<h1>成绩分析</h1>
 {% endblock %}
 
 {% block content %}
 <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.common.js"></script>
 <script src="http://libs.baidu.com/jquery/1.7.2/jquery.js"></script>
 
-<div class="row">
+<section class="content">
+	<div class="row">
+		<div style="margin:15px">
+	{% for c in course %}
+	<span style="margin:15px">课程名：{{c['cname']}}</span>
+	{% endfor %}
+	{% for c in count %}
+	<span>选课人数：{{c['count']}}</span>
+	{% endfor %}
+		</div>
 	<div class="col-md-6">
 		<div class="box box-primary">
 						<table class="table no-margin" >
@@ -122,7 +126,7 @@
         {% endfor %}
     </div>
 </div>
-
+</section>
 
 
 {% endblock %}

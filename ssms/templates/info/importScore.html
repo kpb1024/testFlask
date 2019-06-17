@@ -47,12 +47,12 @@
 				<td><input type="text" class="am-form-field" name="{{student['sid']}}" value="{{student['dailyScore']}}" onkeyup="value=test(value)?value:''" size=6 /> </td>
 				<td><input type="text" class="am-form-field" name="{{student['name']}}" value="{{student['finalExamScore']}}"  onkeyup="value=test(value)?value:''" size=6 /></td>
 				<td>
-					<select name="status" id="status">
+					<select name="{{student['sid']}}{{student['name']}}" id="status">
 						<option value="正常" selected="selected">正常</option>
-						<option value="免修" onclick="block()">免修</option>
-						<option value="缺考" onclick="block()">缺考</option>
-						<option value="缓考" onclick="block()">缓考</option>
-						<option value="作弊" onclick="block()">作弊</option>
+						<option value="免修" >免修</option>
+						<option value="缺考" >缺考</option>
+						<option value="缓考" >缓考</option>
+						<option value="作弊" >作弊</option>
 					</select>
 				</td>
 			</tr>
@@ -69,19 +69,20 @@
 {% endblock %}
 {% block jsfile %}
 <script type="text/JavaScript">
-	$("#status").on("change",function(){
+
+	$("#submit").click(function(){
+		alert("确认要提交吗？");
+	});
+	$("select").on("change",function(){
 		if($("option:selected",this).val() != "正常"){
 			// $(this).parents('td').siblings().find('input').css('color','red');
 			$(this).parents('td').siblings().find('input').attr('disabled',true);
+			alert("考试状态非正常将无法录入成绩，确认要提交吗？");
 		}
 		if($("option:selected",this).val() == "正常"){
 			// $(this).parents('td').siblings().find('input').css('color','red');
 			$(this).parents('td').siblings().find('input').attr('disabled',false);
 		}
 	});
-	$("#submit").click(function(){
-		alert("确认要提交吗？")
-	});
-
 </script>
 {% endblock %}
