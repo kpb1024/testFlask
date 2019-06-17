@@ -395,21 +395,33 @@ def importScore(cid):
 			cur = db.cursor()
 			cur.execute('select sid,name from studentCourse,student where cid=%s and sid=student.id',(cid))
 			Students1=get_results(cur)
-			
 			for student in Students1:
-				dailyScore = request.form[str(student['sid'])]
-				finalExamScore = request.form[student['name']]
-				StudentExamStatus = request.form['status']
-				score = (dailyScore*ratio + (100-ratio)*finalExamScore)/100
-				if(dailyScore==''):
+				str1 = '%s%s' % (str(student['sid']),student['name']) #用+会坑，详见https://blog.csdn.net/zyz511919766/article/details/22072701
+				StudentExamStatus = request.form[str1]
+				if(StudentExamStatus == '正常'):#disabled之后请求不了dailyScore
+					dailyScore = request.form[str(student['sid'])]
+					finalExamScore = request.form[student['name']]
+					cur.execute('select dailyScoreRatio from course where cid = %s' % cid)
+					ratio = int(get_results(cur)[0]['dailyScoreRatio'])
+					if(dailyScore==''):
+						dailyScore=None
+					else:
+						dailyScore=int(dailyScore)
+					if(finalExamScore==''):
+						finalExamScore=None
+					else:
+						finalExamScore=int(finalExamScore)
+						
+					if(finalExamScore!=None and dailyScore!=None):
+						score = (dailyScore*ratio + (100-ratio)*finalExamScore)/100
+					else:
+						score = None
+					db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s,score=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,score,student['sid'],cid))
+				else:
 					dailyScore=None
-				else:
-					dailyScore=int(dailyScore)
-				if(finalExamScore==''):
 					finalExamScore=None
-				else:
-					finalExamScore=int(finalExamScore)
-				db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s,score=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,score,student['sid'],cid))
+					score = None
+					db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s,score=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,score,student['sid'],cid))
 			db.commit()
 			return redirect(url_for('info.scoreMain', cid=cid))
 		return render_template('info/importScore.html', students=students, cid=cid,per=per)
@@ -423,7 +435,8 @@ def importScore(cid):
 			finalExamScore=None
 			for student in Students1:
 				level=request.form['level']
-				StudentExamStatus = request.form['status']
+				str1 = '%s%s' % (str(student['sid']),student['name']) #用+会坑，详见https://blog.csdn.net/zyz511919766/article/details/22072701
+				StudentExamStatus = request.form[str1]
 				if level=='优秀':
 					score=95
 				elif level=='良好':
