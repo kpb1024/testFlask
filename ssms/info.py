@@ -12,6 +12,12 @@ from ssms.analysis import *
 from ssms.analysis2 import *
 from ssms.utils import *
 
+
+mesg='''
+同学您好, 您所参加的课程{}的成绩已经审核完毕,
+请尽快登录教务系统查看,谢谢!
+'''
+
 bp = Blueprint('info', __name__)
 
 @bp.route('/', methods=('GET','POST'))
@@ -142,15 +148,14 @@ def createCourse():
 		coursevolume = request.form['coursevolume']
 		courseyear = request.form['courseyear']
 		courseclass = request.form['courseclass']
-		scoreType = request.form['scoreType']
 		dailyScoreRatio = request.form['dailyScoreRatio']
 		dailyScoreRatioDesc = request.form['dailyScoreRatioDesc']
 		tid = g.user['id']
 		db = get_db()
 		cur = db.cursor()
 		cur.execute(
-			'INSERT INTO course VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-			(cname, courseterm, courseyear, coursepoint, coursetype, coursevolume, tid, dailyScoreRatio, dailyScoreRatioDesc, courseclass, scoreType)
+			'INSERT INTO course(cname, courseterm, courseyear, coursepoint, coursetype, coursevolume, tid, dailyScoreRatio, dailyScoreRatioDesc, courseclass) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+			(cname, courseterm, courseyear, coursepoint, coursetype, coursevolume, tid, dailyScoreRatio, dailyScoreRatioDesc, courseclass)
 		)
 		db.commit()
 		return redirect(url_for('info.index'))
@@ -500,7 +505,8 @@ def review():
 	cur.execute('select cid,cname,coursetype,coursepoint,courseyear,courseterm,coursevolume,name from course,teacher')
 	courses = get_results(cur)
 	return render_template('info/review.html', courses=courses)
-	
+
+
 @bp.route('/reviewGrade?cid=<cid>', methods=['GET', 'POST'])
 @login_required
 def reviewGrade(cid):
@@ -511,11 +517,20 @@ def reviewGrade(cid):
 			cur1 = db1.cursor()
 			cur1.execute('update studentCourse set scoreReviewStatus=%s where cid=%s',('审核完毕',cid))
 			db1.commit()
+			cur1.execute('select email from user where id in (select sid from studentCourse where cid = %s) and email like "%%"', (cid))
+			emails = get_results(cur1)
+			email_list = []
+			for email in emails:
+				email_list.append(email['email'])
+			cur1.execute(
+				'select cname from course where cid = %s',
+				(cid))
+			send_email(mesg.format(get_results(cur1)[0]['cname']), email_list)
 		else:
 			feedback=request.form['feedback']
 			db2 = get_db()	
 			cur2 = db2.cursor()
-			cur1.execute('update studentCourse set scoreReviewStatus=%s where cid=%s',(feedback,cid))
+			cur2.execute('update studentCourse set scoreReviewStatus=%s where cid=%s',(feedback,cid))
 	db = get_db()
 	cur = db.cursor()
 	cur.execute('select sid ,name,dailyScore,finalExamScore,score,scoreReviewStatus from student,studentCourse where cid=%s and sid=student.id',(cid))
