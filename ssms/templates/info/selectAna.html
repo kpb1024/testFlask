@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block header %}
+<h1>按学年、学期成绩分析</h1>
+{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <!-- 成绩筛选 -->
+            <div class="grade_select" style="padding:20px">
+                <form class="am-form-inline" role="form" method="post" >
+                    <fieldset>
+                        <div class="tips">
+                            <h5>使用提示：</h5>
+                            <ol>
+                                <li>学科类别与学年均必须选择至少一项，才可成功查询。</li>
+                                <li>对于 windows：按住 Ctrl 按钮来选择多个选项</li>
+                                <li>对于 Mac：按住 command 按钮来选择多个选项</li>
+                            </ol>
+                        </div>
+<!--                        <button type="button" class="pull-right btn btn-default" id="sendEmail"><a href="{{ url_for('info.index') }}">返回主页-->
+<!--                            <i class="fa fa-arrow-circle-right"></i></a></button>-->
+                        <span style="top: auto;">条件筛选：</span>
+                        <div class="am-form-group">
+                            <label for="coursetype" style="position:relative;left:15%">学科类别</label>
+                            <select multiple id="coursetype" name="coursetype" style="position:relative;left:25%">
+                                <option value="gb" selected>公必</option>
+                                <option value="gx">公选</option>
+                                <option value="zb">专必</option>
+                                <option value="zx">专选</option>
+                            </select>
+                            <span class="am-form-caret"></span>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="courseyear" style="position:relative;left:45%">学年</label>
+                            <select multiple id="courseyear" name="courseyear" style="position:relative;left:55%">
+                                <option value="2017">2017</option>
+                                <option value="2018">2018</option>
+                                <option value="2019" selected>2019</option>
+                            </select>
+                            <span class="am-form-caret"></span>
+                        </div>
+                        <button type="submit" class="am-btn am-btn-default" style="position:relative;left:10%">提交</button>
+                    </fieldset>
+                </form>
+            </div>
+
+            <!-- 成绩显示 -->
+            <div class="box box-info" style="width:95%;margin:auto;">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <thead>
+                            <tr>
+                                <th>学科类别</th>
+                                <th>学年</th>
+                                <th>绩点</th>
+                                <th>排名</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for course in courses %}
+                            <tr>
+                                <td>{{ cc}}</td>
+                                <td>{{ cy}}</td>
+                                <td>{{ course['avggpa'] }}</td>
+                                <td>{{ course['rk'] }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.box-body -->
+                <!-- /.box-footer -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block jsfile %}
+
+{% endblock %}
