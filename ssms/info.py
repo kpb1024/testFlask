@@ -11,6 +11,7 @@ from ssms.db import get_db, get_results
 from ssms.analysis import * 
 from ssms.analysis2 import *
 from ssms.utils import *
+import sys #调试
 
 bp = Blueprint('info', __name__)
 
@@ -58,6 +59,7 @@ def index():
 		cur.execute(sql)
 		courses = get_results(cur)
 		return render_template('info/index2.html', courses=courses)
+		
 	id = session['id']
 	db = get_db()
 	cur = db.cursor()
@@ -249,6 +251,55 @@ def total_rank():
 	total_rank['total_avg_gpa'] = total_avg_gpa(sid)
 	return render_template('info/total_rank.html', scores=total_rank)
 
+@bp.route('/selectAna', methods=('GET', 'POST'))
+@login_required		
+def selectAna():
+	courses = {}
+	sid = session['id']
+	db = get_db()
+	cur = db.cursor()
+	cc=""
+	cy=""
+	ccd=""
+	cyd=""
+	if request.method == 'POST':
+		courseclass = request.form.getlist('coursetype')
+		courseyear = request.form.getlist('courseyear')
+		
+		cc="' or ".join(("courseclass = '" + str(n) for n in courseclass))
+		cy = "' or ".join(("courseyear = '" + str(n) for n in courseyear))
+		cc=cc+"'"
+		cy=cy+"'"
+		query= 'CREATE TEMPORARY TABLE scores select sid,ROUND(sum(sc)/sum(coursepoint),2) as avggpa from (select gpa*coursepoint sc, coursepoint,sid from course, studentCourse where course.cid = studentCourse.cid and (' +cc+') and ('+cy+')) as s GROUP BY sid '
+		#print(query, file=sys.stderr)
+		cur.execute(query)
+		query1= 'CREATE TEMPORARY TABLE scores1 select sid,ROUND(sum(sc)/sum(coursepoint),2) as avggpa from (select gpa*coursepoint sc, coursepoint,sid from course, studentCourse where course.cid = studentCourse.cid and (' +cc+') and ('+cy+')) as s GROUP BY sid '
+		cur.execute(query1)
+		
+		query2='SELECT avggpa, FIND_IN_SET( avggpa, (SELECT GROUP_CONCAT( avggpa ORDER BY avggpa DESC ) FROM scores ))  as rk FROM scores1 where sid = %s'
+		cur.execute(query2,sid)
+		courses = get_results(cur)
+	
+		for i in courseclass:
+			if i == 'gx':
+				ccd = ccd +" 公选 "
+			elif i == 'gb':
+				ccd = ccd +" 公必 "
+			elif i == 'zb':
+				ccd = ccd +" 专必 "
+			elif i == 'zx':
+				ccd = ccd +" 专选 "
+		for i in courseyear:
+			if i == '2018':
+				cyd = cyd +" 2018 "
+			elif i == '2019':
+				cyd = cyd +" 2019 "
+			elif i == '2017':
+				cyd = cyd +" 2017 "
+				
+	return render_template('info/selectAna.html', courses=courses,cc=ccd,cy=cyd)
+	#return render_template('info/selectAna.html')
+
 @bp.route('/term_gpa', methods=('GET', 'POST'))
 @login_required
 def term_gpa():
@@ -259,9 +310,9 @@ def term_gpa():
 	gpa=[]
 	for tg in term_gpa:
 		gpa.append(tg['gp'])
-		courseyaer.append(tg['courseyear'])
+		courseyear.append(tg['courseyear'])
 		courseterm.append(tg['courseterm'])
-	return jsonify(term=courseterm, year=courseyaer, gpa=gpa)
+	return jsonify(term=courseterm, year=courseyear, gpa=gpa)
 
 @bp.route('/term_rank', methods=('GET', 'POST'))
 @login_required
