@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block header %}
+<link rel="stylesheet" href="static/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<h1>成绩申诉审核</h1>
+{% endblock %}
+{% block content %}
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">成绩申诉</h3>
+                <button type="button" class="pull-right btn btn-default" id="sendEmail"><a href="{{ url_for('info.index') }}">返回主页
+                    <i class="fa fa-arrow-circle-right"></i></a></button>
+            </div>
+            <!-- 表格 -->
+            <div class="box-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>学号</th>
+                        <th>姓名</th>
+                        <th>课程号</th>
+                        <th>课程名称</th>
+                        <th>平时成绩</th>
+                        <th>考试成绩</th>
+                        <th>最终成绩</th>
+                        <th>申诉理由</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <meta charset="UTF-8">
+                    {% for proposal in proposals %}
+                    <tr>
+                        <td>{{ proposal['sid'] }}</td>
+                        <td>{{ proposal['name'] }}</td>
+                        <td>{{ proposal['cid'] }}</td>
+                        <td>{{ proposal['cname'] }}</td>
+                        <td>{{ proposal['dailyScore'] }}</td>
+                        <td>{{ proposal['finalExamScore'] }}</td>
+                        <td>{{ proposal['score'] }}</td>
+                        <td>{{ proposal['reason'] }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+
+    </div>
+    <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+{% endblock %}
+{% block jsfile %}
+<div class="daterangepicker dropdown-menu ltr opensleft"><div class="calendar left"><div class="daterangepicker_input"><input class="input-mini form-control" type="text" name="daterangepicker_start" value=""><i class="fa fa-calendar glyphicon glyphicon-calendar"></i><div class="calendar-time" style="display: none;"><div></div><i class="fa fa-clock-o glyphicon glyphicon-time"></i></div></div><div class="calendar-table"></div></div><div class="calendar right"><div class="daterangepicker_input"><input class="input-mini form-control" type="text" name="daterangepicker_end" value=""><i class="fa fa-calendar glyphicon glyphicon-calendar"></i><div class="calendar-time" style="display: none;"><div></div><i class="fa fa-clock-o glyphicon glyphicon-time"></i></div></div><div class="calendar-table"></div></div><div class="ranges"><ul><li data-range-key="Today">Today</li><li data-range-key="Yesterday">Yesterday</li><li data-range-key="Last 7 Days">Last 7 Days</li><li data-range-key="Last 30 Days">Last 30 Days</li><li data-range-key="This Month">This Month</li><li data-range-key="Last Month">Last Month</li><li data-range-key="Custom Range">Custom Range</li></ul><div class="range_inputs"><button class="applyBtn btn btn-sm btn-success" disabled="disabled" type="button">Apply</button> <button class="cancelBtn btn btn-sm btn-default" type="button">Cancel</button></div></div></div>
+
+<script>
+    $(function () {
+        $('#example1').DataTable()
+        $('#example2').DataTable({
+            'paging'      : true,
+            'lengthChange': false,
+            'searching'   : false,
+            'ordering'    : true,
+            'info'        : true,
+            'autoWidth'   : false
+        })
+    })
+</script>
+{% endblock %}

@@ -223,6 +223,15 @@ def cancelProposal(cid):
 	cur.execute('delete from proposal where cid = %s and sid = %s', (cid,id))
 	return redirect(url_for('info.index'))
 
+@bp.route('/reviewProposal/<cid>',methods=('GET','POST'))
+def reviewProposal(cid):
+	cur = get_db().cursor()
+	cur.execute('select * from proposal where cid = %s' % cid)
+	proposals = get_results(cur)
+	
+
+
+
 @bp.route('/myScore', methods=('GET', 'POST'))
 # @login_required
 def myScore():
@@ -599,4 +608,3 @@ def getExcelByCid(cid):
 	resp.headers['Content-Type'] = 'application/x-xlsx'
 	return resp
 
-#test
