@@ -12,27 +12,46 @@
 					<thead>
 					<tr>
 						<th>课程名称</th>
-						<th>课程目前成绩</th>
 						<th>申诉提交时间</th>
 						<th>申诉原因</th>
 						<th>被授课教师查看</th>
 						<th>被教务老师查看</th>
 						<th>申诉回复</th>
+						{% if g.user['auth'] == 0 %}
 						<th>取消申诉</th>
+						{% else %}
+						<th>确认审核</th>
+						{% endif %}
 					</tr>
 					</thead>
 					<tbody>
 					{% for proposal in proposals %}
 					<tr>
 						<td>{{ proposal['cname'] }}</td>
-						<td>{{ proposal['score'] }}</td>
 						<td>{{ proposal['raisedTime'] }}</td>
 						<td>{{ proposal['reason'] }}</td>
-						<td>{{ proposal['is_checked_by_teacher'] }}</td>
-						<td>{{ proposal['is_checked_by_dean '] }}</td>
+						{% if proposal['is_checked_by_teacher'] == 0 %}
+						<td>未被审核</td>
+						{% else  %}
+						<td>已经审核</td>
+						{% endif %}
+						{% if proposal['is_checked_by_dean'] == 0 %}
+						<td>未被审核</td>
+						{% else  %}
+						<td>已经审核</td>
+						{% endif %}
+						{% if proposal['reply'] == None %}
+						<td>无</td>
+						{% else  %}
 						<td>{{ proposal['reply'] }}</td>
+						{% endif %}
 						{% set i = proposal['cid'] %}
+						{% if g.user['auth'] == 1 %}
+						{% set id = proposal['sid'] %}
+						<td><a href="{{ url_for('info.reviewProposal',cid=i,sid=id) }}" class="myButton">确认审核</a></td>
+						{% else %}
 						<td><a href="{{ url_for('info.cancelProposal',cid=i) }}" class="myButton">取消</a></td>
+						{% endif %}
 					</tr>
 					{% endfor %}
 					</tbody>

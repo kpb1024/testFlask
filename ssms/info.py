@@ -203,13 +203,17 @@ def showProposal():
 	db = get_db()
 	cur = db.cursor()
 	id = g.user['id']
-	sql='select DISTINCT cname,raisedTime,score, reason, reply,is_checked_by_teacher, is_checked_by_dean,course.cid  from proposal, course,studentCourse where course.cid = studentCourse.cid and proposal.cid=course.cid  and proposal.sid = studentCourse.sid'
 	if g.user['auth'] == 0:
-		sql += ' and proposal.sid =%s' % id
-		cur.execute(sql)
+		cur.execute(
+			'select distinct * '
+			'from proposal p join course c '
+			'where p.cid = c.cid '
+			'and p.sid = %s' % id
+		)
 	else:
-		sql += ' and proposal.cid =%s'
-		cur.executemany(sql, g.user['cid'])
+		cur.execute(
+			'select distinct * from proposal p join course c join student s '
+			'where p.cid = c.cid and s.id = p.sid and p.cid in (select distinct cid from course where tid = %s)', id)
 	proposals = get_results(cur)
 	return render_template('info/showProposal.html', proposals = proposals)
 
@@ -218,17 +222,24 @@ def showProposal():
 @bp.route('/cancelProposal/<cid>')
 @login_required
 def cancelProposal(cid):
-	cur = get_db().cursor()
+	db = get_db()
+	cur = db.cursor()
 	id = g.user['id']
 	cur.execute('delete from proposal where cid = %s and sid = %s', (cid,id))
-	return redirect(url_for('info.index'))
+	db.commit()
+	return redirect(url_for('info.showProposal'))
 
-@bp.route('/reviewProposal/<cid>',methods=('GET','POST'))
-def reviewProposal(cid):
-	cur = get_db().cursor()
-	cur.execute('select * from proposal where cid = %s' % cid)
-	proposals = get_results(cur)
-	
+@bp.route('/reviewProposal/<cid>&<sid>')
+@login_required
+def reviewProposal(cid, sid):
+	db = get_db()
+	cur = db.cursor()
+	if g.user['auth'] == 1:
+		cur.execute('update proposal set is_checked_by_teacher = 1 where cid = %s and sid = %s', (cid,sid))
+	elif g.user['auth'] == 2:
+		cur.execute('update proposal set is_checked_by_dean = 1 where cid = %s and sid = %s', (cid,sid))
+	db.commit()
+	return redirect(url_for('info.showProposal'))
 
 
 
@@ -608,3 +619,48 @@ def getExcelByCid(cid):
 	resp.headers['Content-Type'] = 'application/x-xlsx'
 	return resp
 
+@bp.route('/selectAna', methods=('GET', 'POST'))
+@login_required		
+def selectAna():
+	courses = {}
+	sid = session['id']
+	db = get_db()
+	cur = db.cursor()
+	cc=""
+	cy=""
+	ccd=""
+	cyd=""
+	if request.method == 'POST':
+		courseclass = request.form.getlist('coursetype')
+		courseyear = request.form.getlist('courseyear')
+		cc="' or ".join(("courseclass = '" + str(n) for n in courseclass))
+		cy = "' or ".join(("courseyear = '" + str(n) for n in courseyear))
+		cc=cc+"'"
+		cy=cy+"'"
+		query= 'CREATE TEMPORARY TABLE scores select sid,ROUND(sum(sc)/sum(coursepoint),2) as avggpa from (select gpa*coursepoint sc, coursepoint,sid from course, studentCourse where course.cid = studentCourse.cid and (' +cc+') and ('+cy+')) as s GROUP BY sid '
+		cur.execute(query)
+		query1= 'CREATE TEMPORARY TABLE scores1 select sid,ROUND(sum(sc)/sum(coursepoint),2) as avggpa from (select gpa*coursepoint sc, coursepoint,sid from course, studentCourse where course.cid = studentCourse.cid and (' +cc+') and ('+cy+')) as s GROUP BY sid '
+		cur.execute(query1)
+		
+		query2='SELECT avggpa, FIND_IN_SET( avggpa, (SELECT GROUP_CONCAT( avggpa ORDER BY avggpa DESC ) FROM scores ))  as rk FROM scores1 where sid = %s'
+		cur.execute(query2,sid)
+		courses = get_results(cur)
+	
+		for i in courseclass:
+			if i == 'gx':
+				ccd = ccd +" 公选 "
+			elif i == 'gb':
+				ccd = ccd +" 公必 "
+			elif i == 'zb':
+				ccd = ccd +" 专必 "
+			elif i == 'zx':
+				ccd = ccd +" 专选 "
+		for i in courseyear:
+			if i == '2018':
+				cyd = cyd +" 2018 "
+			elif i == '2019':
+				cyd = cyd +" 2019 "
+			elif i == '2017':
+				cyd = cyd +" 2017 "
+				
+	return render_template('info/selectAna.html', courses=courses,cc=ccd,cy=cyd)
