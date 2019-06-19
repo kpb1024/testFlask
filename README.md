@@ -1,3 +1,10 @@
+# 环境配置和应用部署
+- 电脑需安装Python3.6环境，应用必要的Python库通过在/testFlask文件夹下运行`pip install -r requirements.txt`安装；
+- 数据库需通过`mysql -uroot -proot -h127.0.0.1 -P3306 < fulldump.sql`来将数据库备份导入到本地的MySQL中，然后在/testFlask/ssms/__init__.py中修改数据库的host,user,password
+- 部署完后双击运行run.sh脚本
+
+---
+
 # Git协同开发
 ## 1. 获取项目文件
 `git clone git@github.com:kpb1024/testFlask.git`
