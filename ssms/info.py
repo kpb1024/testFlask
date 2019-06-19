@@ -210,10 +210,16 @@ def showProposal():
 			'where p.cid = c.cid '
 			'and p.sid = %s' % id
 		)
-	else:
+	elif g.user['auth'] == 1:
 		cur.execute(
 			'select distinct * from proposal p join course c join student s '
 			'where p.cid = c.cid and s.id = p.sid and p.cid in (select distinct cid from course where tid = %s)', id)
+	else:
+		cur.execute(
+			'select distinct * from proposal p join course c join student s '
+			'where p.cid = c.cid and s.id = p.sid'
+		)
+		
 	proposals = get_results(cur)
 	return render_template('info/showProposal.html', proposals = proposals)
 
