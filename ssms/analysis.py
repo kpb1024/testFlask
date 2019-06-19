@@ -187,12 +187,13 @@ def send_email(msg, to):
 	#message['from'] = '757139408@qq.com'
 	#password = "ythmxdzhmcxhbahi"
 	message['from'] = 'kangpeibang@qq.com'
-	password = "hmceqjhelsxbcbbf"
+	#password = "hmceqjhelsxbcbbf"
+	password = "qynkjhmxppyrcajj"
 
 	message['subject'] = Header(u'教务系统消息', 'utf-8').encode()
-	#smtp_server = "smtp.qq.com"
-	smtp_server = '127.0.0.1'
-	server = smtplib.SMTP(smtp_server)  # SMTP协议默认端口是25
+	smtp_server = "smtp.qq.com"
+	#smtp_server = '127.0.0.1'
+	server = smtplib.SMTP_SSL(smtp_server,465)  # SMTP协议默认端口是25
 	# 打印出和SMTP服务器交互的所有信息。
 	# server.set_debuglevel(1)
 	# 登录SMTP服务器
