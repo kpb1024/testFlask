@@ -73,7 +73,7 @@
                 <p>
                   账户：{{ g.user['username'] }}
                   <small>学号：{{g.user['id']}}</small>
-                  <small>性别：{{"男" if g.user['is_male']== 1 else "女"}}</small>
+                  <small>性别：{{"男" if g.user['id']==1 else "女"}}</small>
                   <small>邮箱：{{g.user['email'] if g.user['email']!=None else "无"}}</small>
                 </p>
               </li>
@@ -233,7 +233,6 @@
             <li><a href="total_rank"><i class="fa fa-circle-o"></i>综合成绩分析</a></li>
             <li><a href="sco_distribution"><i class="fa fa-circle-o"></i>课程总体分布分析</a></li>
             <li><a href="sw_analysis"><i class="fa fa-circle-o"></i>优劣势学科分析</a></li>
-            <li><a href="selectAna"><i class="fa fa-circle-o"></i>按学科、学年查看排名</a></li>
           </ul>
         </li>
         {% elif g.user['auth'] == 1 %}

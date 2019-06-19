@@ -193,6 +193,7 @@
                           <!-- /.direct-chat-pane -->
                       </div>
                       <!-- /.box-body -->
+                      <!-- /.box-footer-->
                   </div>
                   </div>
                 <!-- /.col -->
@@ -303,6 +304,8 @@
                 </div>
             </div>
         </div>
+
+
 
       <!-- 成绩基本概览 -->
       <div class="row">
@@ -489,7 +492,6 @@
         yAxis: [
             {
                 type: 'value',
-		minInterval: 0.1,
                 name:'综合绩点',
                 axisTick: {
                     alignWithLabel: true
@@ -501,16 +503,15 @@
                     }
                 },
                 min:function(value) {
-                    return Math.floor(value.min - 1);
+                    return value.min - 1;
                 },
                 max: function(value) {
-                    return Math.round(value.max + 1);
+                    return value.max + 1;
                 },
 
             },
             {
                 type: 'value',
-		minInterval: 1,
                 name:'综合排名',
                 axisTick: {
                     alignWithLabel: true
@@ -523,10 +524,10 @@
                 },
                 minInterval: 1,
                 min:function(value) {
-                    return Math.floor(0.9*value.min);
+                    return 0.9*value.min ;
                 },
                 max: function(value) {
-                    return Math.ceil(1.1*value.max);
+                    return 1.1*value.max;
                 },
 
             }
@@ -537,7 +538,7 @@
                 name:'学年-学期',
                 nameLocation:'middle',
                 nameGap:23,
-                data: ["2019-1", "2019-2"]
+                data: ["2017-1", "2017-2", "2018-1", "2018-2", "2019-1"]
             }
         ],
         series: [
