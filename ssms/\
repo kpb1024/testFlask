@@ -184,15 +184,12 @@ def course_involve(sid):
 def send_email(msg, to):
 	# 三个参数：第一个为文本内容，第二个 plain 设置文本格式，第三个 utf-8 设置编码
 	message = MIMEText(msg, 'plain', 'utf-8')
-	#message['from'] = '757139408@qq.com'
-	#password = "ythmxdzhmcxhbahi"
-	message['from'] = 'kangpeibang@qq.com'
-	password = "hmceqjhelsxbcbbf"
-
+	message['from'] = '757139408@qq.com'
+	password = "ythmxdzhmcxhbahi"
 	message['subject'] = Header(u'教务系统消息', 'utf-8').encode()
 	#smtp_server = "smtp.qq.com"
-	smtp_server = '127.0.0.1'
-	server = smtplib.SMTP(smtp_server)  # SMTP协议默认端口是25
+	smtp_server = "localhost"
+	server = smtplib.SMTP(smtp_server, 25)  # SMTP协议默认端口是25
 	# 打印出和SMTP服务器交互的所有信息。
 	# server.set_debuglevel(1)
 	# 登录SMTP服务器

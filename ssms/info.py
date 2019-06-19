@@ -453,6 +453,9 @@ def importScore(cid):
 					db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,StudentExamStatus=%s,score=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,StudentExamStatus,score,student['sid'],cid))
 			db.commit()
 			return redirect(url_for('info.scoreMain', cid=cid))
+		#cur.execute('SELECT sid,name,school,major FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
+		cur.execute('SELECT * FROM student,studentCourse WHERE student.id=studentCourse.sid and cid = %s and tid=%s',(cid,id))
+		students = get_results(cur)
 		return render_template('info/importScore.html', students=students, cid=cid,per=per)
 	else:
 		if request.method=="POST":
@@ -465,7 +468,7 @@ def importScore(cid):
 			for student in Students1:
 				level=request.form['level']
 				str1 = '%s%s' % (str(student['sid']),student['name']) #用+会坑，详见https://blog.csdn.net/zyz511919766/article/details/22072701
-				StudentExamStatus = request.form[str1]
+				StudentExamStatus = request.form['status']
 				if level=='优秀':
 					score=95
 				elif level=='良好':
@@ -479,9 +482,9 @@ def importScore(cid):
 				else:
 					score=None	#空键处理
 				db.cursor().execute('update studentCourse set dailyScore=%s,finalExamScore=%s,score=%s,StudentExamStatus=%s where sid=%s and cid=%s',(dailyScore,finalExamScore,score,StudentExamStatus,student['sid'],cid))
-			db.commit()
+				db.commit()
 			return redirect(url_for('info.scoreMain', cid=cid))
-		return render_template('info/importScore.html', students=students, cid=cid,per=per)#需要等级制页面吗
+		return render_template('info/importScore0.html', students=students, cid=cid,per=per)#需要等级制页面吗
 	
 
 
@@ -541,14 +544,16 @@ def reviewGrade(cid):
 			cur1 = db1.cursor()
 			cur1.execute('update studentCourse set scoreReviewStatus=%s where cid=%s',('审核完毕',cid))
 			db1.commit()
-			cur1.execute('select email from user where id in (select sid from studentCourse where cid = %s) and email like "%%"', (cid))
+			cur1.execute('select email from user where id in (select sid from studentCourse where cid = %s)', (cid))
 			emails = get_results(cur1)
 			email_list = []
 			for email in emails:
-				email_list.append(email['email'])
+				if email['email'] is not '':
+					email_list.append(email['email'])
 			cur1.execute(
 				'select cname from course where cid = %s',
 				(cid))
+			mesg = '同学你所选的课程——{}的课程成绩已经审核完毕，请查看'
 			send_email(mesg.format(get_results(cur1)[0]['cname']), email_list)
 		else:
 			feedback=request.form['feedback']
