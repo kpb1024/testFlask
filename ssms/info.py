@@ -285,9 +285,9 @@ def term_gpa():
 	gpa=[]
 	for tg in term_gpa:
 		gpa.append(tg['gp'])
-		courseyaer.append(tg['courseyear'])
+		courseyear.append(tg['courseyear'])
 		courseterm.append(tg['courseterm'])
-	return jsonify(term=courseterm, year=courseyaer, gpa=gpa)
+	return jsonify(term=courseterm, year=courseyear, gpa=gpa)
 
 @bp.route('/term_rank', methods=('GET', 'POST'))
 @login_required

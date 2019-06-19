@@ -500,6 +500,7 @@
         yAxis: [
             {
                 type: 'value',
+		minInterval: 0.1,
                 name:'综合绩点',
                 axisTick: {
                     alignWithLabel: true
@@ -511,15 +512,16 @@
                     }
                 },
                 min:function(value) {
-                    return value.min - 0.3;
+                    return Math.floor(value.min - 1);
                 },
                 max: function(value) {
-                    return value.max + 0.3;
+                    return Math.round(value.max + 1);
                 },
 
             },
             {
                 type: 'value',
+		minInterval: 1,
                 name:'综合排名',
                 axisTick: {
                     alignWithLabel: true
@@ -532,10 +534,10 @@
                 },
                 minInterval: 1,
                 min:function(value) {
-                    return 0.9*value.min ;
+                    return Math.floor(0.9*value.min);
                 },
                 max: function(value) {
-                    return 1.1*value.max;
+                    return Math.ceil(1.1*value.max);
                 },
 
             }
@@ -546,7 +548,7 @@
                 name:'学年-学期',
                 nameLocation:'middle',
                 nameGap:23,
-                data: ["2017-1", "2017-2", "2018-1", "2018-2", "2019-1"]
+                data: ["2019-1", "2019-2"]
             }
         ],
         series: [
