@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>我的成绩申诉</h1>
+<h1>成绩申诉</h1>
 {% endblock %}
 
 {% block content %}
@@ -13,6 +13,10 @@
 					<tr>
 						<th>课程名称</th>
 						<th>申诉提交时间</th>
+						{% if g.user['auth'] != 0 %}
+						<th>学号</th>
+						<th>姓名</th>
+						{% endif %}
 						<th>申诉原因</th>
 						<th>被授课教师查看</th>
 						<th>被教务老师查看</th>
@@ -29,6 +33,10 @@
 					<tr>
 						<td>{{ proposal['cname'] }}</td>
 						<td>{{ proposal['raisedTime'] }}</td>
+						{% if g.user['auth'] != 0 %}
+						<td>{{ proposal['id'] }}</td>
+						<td>{{ proposal['name'] }}</td>
+						{% endif %}
 						<td>{{ proposal['reason'] }}</td>
 						{% if proposal['is_checked_by_teacher'] == 0 %}
 						<td>未被审核</td>
