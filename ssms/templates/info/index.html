@@ -266,6 +266,8 @@
                                             <th>学年</th>
                                             <th>学期</th>
                                             <th>学分</th>
+                                            <th>平时成绩</th>
+                                            <th>考试成绩</th>
                                             <th>成绩</th>
                                             <th>绩点</th>
                                             <th>成绩状态</th>
@@ -283,6 +285,8 @@
                                             <td>{{ course['courseyear'] }}</td>
                                             <td>{{ course['courseterm'] }}</td>
                                             <td>{{ course['coursepoint'] }}</td>
+                                            <td>{{ course['dailyScore'] }}</td>
+                                            <td>{{ course['finalExamScore'] }}</td>
                                             <td>{{ course['score'] }}</td>
                                             <td>{{ course['gpa'] }}</td>
                                             <td>{{ course['st'] }}</td>
@@ -523,10 +527,10 @@
                 },
                 minInterval: 1,
                 min:function(value) {
-                    return Math.floor(0.9*value.min);
+                    return Math.floor(1.1*value.max);
                 },
-                max: function(value) {
-                    return Math.ceil(1.1*value.max);
+                max:function(value) {
+                    return Math.ceil(0.9*value.min);
                 },
 
             }

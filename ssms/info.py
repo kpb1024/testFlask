@@ -69,7 +69,7 @@ def index():
 	for i in range(len(courseclass_gpa_rank(id))):
 	    ctype=courseclass_gpa_rank(id)[i]['courseclass']
 	    courseClass[ctype]=courseclass_gpa_rank(id)[i]
-	sql = 'SELECT coursetype, cname, t.name, courseyear, courseterm, coursepoint, score, gpa,`scoreReviewStatus` st, studentExamStatus '
+	sql = 'SELECT coursetype, cname, t.name, courseyear, courseterm, coursepoint, dailyScore, finalExamScore, score, gpa,`scoreReviewStatus` st, studentExamStatus '
 	sql += 'FROM studentCourse sc JOIN course c JOIN teacher t where sc.tid = t.id and sc.cid = c.cid and '
 	sql += 'sid = %s' % id
 	if request.method == 'POST':
@@ -84,9 +84,9 @@ def index():
 			sql += ' and courseyear = %s' % year
 		if term is not u'':
 			sql += ' and courseterm = %s' % term
-		cur.execute(sql)
-		courselist = get_results(cur)
-		return render_template('info/index.html', courses=courselist, scores=total_rank, cc=courseClass)
+		#cur.execute(sql)
+		#courselist = get_results(cur)
+		#return render_template('info/index.html', courses=courselist, scores=total_rank, cc=courseClass)
 	cur.execute(sql)
 	courselist = get_results(cur)
 	if len(courselist) is 0:
